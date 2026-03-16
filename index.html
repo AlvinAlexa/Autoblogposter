@@ -492,6 +492,101 @@ select option { background: #141720; }
   flex-wrap: wrap;
 }
 
+/* ── THUMBNAIL PREVIEW TAB ── */
+.thumb-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.thumb-preview-wrap {
+  position: relative;
+  border-radius: var(--r);
+  overflow: hidden;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumb-preview-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--r);
+  cursor: zoom-in;
+  transition: transform .2s ease;
+}
+.thumb-preview-img:hover { transform: scale(1.015); }
+
+.thumb-generating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 32px 20px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.thumb-generating .gen-spinner {
+  width: 22px; height: 22px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--accent2);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+.thumb-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.thumb-size-badge {
+  margin-left: auto;
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+/* Lightbox overlay */
+.thumb-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+  animation: lb-in .18s ease;
+}
+@keyframes lb-in { from { opacity:0; } to { opacity:1; } }
+
+.thumb-lightbox img {
+  max-width: 92vw;
+  max-height: 88vh;
+  border-radius: var(--r2);
+  box-shadow: 0 24px 80px rgba(0,0,0,.8);
+  pointer-events: none;
+}
+
+.thumb-lightbox-close {
+  position: absolute;
+  top: 18px; right: 22px;
+  font-size: 22px;
+  color: var(--muted2);
+  cursor: pointer;
+  line-height: 1;
+  transition: color .12s;
+}
+.thumb-lightbox-close:hover { color: var(--text); }
+
 /* ── FIX #2: Missing iframe input styles ── */
 .iframe-row {
   display: flex;
@@ -1343,6 +1438,14 @@ function renderGames() {
       (gd.highlightContent ? '<button class="btn btn-primary" onclick="postToBlogger(' + idx + ',\'highlights\')"><span class="btn-text">\u{1F4E4} Post Highlights</span><div class="spin"></div></button>' : '')
     ) : '';
 
+    var thumbPanelHtml = gd.thumbUrl
+      ? '<div class="thumb-preview-wrap"><img class="thumb-preview-img" id="thumb-img-' + idx + '" src="' + gd.thumbUrl + '" alt="Match thumbnail" onclick="openLightbox(this.src)" /><div class="thumb-size-badge" id="thumb-size-' + idx + '">800 × 420</div></div>'
+        + '<div class="thumb-actions">'
+        + '<button class="btn btn-secondary" onclick="regenThumbnail(' + idx + ')"><span class="btn-text">&#x1F504; Regen</span><div class="spin"></div></button>'
+        + '<a class="btn btn-secondary" id="thumb-dl-' + idx + '" href="' + gd.thumbUrl + '" download="sports803-' + idx + '.jpg"><span class="btn-text">&#x2B07; Download</span></a>'
+        + '</div>'
+      : '<div class="thumb-generating"><div class="gen-spinner"></div><span>Generating thumbnail\u2026</span></div>';
+
     html += '<div class="game-card" id="card-' + idx + '">'
       + '<div class="game-card-head">'
         + '<div class="game-teams">'
@@ -1362,10 +1465,12 @@ function renderGames() {
         + '<div class="content-tabs">'
           + '<button class="ctab active" id="tab-pre-' + idx + '" onclick="switchTab(' + idx + ',\'preview\',this)">\u{1F4DD} Preview Post</button>'
           + '<button class="ctab" id="tab-hl-' + idx + '"  onclick="switchTab(' + idx + ',\'highlights\',this)">\u{1F3C6} Highlights Post</button>'
+          + '<button class="ctab" id="tab-th-' + idx + '"  onclick="switchTab(' + idx + ',\'thumbnail\',this)">\u{1F5BC}\uFE0F Thumbnail</button>'
         + '</div>'
         + '<div class="content-area">'
           + '<div id="text-preview-'    + idx + '">' + previewText   + '</div>'
           + '<div id="text-highlights-' + idx + '" style="display:none">' + highlightText + '</div>'
+          + '<div id="text-thumbnail-'  + idx + '" style="display:none"><div class="thumb-panel">' + thumbPanelHtml + '</div></div>'
         + '</div>'
         + '<div class="iframe-row">'
           + '<div class="iframe-label">&#x1F4FA; Stream URL (iframe src) <span class="badge-tip">OPTIONAL</span></div>'
@@ -1385,8 +1490,10 @@ function renderGames() {
 function switchTab(idx, tab, el) {
   document.getElementById('tab-pre-' + idx).classList.toggle('active', tab === 'preview');
   document.getElementById('tab-hl-'  + idx).classList.toggle('active', tab === 'highlights');
+  document.getElementById('tab-th-'  + idx).classList.toggle('active', tab === 'thumbnail');
   document.getElementById('text-preview-'    + idx).style.display = tab === 'preview'    ? 'block' : 'none';
   document.getElementById('text-highlights-' + idx).style.display = tab === 'highlights' ? 'block' : 'none';
+  document.getElementById('text-thumbnail-'  + idx).style.display = tab === 'thumbnail'  ? 'block' : 'none';
 }
 
 // ─── CONTENT PHRASES ───────────────────────────────────────────────────────
@@ -1481,6 +1588,25 @@ async function generatePreviewContent(idx) {
   var thumb = await generateMatchThumbnail(gd);
   gd.thumbUrl = thumb;
 
+  // ── Live-update the thumbnail panel without a full re-render ──
+  var thumbPanel = document.getElementById('text-thumbnail-' + idx);
+  if (thumbPanel) {
+    if (thumb) {
+      thumbPanel.innerHTML = '<div class="thumb-panel">'
+        + '<div class="thumb-preview-wrap">'
+          + '<img class="thumb-preview-img" id="thumb-img-' + idx + '" src="' + thumb + '" alt="Match thumbnail" onclick="openLightbox(this.src)" />'
+        + '</div>'
+        + '<div class="thumb-actions">'
+          + '<button class="btn btn-secondary" onclick="regenThumbnail(' + idx + ')"><span class="btn-text">&#x1F504; Regen</span><div class="spin"></div></button>'
+          + '<a class="btn btn-secondary" id="thumb-dl-' + idx + '" href="' + thumb + '" download="sports803-thumb-' + idx + '.jpg"><span class="btn-text">&#x2B07; Download</span></a>'
+          + '<span class="thumb-size-badge">800 \u00d7 420</span>'
+        + '</div>'
+      + '</div>';
+    } else {
+      thumbPanel.innerHTML = '<div class="content-empty">\u26A0\uFE0F Thumbnail could not be generated</div>';
+    }
+  }
+
   var text = generatePreviewText(homeName, awayName, gd.league.name, venue, dateStr);
   gd.preContent = text;
 
@@ -1522,6 +1648,61 @@ async function regenHighlights(idx) {
   var el = document.getElementById('text-highlights-' + idx);
   if (el) el.innerHTML = '<div class="content-empty">\u23F3 Regenerating\u2026</div>';
   await generateHighlightContent(idx);
+}
+
+async function regenThumbnail(idx) {
+  detectedGames[idx].thumbUrl = null;
+  var panel = document.getElementById('text-thumbnail-' + idx);
+  if (panel) panel.innerHTML = '<div class="thumb-panel"><div class="thumb-generating"><div class="gen-spinner"></div><span>Regenerating thumbnail\u2026</span></div></div>';
+  // Switch to thumbnail tab so user sees progress
+  switchTab(idx, 'thumbnail', null);
+  document.getElementById('tab-th-' + idx).classList.add('active');
+  document.getElementById('tab-pre-' + idx).classList.remove('active');
+  var thumb = await generateMatchThumbnail(detectedGames[idx]);
+  detectedGames[idx].thumbUrl = thumb;
+  if (panel) {
+    if (thumb) {
+      panel.innerHTML = '<div class="thumb-panel">'
+        + '<div class="thumb-preview-wrap">'
+          + '<img class="thumb-preview-img" src="' + thumb + '" alt="Match thumbnail" onclick="openLightbox(this.src)" />'
+        + '</div>'
+        + '<div class="thumb-actions">'
+          + '<button class="btn btn-secondary" onclick="regenThumbnail(' + idx + ')"><span class="btn-text">&#x1F504; Regen</span><div class="spin"></div></button>'
+          + '<a class="btn btn-secondary" href="' + thumb + '" download="sports803-thumb-' + idx + '.jpg"><span class="btn-text">&#x2B07; Download</span></a>'
+          + '<span class="thumb-size-badge">800 \u00d7 420</span>'
+        + '</div>'
+      + '</div>';
+    } else {
+      panel.innerHTML = '<div class="content-empty">\u26A0\uFE0F Could not generate thumbnail</div>';
+    }
+  }
+  log('ok', '\u2713 Thumbnail regenerated for game ' + idx);
+}
+
+// ── Lightbox ──────────────────────────────────────────────────────────────
+function openLightbox(src) {
+  var existing = document.getElementById('thumb-lightbox');
+  if (existing) existing.remove();
+  var lb = document.createElement('div');
+  lb.className = 'thumb-lightbox';
+  lb.id        = 'thumb-lightbox';
+  lb.innerHTML = '<span class="thumb-lightbox-close" onclick="closeLightbox()">&times;</span>'
+               + '<img src="' + src + '" alt="Thumbnail preview" />';
+  lb.addEventListener('click', function(e) {
+    if (e.target === lb) closeLightbox();
+  });
+  document.body.appendChild(lb);
+  document.addEventListener('keydown', lbKeyHandler);
+}
+
+function closeLightbox() {
+  var lb = document.getElementById('thumb-lightbox');
+  if (lb) lb.remove();
+  document.removeEventListener('keydown', lbKeyHandler);
+}
+
+function lbKeyHandler(e) {
+  if (e.key === 'Escape') closeLightbox();
 }
 
 // ─── THUMBNAIL FETCHER ────────────────────────────────────────────────────
