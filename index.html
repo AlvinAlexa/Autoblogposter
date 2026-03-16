@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -31,198 +30,198 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-background: var(–bg);
-color: var(–text);
-font-family: ‘Syne’, sans-serif;
-font-size: 14px;
-min-height: 100vh;
-overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* ── NOISE TEXTURE ── */
 body::before {
-content: ‘’;
-position: fixed;
-inset: 0;
-background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.03’/%3E%3C/svg%3E”);
-pointer-events: none;
-z-index: 0;
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* ── HEADER ── */
 .topbar {
-background: var(–s1);
-border-bottom: 1px solid var(–border);
-padding: 0 24px;
-position: sticky;
-top: 0;
-z-index: 200;
-display: flex;
-align-items: center;
-height: 54px;
-gap: 16px;
+  background: var(--s1);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  height: 54px;
+  gap: 16px;
 }
 
 .topbar-logo {
-display: flex;
-align-items: center;
-gap: 10px;
-font-size: 15px;
-font-weight: 800;
-letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .topbar-logo .badge {
-background: var(–accent);
-color: #070809;
-font-size: 10px;
-font-weight: 800;
-padding: 3px 7px;
-border-radius: 4px;
-letter-spacing: 0.06em;
+  background: var(--accent);
+  color: #070809;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
 }
 
 .topbar-sub {
-font-size: 11px;
-color: var(–muted);
-letter-spacing: 0.08em;
-text-transform: uppercase;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .topbar-right {
-margin-left: auto;
-display: flex;
-align-items: center;
-gap: 10px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .pill {
-display: inline-flex;
-align-items: center;
-gap: 5px;
-font-size: 10px;
-font-weight: 600;
-letter-spacing: 0.06em;
-text-transform: uppercase;
-padding: 4px 10px;
-border-radius: 20px;
-border: 1px solid var(–border);
-color: var(–muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  color: var(--muted);
 }
 
-.pill.ok  { border-color: rgba(46,213,115,.4); color: var(–green); background: rgba(46,213,115,.07); }
-.pill.err { border-color: rgba(255,71,87,.4);  color: var(–red);   background: rgba(255,71,87,.07); }
-.pill.dot::before { content: ‘’; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pill.ok  { border-color: rgba(46,213,115,.4); color: var(--green); background: rgba(46,213,115,.07); }
+.pill.err { border-color: rgba(255,71,87,.4);  color: var(--red);   background: rgba(255,71,87,.07); }
+.pill.dot::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
 /* ── LAYOUT ── */
 .layout {
-display: grid;
-grid-template-columns: 300px 1fr;
-min-height: calc(100vh - 54px);
-position: relative;
-z-index: 1;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: calc(100vh - 54px);
+  position: relative;
+  z-index: 1;
 }
 
 /* ── SIDEBAR ── */
 .sidebar {
-background: var(–s1);
-border-right: 1px solid var(–border);
-padding: 24px 20px;
-display: flex;
-flex-direction: column;
-gap: 24px;
-overflow-y: auto;
-max-height: calc(100vh - 54px);
-position: sticky;
-top: 54px;
+  background: var(--s1);
+  border-right: 1px solid var(--border);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  max-height: calc(100vh - 54px);
+  position: sticky;
+  top: 54px;
 }
 
 .sidebar-section { display: flex; flex-direction: column; gap: 10px; }
 
 .section-label {
-font-size: 9px;
-font-weight: 700;
-letter-spacing: 0.14em;
-text-transform: uppercase;
-color: var(–muted);
-padding-bottom: 6px;
-border-bottom: 1px solid var(–border);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
 }
 
 .input-group { display: flex; flex-direction: column; gap: 5px; }
 
 .input-label {
-font-size: 11px;
-color: var(–muted2);
-font-weight: 500;
-display: flex;
-align-items: center;
-gap: 6px;
+  font-size: 11px;
+  color: var(--muted2);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .input-label .tip {
-font-size: 9px;
-background: var(–s3);
-padding: 1px 5px;
-border-radius: 3px;
-color: var(–muted);
-font-family: ‘JetBrains Mono’, monospace;
+  font-size: 9px;
+  background: var(--s3);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
 }
 
-input[type=“text”], input[type=“password”], select, textarea {
-background: var(–s2);
-border: 1px solid var(–border);
-color: var(–text);
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 11px;
-padding: 9px 11px;
-border-radius: var(–r);
-width: 100%;
-outline: none;
-transition: border-color .15s;
+input[type="text"], input[type="password"], select, textarea {
+  background: var(--s2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 9px 11px;
+  border-radius: var(--r);
+  width: 100%;
+  outline: none;
+  transition: border-color .15s;
 }
 
-input[type=“text”]:focus,
-input[type=“password”]:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
 select:focus,
 textarea:focus {
-border-color: var(–accent2);
+  border-color: var(--accent2);
 }
 
 select option { background: #141720; }
 
 .btn {
-display: inline-flex;
-align-items: center;
-justify-content: center;
-gap: 8px;
-font-family: ‘Syne’, sans-serif;
-font-weight: 700;
-font-size: 11px;
-letter-spacing: 0.08em;
-text-transform: uppercase;
-padding: 10px 18px;
-border-radius: var(–r);
-border: none;
-cursor: pointer;
-transition: all .15s;
-white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  border-radius: var(--r);
+  border: none;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
 }
 
-.btn-primary { background: var(–accent); color: #070809; }
+.btn-primary { background: var(--accent); color: #070809; }
 .btn-primary:hover { background: #f5ff80; transform: translateY(-1px); }
 
 .btn-secondary {
-background: var(–s3);
-color: var(–text);
-border: 1px solid var(–border2);
+  background: var(--s3);
+  color: var(--text);
+  border: 1px solid var(--border2);
 }
-.btn-secondary:hover { border-color: var(–accent2); color: var(–accent2); }
+.btn-secondary:hover { border-color: var(--accent2); color: var(--accent2); }
 
 .btn-danger {
-background: rgba(255,71,87,.12);
-color: var(–red);
-border: 1px solid rgba(255,71,87,.3);
+  background: rgba(255,71,87,.12);
+  color: var(--red);
+  border: 1px solid rgba(255,71,87,.3);
 }
 .btn-danger:hover { background: rgba(255,71,87,.2); }
 
@@ -231,12 +230,12 @@ border: 1px solid rgba(255,71,87,.3);
 .btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 
 .btn .spin {
-width: 12px; height: 12px;
-border: 2px solid currentColor;
-border-top-color: transparent;
-border-radius: 50%;
-animation: spin .6s linear infinite;
-display: none;
+  width: 12px; height: 12px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin .6s linear infinite;
+  display: none;
 }
 
 .btn.loading .spin { display: block; }
@@ -245,70 +244,70 @@ display: none;
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .leagues-grid {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 6px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
 }
 
 .league-toggle {
-display: flex;
-align-items: center;
-gap: 7px;
-background: var(–s2);
-border: 1px solid var(–border);
-border-radius: var(–r);
-padding: 7px 10px;
-cursor: pointer;
-transition: all .15s;
-font-size: 11px;
-font-weight: 500;
-color: var(–muted2);
-user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: all .15s;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted2);
+  user-select: none;
 }
 .league-toggle.active {
-border-color: var(–accent);
-background: rgba(232,255,71,.08);
-color: var(–text);
+  border-color: var(--accent);
+  background: rgba(232,255,71,.08);
+  color: var(--text);
 }
 .league-toggle .lcheck {
-width: 14px; height: 14px;
-border: 1.5px solid var(–border2);
-border-radius: 3px;
-flex-shrink: 0;
-display: flex; align-items: center; justify-content: center;
-font-size: 9px;
-transition: all .15s;
+  width: 14px; height: 14px;
+  border: 1.5px solid var(--border2);
+  border-radius: 3px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+  transition: all .15s;
 }
 .league-toggle.active .lcheck {
-background: var(–accent);
-border-color: var(–accent);
-color: #070809;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #070809;
 }
 
 /* ── MAIN ── */
 .main { padding: 28px 28px 60px; overflow-y: auto; }
 
 .main-header {
-display: flex;
-align-items: flex-start;
-justify-content: space-between;
-gap: 16px;
-margin-bottom: 28px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
 }
 
 .main-title {
-font-size: 22px;
-font-weight: 800;
-letter-spacing: -0.03em;
-line-height: 1.1;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
 }
-.main-title span { color: var(–accent); }
+.main-title span { color: var(--accent); }
 
 .main-subtitle {
-font-size: 12px;
-color: var(–muted);
-margin-top: 4px;
-font-weight: 400;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+  font-weight: 400;
 }
 
 .scan-actions { display: flex; gap: 8px; }
@@ -317,428 +316,426 @@ font-weight: 400;
 .games-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
 
 .game-card {
-background: var(–s1);
-border: 1px solid var(–border);
-border-radius: var(–r2);
-overflow: hidden;
-transition: border-color .15s;
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  overflow: hidden;
+  transition: border-color .15s;
 }
-.game-card:hover { border-color: var(–border2); }
+.game-card:hover { border-color: var(--border2); }
 
 .game-card-head {
-display: flex;
-align-items: center;
-gap: 12px;
-padding: 14px 16px;
-border-bottom: 1px solid var(–border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
 }
 
 .game-teams {
-flex: 1;
-display: flex;
-align-items: center;
-gap: 10px;
-min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
 }
 
 .team-block {
-display: flex;
-align-items: center;
-gap: 8px;
-flex: 1;
-min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
 }
 
 .team-logo {
-width: 32px; height: 32px;
-object-fit: contain;
-flex-shrink: 0;
-filter: drop-shadow(0 1px 4px rgba(0,0,0,.5));
+  width: 32px; height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,.5));
 }
 
 .team-logo-placeholder {
-width: 32px; height: 32px;
-background: var(–s3);
-border: 1px solid var(–border);
-border-radius: 50%;
-display: flex; align-items: center; justify-content: center;
-font-size: 14px;
-flex-shrink: 0;
+  width: 32px; height: 32px;
+  background: var(--s3);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
 }
 
 .team-name {
-font-size: 13px;
-font-weight: 700;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .vs-block {
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 3px;
-flex-shrink: 0;
-width: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  width: 56px;
 }
 
 .vs-score {
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 18px;
-font-weight: 500;
-color: var(–text);
-letter-spacing: 2px;
-line-height: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 2px;
+  line-height: 1;
 }
 
 .vs-label {
-font-size: 9px;
-font-weight: 600;
-letter-spacing: 0.1em;
-text-transform: uppercase;
-color: var(–muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
-.vs-label.live-lbl { color: var(–green); animation: pulse-live 1.5s infinite; }
-.vs-label.ft-lbl   { color: var(–muted); }
-.vs-label.pre-lbl  { color: var(–accent); }
+.vs-label.live-lbl { color: var(--green); animation: pulse-live 1.5s infinite; }
+.vs-label.ft-lbl   { color: var(--muted); }
+.vs-label.pre-lbl  { color: var(--accent); }
 
 @keyframes pulse-live { 0%,100%{opacity:1} 50%{opacity:.5} }
 
 .game-meta-right {
-display: flex;
-flex-direction: column;
-align-items: flex-end;
-gap: 5px;
-flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  flex-shrink: 0;
 }
 
 .league-tag {
-font-size: 9px;
-font-weight: 700;
-letter-spacing: 0.08em;
-text-transform: uppercase;
-padding: 2px 8px;
-border-radius: 3px;
-background: rgba(232,255,71,.1);
-color: var(–accent);
-border: 1px solid rgba(232,255,71,.2);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(232,255,71,.1);
+  color: var(--accent);
+  border: 1px solid rgba(232,255,71,.2);
 }
 
 .game-time {
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 10px;
-color: var(–muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
 }
 
 /* ── CONTENT PANEL ── */
 .game-content-panel {
-padding: 14px 16px;
-display: flex;
-flex-direction: column;
-gap: 10px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .content-tabs {
-display: flex;
-gap: 4px;
-border-bottom: 1px solid var(–border);
-padding-bottom: 10px;
-margin-bottom: 4px;
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+  margin-bottom: 4px;
 }
 
 .ctab {
-font-size: 10px;
-font-weight: 700;
-letter-spacing: 0.06em;
-text-transform: uppercase;
-padding: 4px 12px;
-border-radius: 4px;
-cursor: pointer;
-color: var(–muted);
-border: 1px solid transparent;
-background: none;
-font-family: ‘Syne’, sans-serif;
-transition: all .12s;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--muted);
+  border: 1px solid transparent;
+  background: none;
+  font-family: 'Syne', sans-serif;
+  transition: all .12s;
 }
-.ctab.active { background: var(–s3); border-color: var(–border2); color: var(–text); }
-.ctab:hover:not(.active) { color: var(–muted2); }
+.ctab.active { background: var(--s3); border-color: var(--border2); color: var(--text); }
+.ctab:hover:not(.active) { color: var(--muted2); }
 
 .content-area { min-height: 100px; position: relative; }
 
 .content-text {
-font-size: 12px;
-color: var(–muted2);
-line-height: 1.7;
-font-family: ‘JetBrains Mono’, monospace;
-font-weight: 300;
-white-space: pre-wrap;
-word-break: break-word;
+  font-size: 12px;
+  color: var(--muted2);
+  line-height: 1.7;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .content-empty {
-display: flex;
-align-items: center;
-justify-content: center;
-height: 80px;
-color: var(–muted);
-font-size: 11px;
-font-style: italic;
-letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  color: var(--muted);
+  font-size: 11px;
+  font-style: italic;
+  letter-spacing: 0.04em;
 }
 
 .content-actions {
-display: flex;
-gap: 8px;
-flex-wrap: wrap;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 /* ── FIX #2: Missing iframe input styles ── */
 .iframe-row {
-display: flex;
-flex-direction: column;
-gap: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .iframe-label {
-font-size: 10px;
-color: var(–muted);
-font-weight: 600;
-letter-spacing: 0.04em;
-display: flex;
-align-items: center;
-gap: 6px;
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 /* ── FIX #3: badge-tip (was .highlight-badge in CSS but .badge-tip in JS) ── */
 .badge-tip {
-font-size: 9px;
-font-weight: 700;
-letter-spacing: 0.06em;
-text-transform: uppercase;
-padding: 2px 6px;
-border-radius: 3px;
-background: rgba(0,212,255,.1);
-color: var(–accent2);
-border: 1px solid rgba(0,212,255,.2);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(0,212,255,.1);
+  color: var(--accent2);
+  border: 1px solid rgba(0,212,255,.2);
 }
 
 .iframe-input {
-background: var(–s2);
-border: 1px solid var(–border);
-color: var(–text);
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 10px;
-padding: 8px 10px;
-border-radius: var(–r);
-width: 100%;
-outline: none;
-resize: vertical;
-transition: border-color .15s;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 8px 10px;
+  border-radius: var(--r);
+  width: 100%;
+  outline: none;
+  resize: vertical;
+  transition: border-color .15s;
 }
-.iframe-input:focus { border-color: var(–accent2); }
-.iframe-input::placeholder { color: var(–muted); }
+.iframe-input:focus { border-color: var(--accent2); }
+.iframe-input::placeholder { color: var(--muted); }
 
 /* ── STATUS BADGE ── */
 .post-status {
-display: inline-flex;
-align-items: center;
-gap: 5px;
-font-size: 9px;
-font-weight: 700;
-letter-spacing: 0.08em;
-text-transform: uppercase;
-padding: 3px 9px;
-border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
 }
-.post-status.draft   { background: rgba(255,165,2,.1);  color: var(–orange); border: 1px solid rgba(255,165,2,.3); }
-.post-status.posted  { background: rgba(46,213,115,.1); color: var(–green);  border: 1px solid rgba(46,213,115,.3); }
-.post-status.updated { background: rgba(0,212,255,.1);  color: var(–accent2);border: 1px solid rgba(0,212,255,.3); }
-.post-status.idle    { background: var(–s3); color: var(–muted); border: 1px solid var(–border); }
+.post-status.draft   { background: rgba(255,165,2,.1);  color: var(--orange); border: 1px solid rgba(255,165,2,.3); }
+.post-status.posted  { background: rgba(46,213,115,.1); color: var(--green);  border: 1px solid rgba(46,213,115,.3); }
+.post-status.updated { background: rgba(0,212,255,.1);  color: var(--accent2);border: 1px solid rgba(0,212,255,.3); }
+.post-status.idle    { background: var(--s3); color: var(--muted); border: 1px solid var(--border); }
 
 /* ── LOG ── */
 .log-panel {
-background: var(–s2);
-border: 1px solid var(–border);
-border-radius: var(–r);
-padding: 12px 14px;
-max-height: 160px;
-overflow-y: auto;
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 10px;
-line-height: 1.8;
-color: var(–muted);
-scrollbar-width: thin;
-scrollbar-color: var(–border2) transparent;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  max-height: 160px;
+  overflow-y: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  line-height: 1.8;
+  color: var(--muted);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
 }
 
 .log-line { display: flex; gap: 10px; }
-.log-line .ts  { color: var(–muted); flex-shrink: 0; }
-.log-line.info .msg { color: var(–muted2); }
-.log-line.ok   .msg { color: var(–green); }
-.log-line.err  .msg { color: var(–red); }
-.log-line.ai   .msg { color: var(–accent2); }
+.log-line .ts  { color: var(--muted); flex-shrink: 0; }
+.log-line.info .msg { color: var(--muted2); }
+.log-line.ok   .msg { color: var(--green); }
+.log-line.err  .msg { color: var(--red); }
+.log-line.ai   .msg { color: var(--accent2); }
 
 /* ── EMPTY STATE ── */
 .empty-state {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-padding: 80px 20px;
-color: var(–muted);
-text-align: center;
-gap: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: var(--muted);
+  text-align: center;
+  gap: 12px;
 }
 .empty-state .icon { font-size: 48px; opacity: .4; }
-.empty-state h3 { font-size: 16px; font-weight: 700; color: var(–muted2); }
+.empty-state h3 { font-size: 16px; font-weight: 700; color: var(--muted2); }
 .empty-state p  { font-size: 12px; max-width: 340px; line-height: 1.6; }
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(–border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
-.layout { grid-template-columns: 1fr; }
-.sidebar { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(–border); }
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
 }
 
 /* ── TOAST ── */
 .toast {
-position: fixed;
-bottom: 24px; right: 24px;
-background: var(–s3);
-border: 1px solid var(–border2);
-border-radius: var(–r2);
-padding: 12px 18px;
-font-size: 12px;
-font-weight: 600;
-z-index: 999;
-transform: translateY(80px);
-opacity: 0;
-transition: all .3s cubic-bezier(.34,1.56,.64,1);
-max-width: 320px;
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: var(--s3);
+  border: 1px solid var(--border2);
+  border-radius: var(--r2);
+  padding: 12px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  max-width: 320px;
 }
 .toast.show { transform: translateY(0); opacity: 1; }
-.toast.ok  { border-color: rgba(46,213,115,.5); color: var(–green); }
-.toast.err { border-color: rgba(255,71,87,.5);  color: var(–red); }
+.toast.ok  { border-color: rgba(46,213,115,.5); color: var(--green); }
+.toast.err { border-color: rgba(255,71,87,.5);  color: var(--red); }
 
 /* ── DIVIDER ── */
-.divider { height: 1px; background: var(–border); margin: 4px 0; }
+.divider { height: 1px; background: var(--border); margin: 4px 0; }
 
 .settings-note {
-font-size: 10px;
-color: var(–muted);
-line-height: 1.6;
-background: var(–s2);
-border: 1px solid var(–border);
-border-radius: var(–r);
-padding: 10px 12px;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 10px 12px;
 }
-.settings-note a { color: var(–accent2); }
+.settings-note a { color: var(--accent2); }
 
 /* ── FIX #4: Google sign-in button ── */
 .google-signin-btn {
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 10px;
-width: 100%;
-background: #fff;
-color: #3c3c3c;
-border: none;
-border-radius: var(–r);
-padding: 10px 16px;
-font-family: ‘Syne’, sans-serif;
-font-size: 12px;
-font-weight: 700;
-cursor: pointer;
-transition: background .15s, box-shadow .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background: #fff;
+  color: #3c3c3c;
+  border: none;
+  border-radius: var(--r);
+  padding: 10px 16px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s, box-shadow .15s;
 }
 .google-signin-btn:hover { background: #f0f0f0; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
 .google-signin-btn img { width: 18px; height: 18px; }
 
 /* ── FIX #5: Signed-in block — hidden by default, shown via .visible ── */
 .signed-in-block {
-display: none;
-flex-direction: column;
-gap: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
 }
 .signed-in-block.visible { display: flex; }
 
 .user-info-row {
-display: flex;
-align-items: center;
-gap: 10px;
-background: var(–s2);
-border: 1px solid var(–border);
-border-radius: var(–r);
-padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 10px 12px;
 }
 
 .user-avatar {
-width: 32px; height: 32px;
-border-radius: 50%;
-object-fit: cover;
-flex-shrink: 0;
-border: 1px solid var(–border2);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--border2);
 }
 
 .user-name {
-font-size: 12px;
-font-weight: 700;
-color: var(–text);
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-email {
-font-size: 10px;
-color: var(–muted);
-font-family: ‘JetBrains Mono’, monospace;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
+  font-size: 10px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .signout-btn {
-margin-left: auto;
-flex-shrink: 0;
-background: rgba(255,71,87,.1);
-color: var(–red);
-border: 1px solid rgba(255,71,87,.25);
-border-radius: 6px;
-padding: 4px 10px;
-font-family: ‘Syne’, sans-serif;
-font-size: 10px;
-font-weight: 700;
-cursor: pointer;
-transition: background .15s;
+  margin-left: auto;
+  flex-shrink: 0;
+  background: rgba(255,71,87,.1);
+  color: var(--red);
+  border: 1px solid rgba(255,71,87,.25);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s;
 }
 .signout-btn:hover { background: rgba(255,71,87,.2); }
 
 /* keep .highlight-badge too for any other references */
 .highlight-badge {
-font-size: 9px;
-font-weight: 700;
-letter-spacing: 0.06em;
-text-transform: uppercase;
-padding: 2px 6px;
-border-radius: 3px;
-background: rgba(0,212,255,.1);
-color: var(–accent2);
-border: 1px solid rgba(0,212,255,.2);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(0,212,255,.1);
+  color: var(--accent2);
+  border: 1px solid rgba(0,212,255,.2);
 }
 </style>
-
 </head>
 <body>
 
 <!-- TOPBAR -->
-
 <div class="topbar">
   <div class="topbar-logo">
     <span class="badge">S803</span>
@@ -754,108 +751,104 @@ border: 1px solid rgba(0,212,255,.2);
 <div class="layout">
 
   <!-- SIDEBAR -->
-
   <aside class="sidebar">
 
-```
-<!-- BLOGGER CONNECTION -->
-<div class="sidebar-section">
-  <div class="section-label">&#x1F510; Blogger Connection</div>
+    <!-- BLOGGER CONNECTION -->
+    <div class="sidebar-section">
+      <div class="section-label">&#x1F510; Blogger Connection</div>
 
-  <!-- NOT signed in -->
-  <div id="signin-block">
-    <button class="google-signin-btn" onclick="signInWithGoogle()">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-      Sign in with Google
-    </button>
-    <div class="settings-note" style="margin-top:8px;">
-      Sign in with the Google account that <strong>owns</strong> your Sports 803 Blogger blog.
-      No passwords stored &#x2014; uses secure Google OAuth.
-    </div>
-  </div>
-
-  <!-- Signed in -->
-  <div class="signed-in-block" id="signedin-block">
-    <div class="user-info-row">
-      <img class="user-avatar" id="user-avatar" src="" alt="" style="display:none;">
-      <div style="flex:1;min-width:0;">
-        <div class="user-name" id="user-name"></div>
-        <div class="user-email" id="user-email"></div>
+      <!-- NOT signed in -->
+      <div id="signin-block">
+        <button class="google-signin-btn" onclick="signInWithGoogle()">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+          Sign in with Google
+        </button>
+        <div class="settings-note" style="margin-top:8px;">
+          Sign in with the Google account that <strong>owns</strong> your Sports 803 Blogger blog.
+          No passwords stored &#x2014; uses secure Google OAuth.
+        </div>
       </div>
-      <button class="signout-btn" onclick="signOut()">Sign out</button>
+
+      <!-- Signed in -->
+      <div class="signed-in-block" id="signedin-block">
+        <div class="user-info-row">
+          <img class="user-avatar" id="user-avatar" src="" alt="" style="display:none;">
+          <div style="flex:1;min-width:0;">
+            <div class="user-name" id="user-name"></div>
+            <div class="user-email" id="user-email"></div>
+          </div>
+          <button class="signout-btn" onclick="signOut()">Sign out</button>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Blog ID</label>
+          <input type="text" id="blog-id" placeholder="3020785713747810415"/>
+        </div>
+        <button class="btn btn-secondary btn-full" onclick="saveConfig()">
+          <span class="btn-text">&#x1F4BE; Save Blog ID</span>
+        </button>
+        <div class="settings-note">
+          Your Blog ID is the number in your Blogger dashboard URL.<br>
+          e.g. <strong>3020785713747810415</strong>
+        </div>
+      </div>
     </div>
-    <div class="input-group">
-      <label class="input-label">Blog ID</label>
-      <input type="text" id="blog-id" placeholder="3020785713747810415"/>
+
+    <div class="divider"></div>
+
+    <!-- LEAGUES -->
+    <div class="sidebar-section">
+      <div class="section-label">&#x26BD; Leagues to Monitor</div>
+      <div class="leagues-grid" id="leagues-grid"></div>
     </div>
-    <button class="btn btn-secondary btn-full" onclick="saveConfig()">
-      <span class="btn-text">&#x1F4BE; Save Blog ID</span>
-    </button>
-    <div class="settings-note">
-      Your Blog ID is the number in your Blogger dashboard URL.<br>
-      e.g. <strong>3020785713747810415</strong>
+
+    <div class="divider"></div>
+
+    <!-- POST SETTINGS -->
+    <div class="sidebar-section">
+      <div class="section-label">&#x2699;&#xFE0F; Post Settings</div>
+      <div class="input-group">
+        <label class="input-label">Post Language</label>
+        <select id="post-lang">
+          <option value="English">English</option>
+          <option value="Spanish">Spanish</option>
+          <option value="French">French</option>
+          <option value="Arabic">Arabic</option>
+          <option value="Portuguese">Portuguese</option>
+          <option value="German">German</option>
+          <option value="Italian">Italian</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Writing Style</label>
+        <select id="post-style">
+          <option value="energetic and engaging">&#x26A1; Energetic &amp; Engaging</option>
+          <option value="professional journalist">&#x1F4F0; Professional Journalist</option>
+          <option value="casual and fun">&#x1F604; Casual &amp; Fun</option>
+          <option value="analytical and tactical">&#x1F3AF; Analytical &amp; Tactical</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label class="input-label">Publish Mode</label>
+        <select id="publish-mode">
+          <option value="DRAFT">Draft (review first)</option>
+          <option value="LIVE">Live (auto-publish)</option>
+        </select>
+      </div>
     </div>
-  </div>
-</div>
 
-<div class="divider"></div>
+    <div class="divider"></div>
 
-<!-- LEAGUES -->
-<div class="sidebar-section">
-  <div class="section-label">&#x26BD; Leagues to Monitor</div>
-  <div class="leagues-grid" id="leagues-grid"></div>
-</div>
-
-<div class="divider"></div>
-
-<!-- POST SETTINGS -->
-<div class="sidebar-section">
-  <div class="section-label">&#x2699;&#xFE0F; Post Settings</div>
-  <div class="input-group">
-    <label class="input-label">Post Language</label>
-    <select id="post-lang">
-      <option value="English">English</option>
-      <option value="Spanish">Spanish</option>
-      <option value="French">French</option>
-      <option value="Arabic">Arabic</option>
-      <option value="Portuguese">Portuguese</option>
-      <option value="German">German</option>
-      <option value="Italian">Italian</option>
-    </select>
-  </div>
-  <div class="input-group">
-    <label class="input-label">Writing Style</label>
-    <select id="post-style">
-      <option value="energetic and engaging">&#x26A1; Energetic &amp; Engaging</option>
-      <option value="professional journalist">&#x1F4F0; Professional Journalist</option>
-      <option value="casual and fun">&#x1F604; Casual &amp; Fun</option>
-      <option value="analytical and tactical">&#x1F3AF; Analytical &amp; Tactical</option>
-    </select>
-  </div>
-  <div class="input-group">
-    <label class="input-label">Publish Mode</label>
-    <select id="publish-mode">
-      <option value="DRAFT">Draft (review first)</option>
-      <option value="LIVE">Live (auto-publish)</option>
-    </select>
-  </div>
-</div>
-
-<div class="divider"></div>
-
-<!-- LOG -->
-<div class="sidebar-section">
-  <div class="section-label">&#x1F4CB; Activity Log</div>
-  <div class="log-panel" id="log-panel">
-    <div class="log-line info"><span class="ts">--:--</span><span class="msg">Dashboard ready.</span></div>
-  </div>
-</div>
-```
+    <!-- LOG -->
+    <div class="sidebar-section">
+      <div class="section-label">&#x1F4CB; Activity Log</div>
+      <div class="log-panel" id="log-panel">
+        <div class="log-line info"><span class="ts">--:--</span><span class="msg">Dashboard ready.</span></div>
+      </div>
+    </div>
 
   </aside>
 
   <!-- MAIN -->
-
   <main class="main">
     <div class="main-header">
       <div>
@@ -874,21 +867,17 @@ border: 1px solid rgba(0,212,255,.2);
       </div>
     </div>
 
-```
-<div id="games-container">
-  <div class="empty-state">
-    <div class="icon">&#x1F4E1;</div>
-    <h3>No games loaded yet</h3>
-    <p>Configure your API keys, select leagues and click <strong>Scan Leagues</strong> to detect today's matches and generate AI content automatically.</p>
-  </div>
-</div>
-```
-
+    <div id="games-container">
+      <div class="empty-state">
+        <div class="icon">&#x1F4E1;</div>
+        <h3>No games loaded yet</h3>
+        <p>Configure your API keys, select leagues and click <strong>Scan Leagues</strong> to detect today's matches and generate AI content automatically.</p>
+      </div>
+    </div>
   </main>
 </div>
 
 <!-- TOAST -->
-
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1381,162 +1370,158 @@ function renderGames() {
         + '<div class="iframe-row">'
           + '<div class="iframe-label">&#x1F4FA; Stream URL (iframe src) <span class="badge-tip">OPTIONAL</span></div>'
           + '<textarea class="iframe-input" id="iframe-src-' + idx + '" rows="2" placeholder="Paste the src= URL of your iframe here e.g. https://soulmap1.blogspot.com/p/media-player.html?mora=https://...m3u8"></textarea>'
-
-```
-    + '</div>'
-    + '<div class="content-actions">'
-      + '<button class="btn btn-secondary" onclick="regenPreview(' + idx + ')"><span class="btn-text">\u{1F504} Regen</span><div class="spin"></div></button>'
-      + highlightBtns
-      + '<button class="btn btn-primary" onclick="postToBlogger(' + idx + ',\'preview\')" ' + postPreviewDisabled + '><span class="btn-text">\u{1F4E4} Post Preview</span><div class="spin"></div></button>'
-    + '</div>'
-  + '</div>'
-+ '</div>';
-```
-
-}
-container.innerHTML = html;
+        + '</div>'
+        + '<div class="content-actions">'
+          + '<button class="btn btn-secondary" onclick="regenPreview(' + idx + ')"><span class="btn-text">\u{1F504} Regen</span><div class="spin"></div></button>'
+          + highlightBtns
+          + '<button class="btn btn-primary" onclick="postToBlogger(' + idx + ',\'preview\')" ' + postPreviewDisabled + '><span class="btn-text">\u{1F4E4} Post Preview</span><div class="spin"></div></button>'
+        + '</div>'
+      + '</div>'
+    + '</div>';
+  }
+  container.innerHTML = html;
 }
 
 function switchTab(idx, tab, el) {
-document.getElementById(‘tab-pre-’ + idx).classList.toggle(‘active’, tab === ‘preview’);
-document.getElementById(‘tab-hl-’  + idx).classList.toggle(‘active’, tab === ‘highlights’);
-document.getElementById(‘text-preview-’    + idx).style.display = tab === ‘preview’    ? ‘block’ : ‘none’;
-document.getElementById(‘text-highlights-’ + idx).style.display = tab === ‘highlights’ ? ‘block’ : ‘none’;
+  document.getElementById('tab-pre-' + idx).classList.toggle('active', tab === 'preview');
+  document.getElementById('tab-hl-'  + idx).classList.toggle('active', tab === 'highlights');
+  document.getElementById('text-preview-'    + idx).style.display = tab === 'preview'    ? 'block' : 'none';
+  document.getElementById('text-highlights-' + idx).style.display = tab === 'highlights' ? 'block' : 'none';
 }
 
 // ─── CONTENT PHRASES ───────────────────────────────────────────────────────
 var PREVIEW_PHRASES = [
-“This is set to be a thrilling encounter as both sides go head to head in an exciting”,
-“Football fans are in for a treat as two top-flight clubs clash in what promises to be a compelling”,
-“All eyes are on this fixture as both managers prepare their squads for a crucial”,
-“Expect fireworks as these two sides renew their rivalry in a high-stakes”,
-“Supporters will be glued to their screens for this highly anticipated”,
+  "This is set to be a thrilling encounter as both sides go head to head in an exciting",
+  "Football fans are in for a treat as two top-flight clubs clash in what promises to be a compelling",
+  "All eyes are on this fixture as both managers prepare their squads for a crucial",
+  "Expect fireworks as these two sides renew their rivalry in a high-stakes",
+  "Supporters will be glued to their screens for this highly anticipated",
 ];
 var FORM_PHRASES = [
-“Both teams arrive in good form, having picked up positive results in their recent outings.”,
-“Recent league form suggests this could be evenly contested, with neither side having a clear edge.”,
-“Head-to-head records show this fixture typically produces goals and drama in equal measure.”,
-“Momentum is firmly on one side heading into this contest following a run of impressive performances.”,
-“Key injuries and suspensions could play a decisive role in shaping the outcome of this fixture.”,
+  "Both teams arrive in good form, having picked up positive results in their recent outings.",
+  "Recent league form suggests this could be evenly contested, with neither side having a clear edge.",
+  "Head-to-head records show this fixture typically produces goals and drama in equal measure.",
+  "Momentum is firmly on one side heading into this contest following a run of impressive performances.",
+  "Key injuries and suspensions could play a decisive role in shaping the outcome of this fixture.",
 ];
 var PLAYER_PHRASES = [
-“All eyes will be on the attacking players who have been in devastating form this season.”,
-“The midfield battle could prove decisive, with creative players on both sides capable of turning the game.”,
-“Set pieces and dead-ball situations are likely to play a role, with both teams possessing aerial threats.”,
-“The defensive units will be tested by pacey forwards looking to exploit space behind the backline.”,
-“Experienced campaigners in both squads will be eager to stamp their authority on this fixture.”,
+  "All eyes will be on the attacking players who have been in devastating form this season.",
+  "The midfield battle could prove decisive, with creative players on both sides capable of turning the game.",
+  "Set pieces and dead-ball situations are likely to play a role, with both teams possessing aerial threats.",
+  "The defensive units will be tested by pacey forwards looking to exploit space behind the backline.",
+  "Experienced campaigners in both squads will be eager to stamp their authority on this fixture.",
 ];
 var CTA_PHRASES = [
-“Watch the full live stream free on Sports 803 \u2014 no subscription required, no hidden fees.”,
-“Stream every kick free on Sports 803, your go-to destination for live sports online.”,
-“Don’t miss a single minute \u2014 catch the free live stream exclusively on Sports 803.”,
-“Follow every tackle, goal, and moment of magic live and free on Sports 803.”,
-“Tune in free on Sports 803 and enjoy the action from wherever you are.”,
+  "Watch the full live stream free on Sports 803 \u2014 no subscription required, no hidden fees.",
+  "Stream every kick free on Sports 803, your go-to destination for live sports online.",
+  "Don't miss a single minute \u2014 catch the free live stream exclusively on Sports 803.",
+  "Follow every tackle, goal, and moment of magic live and free on Sports 803.",
+  "Tune in free on Sports 803 and enjoy the action from wherever you are.",
 ];
 var HIGHLIGHT_PHRASES = [
-“A dramatic contest delivered plenty of talking points as the final whistle confirmed”,
-“It was an enthralling battle that lived up to its billing and produced an exciting”,
-“Both sets of supporters were treated to a pulsating match that swung back and forth in a”,
-“The game had everything \u2014 goals, tension, and standout performances \u2014 in an unforgettable”,
-“Tactical battles and individual brilliance combined to produce a spectacular result in this”,
+  "A dramatic contest delivered plenty of talking points as the final whistle confirmed",
+  "It was an enthralling battle that lived up to its billing and produced an exciting",
+  "Both sets of supporters were treated to a pulsating match that swung back and forth in a",
+  "The game had everything \u2014 goals, tension, and standout performances \u2014 in an unforgettable",
+  "Tactical battles and individual brilliance combined to produce a spectacular result in this",
 ];
 var HIGHLIGHT_RESULT = [
-“The match statistics tell only part of the story in what was a gripping ninety minutes.”,
-“Goals, controversy, and breathtaking skill made this one of the most memorable fixtures of the season.”,
-“Tactical discipline and clinical finishing were the hallmarks of the winning performance today.”,
-“Both managers will have plenty to reflect on after a contest packed with incident and quality.”,
-“The game unfolded exactly as anticipated, with both teams creating plenty of goalscoring opportunities.”,
+  "The match statistics tell only part of the story in what was a gripping ninety minutes.",
+  "Goals, controversy, and breathtaking skill made this one of the most memorable fixtures of the season.",
+  "Tactical discipline and clinical finishing were the hallmarks of the winning performance today.",
+  "Both managers will have plenty to reflect on after a contest packed with incident and quality.",
+  "The game unfolded exactly as anticipated, with both teams creating plenty of goalscoring opportunities.",
 ];
 var HIGHLIGHT_CTA = [
-“Relive all the goals and highlights free on Sports 803 \u2014 full match replay now available.”,
-“Watch the extended highlights and full match replay free on Sports 803 anytime.”,
-“Sports 803 has your full match replay and extended highlights \u2014 stream free now.”,
-“Catch every goal and key moment again in the free full match replay on Sports 803.”,
-“The full match and highlights are waiting for you \u2014 watch free on Sports 803.”,
+  "Relive all the goals and highlights free on Sports 803 \u2014 full match replay now available.",
+  "Watch the extended highlights and full match replay free on Sports 803 anytime.",
+  "Sports 803 has your full match replay and extended highlights \u2014 stream free now.",
+  "Catch every goal and key moment again in the free full match replay on Sports 803.",
+  "The full match and highlights are waiting for you \u2014 watch free on Sports 803.",
 ];
 
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function generatePreviewText(homeName, awayName, leagueName, venue, dateStr) {
-var sep      = Math.random() > 0.5 ? ’ vs ’ : ’ x ‘;
-var venueTxt = venue   ? ’ at ’ + venue   : ‘’;
-var dateTxt  = dateStr ? ’ on ’ + dateStr : ’ today’;
-var p1 = pick(PREVIEW_PHRASES) + ’ ’ + leagueName + ’ clash. ’
-+ homeName + sep + awayName + venueTxt + dateTxt
-+ ’ \u2014 watch the free live stream on Sports 803.’;
-var p2 = pick(FORM_PHRASES) + ’ ’ + pick(PLAYER_PHRASES);
-var p3 = pick(CTA_PHRASES);
-var text = p1 + ‘\n\n’ + p2 + ‘\n\n’ + p3;
-return text.length > 580 ? text.slice(0, 577) + ‘\u2026’ : text;
+  var sep      = Math.random() > 0.5 ? ' vs ' : ' x ';
+  var venueTxt = venue   ? ' at ' + venue   : '';
+  var dateTxt  = dateStr ? ' on ' + dateStr : ' today';
+  var p1 = pick(PREVIEW_PHRASES) + ' ' + leagueName + ' clash. '
+         + homeName + sep + awayName + venueTxt + dateTxt
+         + ' \u2014 watch the free live stream on Sports 803.';
+  var p2 = pick(FORM_PHRASES) + ' ' + pick(PLAYER_PHRASES);
+  var p3 = pick(CTA_PHRASES);
+  var text = p1 + '\n\n' + p2 + '\n\n' + p3;
+  return text.length > 580 ? text.slice(0, 577) + '\u2026' : text;
 }
 
 function generateHighlightText(homeName, awayName, homeScore, awayScore, leagueName, headlines) {
-var scoreLine = homeName + ’ ’ + homeScore + ‘-’ + awayScore + ’ ’ + awayName;
-var hScore    = parseInt(homeScore, 10);
-var aScore    = parseInt(awayScore, 10);
-var winner    = hScore > aScore ? homeName : aScore > hScore ? awayName : null;
-var p1 = scoreLine + ’ \u2014 ’ + pick(HIGHLIGHT_PHRASES) + ’ ’ + leagueName + ’ fixture. ’ + (headlines || ‘’);
-var p2 = pick(HIGHLIGHT_RESULT) + ’ ’ + (winner ? winner + ’ showed tremendous quality to secure the three points.’ : ‘Honours were shared after a hard-fought draw.’);
-var p3 = pick(HIGHLIGHT_CTA);
-var text = p1 + ‘\n\n’ + p2.trim() + ‘\n\n’ + p3;
-return text.length > 580 ? text.slice(0, 577) + ‘\u2026’ : text;
+  var scoreLine = homeName + ' ' + homeScore + '-' + awayScore + ' ' + awayName;
+  var hScore    = parseInt(homeScore, 10);
+  var aScore    = parseInt(awayScore, 10);
+  var winner    = hScore > aScore ? homeName : aScore > hScore ? awayName : null;
+  var p1 = scoreLine + ' \u2014 ' + pick(HIGHLIGHT_PHRASES) + ' ' + leagueName + ' fixture. ' + (headlines || '');
+  var p2 = pick(HIGHLIGHT_RESULT) + ' ' + (winner ? winner + ' showed tremendous quality to secure the three points.' : 'Honours were shared after a hard-fought draw.');
+  var p3 = pick(HIGHLIGHT_CTA);
+  var text = p1 + '\n\n' + p2.trim() + '\n\n' + p3;
+  return text.length > 580 ? text.slice(0, 577) + '\u2026' : text;
 }
 
 // ─── CONTENT GENERATORS ────────────────────────────────────────────────────
 async function generatePreviewContent(idx) {
-var gd      = detectedGames[idx];
-if (!gd) return;
-var c       = getCompetitors(gd);
-var venue   = (gd.espnEvent.competitions && gd.espnEvent.competitions[0] && gd.espnEvent.competitions[0].venue && gd.espnEvent.competitions[0].venue.fullName) || ‘’;
-var rawDate = gd.espnEvent.date ? new Date(gd.espnEvent.date) : null;
-var dateStr = rawDate ? rawDate.toLocaleDateString(‘en-US’, { weekday:‘short’, month:‘short’, day:‘numeric’ }) : ‘’;
-var homeName = (c.home.team && c.home.team.displayName) || ‘?’;
-var awayName = (c.away.team && c.away.team.displayName) || ‘?’;
+  var gd      = detectedGames[idx];
+  if (!gd) return;
+  var c       = getCompetitors(gd);
+  var venue   = (gd.espnEvent.competitions && gd.espnEvent.competitions[0] && gd.espnEvent.competitions[0].venue && gd.espnEvent.competitions[0].venue.fullName) || '';
+  var rawDate = gd.espnEvent.date ? new Date(gd.espnEvent.date) : null;
+  var dateStr = rawDate ? rawDate.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }) : '';
+  var homeName = (c.home.team && c.home.team.displayName) || '?';
+  var awayName = (c.away.team && c.away.team.displayName) || '?';
 
-var thumb = await generateMatchThumbnail(gd);
-gd.thumbUrl = thumb;
+  var thumb = await generateMatchThumbnail(gd);
+  gd.thumbUrl = thumb;
 
-var text = generatePreviewText(homeName, awayName, gd.league.name, venue, dateStr);
-gd.preContent = text;
+  var text = generatePreviewText(homeName, awayName, gd.league.name, venue, dateStr);
+  gd.preContent = text;
 
-var el = document.getElementById(‘text-preview-’ + idx);
-if (el) el.innerHTML = ‘<div class="content-text">’ + escHtml(text) + ‘</div>’;
+  var el = document.getElementById('text-preview-' + idx);
+  if (el) el.innerHTML = '<div class="content-text">' + escHtml(text) + '</div>';
 
-var btn = document.querySelector(’#card-’ + idx + ’ [onclick*=“postToBlogger”][onclick*=“preview”]’);
-if (btn) btn.removeAttribute(‘disabled’);
-log(‘ok’, ’\u2713 Content ready: ’ + homeName + ’ vs ’ + awayName);
+  var btn = document.querySelector('#card-' + idx + ' [onclick*="postToBlogger"][onclick*="preview"]');
+  if (btn) btn.removeAttribute('disabled');
+  log('ok', '\u2713 Content ready: ' + homeName + ' vs ' + awayName);
 }
 
 async function generateHighlightContent(idx) {
-var gd = detectedGames[idx];
-if (!gd) return;
-var c        = getCompetitors(gd);
-var score    = getScore(gd);
-var homeName = (c.home.team && c.home.team.displayName) || ‘?’;
-var awayName = (c.away.team && c.away.team.displayName) || ‘?’;
-var headlines = (gd.espnEvent.competitions && gd.espnEvent.competitions[0] && gd.espnEvent.competitions[0].headlines && gd.espnEvent.competitions[0].headlines[0] && gd.espnEvent.competitions[0].headlines[0].description) || ‘’;
+  var gd = detectedGames[idx];
+  if (!gd) return;
+  var c        = getCompetitors(gd);
+  var score    = getScore(gd);
+  var homeName = (c.home.team && c.home.team.displayName) || '?';
+  var awayName = (c.away.team && c.away.team.displayName) || '?';
+  var headlines = (gd.espnEvent.competitions && gd.espnEvent.competitions[0] && gd.espnEvent.competitions[0].headlines && gd.espnEvent.competitions[0].headlines[0] && gd.espnEvent.competitions[0].headlines[0].description) || '';
 
-var text = generateHighlightText(homeName, awayName, score.home, score.away, gd.league.name, headlines);
-gd.highlightContent = text;
+  var text = generateHighlightText(homeName, awayName, score.home, score.away, gd.league.name, headlines);
+  gd.highlightContent = text;
 
-var el = document.getElementById(‘text-highlights-’ + idx);
-if (el) el.innerHTML = ‘<div class="content-text">’ + escHtml(text) + ‘</div>’;
-log(‘ok’, ’\u2713 Highlights ready: ’ + homeName + ’ vs ’ + awayName);
-renderGames();
+  var el = document.getElementById('text-highlights-' + idx);
+  if (el) el.innerHTML = '<div class="content-text">' + escHtml(text) + '</div>';
+  log('ok', '\u2713 Highlights ready: ' + homeName + ' vs ' + awayName);
+  renderGames();
 }
 
 async function regenPreview(idx) {
-detectedGames[idx].preContent = null;
-var el = document.getElementById(‘text-preview-’ + idx);
-if (el) el.innerHTML = ‘<div class="content-empty">\u23F3 Regenerating\u2026</div>’;
-await generatePreviewContent(idx);
+  detectedGames[idx].preContent = null;
+  var el = document.getElementById('text-preview-' + idx);
+  if (el) el.innerHTML = '<div class="content-empty">\u23F3 Regenerating\u2026</div>';
+  await generatePreviewContent(idx);
 }
 
 async function regenHighlights(idx) {
-detectedGames[idx].highlightContent = null;
-var el = document.getElementById(‘text-highlights-’ + idx);
-if (el) el.innerHTML = ‘<div class="content-empty">\u23F3 Regenerating\u2026</div>’;
-await generateHighlightContent(idx);
+  detectedGames[idx].highlightContent = null;
+  var el = document.getElementById('text-highlights-' + idx);
+  if (el) el.innerHTML = '<div class="content-empty">\u23F3 Regenerating\u2026</div>';
+  await generateHighlightContent(idx);
 }
 
 // ─── THUMBNAIL FETCHER ────────────────────────────────────────────────────
@@ -1547,513 +1532,509 @@ await generateHighlightContent(idx);
 
 // League center badge URLs (PNG, CORS-friendly via Wikimedia)
 var LEAGUE_BADGE = {
-‘soccer/uefa.champions’: ‘https://upload.wikimedia.org/wikipedia/en/thumb/b/bf/UEFA_Champions_League_logo_2.svg/200px-UEFA_Champions_League_logo_2.svg.png’,
-‘soccer/eng.1’:          ‘https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Premier_League_Logo.svg/200px-Premier_League_Logo.svg.png’,
-‘soccer/esp.1’:          ‘https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/LaLiga_2023_Horizontal_Logo.svg/200px-LaLiga_2023_Horizontal_Logo.svg.png’,
-‘soccer/ita.1’:          ‘https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Serie_A_Made_in_Italy_logo.svg/200px-Serie_A_Made_in_Italy_logo.svg.png’,
-‘soccer/ger.1’:          ‘https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Bundesliga_logo_%282017%29.svg/200px-Bundesliga_logo_%282017%29.svg.png’,
-‘soccer/fra.1’:          ‘https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Ligue1_logo_2024.svg/200px-Ligue1_logo_2024.svg.png’,
-‘soccer/uefa.europa’:    ‘https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/UEFA_Europa_League_logo_%282021%E2%80%93%29.svg/200px-UEFA_Europa_League_logo_%282021%E2%80%93%29.svg.png’,
-‘soccer/eng.fa’:         ‘https://upload.wikimedia.org/wikipedia/en/thumb/6/6d/The_FA_Cup.svg/200px-The_FA_Cup.svg.png’,
-‘soccer/usa.1’:          ‘https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Major_League_Soccer_logo.svg/200px-Major_League_Soccer_logo.svg.png’,
-‘soccer/tur.1’:          ‘https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/S%C3%BCper_Lig_logo_%282022%29.svg/200px-S%C3%BCper_Lig_logo_%282022%29.svg.png’,
-‘basketball/nba’:        ‘https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/NBA_logo.svg/200px-NBA_logo.svg.png’,
-‘football/nfl’:          ‘https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/National_Football_League_logo.svg/200px-National_Football_League_logo.svg.png’,
-‘hockey/nhl’:            ‘https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/05_NHL_Shield.svg/200px-05_NHL_Shield.svg.png’,
-‘racing/f1’:             ‘https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/200px-F1.svg.png’,
-‘mma/ufc’:               ‘https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/UFC_Logo.svg/200px-UFC_Logo.svg.png’,
-‘tennis/atp’:            ‘https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/ATP_Tour_logo.svg/200px-ATP_Tour_logo.svg.png’,
+  'soccer/uefa.champions': 'https://upload.wikimedia.org/wikipedia/en/thumb/b/bf/UEFA_Champions_League_logo_2.svg/200px-UEFA_Champions_League_logo_2.svg.png',
+  'soccer/eng.1':          'https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Premier_League_Logo.svg/200px-Premier_League_Logo.svg.png',
+  'soccer/esp.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/LaLiga_2023_Horizontal_Logo.svg/200px-LaLiga_2023_Horizontal_Logo.svg.png',
+  'soccer/ita.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Serie_A_Made_in_Italy_logo.svg/200px-Serie_A_Made_in_Italy_logo.svg.png',
+  'soccer/ger.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Bundesliga_logo_%282017%29.svg/200px-Bundesliga_logo_%282017%29.svg.png',
+  'soccer/fra.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Ligue1_logo_2024.svg/200px-Ligue1_logo_2024.svg.png',
+  'soccer/uefa.europa':    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/UEFA_Europa_League_logo_%282021%E2%80%93%29.svg/200px-UEFA_Europa_League_logo_%282021%E2%80%93%29.svg.png',
+  'soccer/eng.fa':         'https://upload.wikimedia.org/wikipedia/en/thumb/6/6d/The_FA_Cup.svg/200px-The_FA_Cup.svg.png',
+  'soccer/usa.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Major_League_Soccer_logo.svg/200px-Major_League_Soccer_logo.svg.png',
+  'soccer/tur.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/S%C3%BCper_Lig_logo_%282022%29.svg/200px-S%C3%BCper_Lig_logo_%282022%29.svg.png',
+  'basketball/nba':        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/NBA_logo.svg/200px-NBA_logo.svg.png',
+  'football/nfl':          'https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/National_Football_League_logo.svg/200px-National_Football_League_logo.svg.png',
+  'hockey/nhl':            'https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/05_NHL_Shield.svg/200px-05_NHL_Shield.svg.png',
+  'racing/f1':             'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/200px-F1.svg.png',
+  'mma/ufc':               'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/UFC_Logo.svg/200px-UFC_Logo.svg.png',
+  'tennis/atp':            'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/ATP_Tour_logo.svg/200px-ATP_Tour_logo.svg.png',
 };
 
 // Sport-category background colours: [leftHex, rightHex]
 var LEAGUE_COLORS = {
-‘soccer/uefa.champions’: [’#0a1c3e’,’#0f2550’],
-‘soccer/eng.1’:          [’#3d0014’,’#1a003a’],
-‘soccer/esp.1’:          [’#c8002d’,’#003087’],
-‘soccer/ita.1’:          [’#0a2240’,’#008c45’],
-‘soccer/ger.1’:          [’#d20515’,’#1c1c1c’],
-‘soccer/fra.1’:          [’#0a1e5e’,’#1a1a2e’],
-‘soccer/uefa.europa’:    [’#f47920’,’#1a1a2e’],
-‘soccer/eng.fa’:         [’#003090’,’#1a1a2e’],
-‘basketball/nba’:        [’#1d428a’,’#c8102e’],
-‘football/nfl’:          [’#013087’,’#d50a0a’],
-‘hockey/nhl’:            [’#000e62’,’#1a1a1a’],
-‘racing/f1’:             [’#e8002d’,’#1a1a1a’],
-‘mma/ufc’:               [’#d20a11’,’#1a1a1a’],
-‘tennis/atp’:            [’#0d4c92’,’#1a1a2e’],
+  'soccer/uefa.champions': ['#0a1c3e','#0f2550'],
+  'soccer/eng.1':          ['#3d0014','#1a003a'],
+  'soccer/esp.1':          ['#c8002d','#003087'],
+  'soccer/ita.1':          ['#0a2240','#008c45'],
+  'soccer/ger.1':          ['#d20515','#1c1c1c'],
+  'soccer/fra.1':          ['#0a1e5e','#1a1a2e'],
+  'soccer/uefa.europa':    ['#f47920','#1a1a2e'],
+  'soccer/eng.fa':         ['#003090','#1a1a2e'],
+  'basketball/nba':        ['#1d428a','#c8102e'],
+  'football/nfl':          ['#013087','#d50a0a'],
+  'hockey/nhl':            ['#000e62','#1a1a1a'],
+  'racing/f1':             ['#e8002d','#1a1a1a'],
+  'mma/ufc':               ['#d20a11','#1a1a1a'],
+  'tennis/atp':            ['#0d4c92','#1a1a2e'],
 };
 
 // Load an image cross-origin, resolving to null on CORS/network failure
 function loadImageCORS(url) {
-return new Promise(function(resolve) {
-if (!url) { resolve(null); return; }
-var img = new Image();
-img.crossOrigin = ‘anonymous’;
-img.onload  = function() { resolve(img); };
-img.onerror = function() {
-// retry without crossOrigin (renders tainted canvas but we catch that)
-var img2 = new Image();
-img2.onload  = function() { resolve(img2); };
-img2.onerror = function() { resolve(null); };
-img2.src = url;
-};
-img.src = url;
-setTimeout(function() { resolve(null); }, 5000);
-});
+  return new Promise(function(resolve) {
+    if (!url) { resolve(null); return; }
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload  = function() { resolve(img); };
+    img.onerror = function() {
+      // retry without crossOrigin (renders tainted canvas but we catch that)
+      var img2 = new Image();
+      img2.onload  = function() { resolve(img2); };
+      img2.onerror = function() { resolve(null); };
+      img2.src = url;
+    };
+    img.src = url;
+    setTimeout(function() { resolve(null); }, 5000);
+  });
 }
 
 // Draw rounded rectangle helper
 function roundRect(ctx, x, y, w, h, r) {
-ctx.beginPath();
-ctx.moveTo(x + r, y);
-ctx.lineTo(x + w - r, y);
-ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-ctx.lineTo(x + w, y + h - r);
-ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-ctx.lineTo(x + r, y + h);
-ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-ctx.lineTo(x, y + r);
-ctx.quadraticCurveTo(x, y, x + r, y);
-ctx.closePath();
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
 }
 
-// Draw a badge initial circle fallback (when image can’t load)
+// Draw a badge initial circle fallback (when image can't load)
 function drawInitialBadge(ctx, text, x, y, size, bg) {
-ctx.save();
-ctx.beginPath();
-ctx.arc(x, y, size / 2, 0, Math.PI * 2);
-ctx.fillStyle = bg || ‘#1e2740’;
-ctx.fill();
-ctx.strokeStyle = ‘rgba(255,255,255,0.25)’;
-ctx.lineWidth = 2;
-ctx.stroke();
-ctx.fillStyle = ‘#fff’;
-ctx.font = ’bold ’ + Math.round(size * 0.36) + ‘px Syne, Arial, sans-serif’;
-ctx.textAlign = ‘center’;
-ctx.textBaseline = ‘middle’;
-ctx.fillText((text || ‘?’).slice(0, 3).toUpperCase(), x, y);
-ctx.restore();
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+  ctx.fillStyle = bg || '#1e2740';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold ' + Math.round(size * 0.36) + 'px Syne, Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText((text || '?').slice(0, 3).toUpperCase(), x, y);
+  ctx.restore();
 }
 
 // Draw team logo into a circle clip (or fallback initial badge)
 function drawTeamBadge(ctx, img, initials, cx, cy, size) {
-var r = size / 2;
-ctx.save();
-// white circle background
-ctx.beginPath();
-ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
-ctx.fillStyle = ‘rgba(255,255,255,0.08)’;
-ctx.fill();
+  var r = size / 2;
+  ctx.save();
+  // white circle background
+  ctx.beginPath();
+  ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  ctx.fill();
 
-if (img) {
-// circular clip
-ctx.beginPath();
-ctx.arc(cx, cy, r, 0, Math.PI * 2);
-ctx.clip();
-ctx.drawImage(img, cx - r, cy - r, size, size);
-} else {
-drawInitialBadge(ctx, initials, cx, cy, size, ‘#1e2740’);
-}
-ctx.restore();
+  if (img) {
+    // circular clip
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(img, cx - r, cy - r, size, size);
+  } else {
+    drawInitialBadge(ctx, initials, cx, cy, size, '#1e2740');
+  }
+  ctx.restore();
 }
 
 // Sports 803 branding logo — shown small at top-right of every card
-var S803_LOGO_URL = ‘https://blogger.googleusercontent.com/img/a/AVvXsEhkrChEsEMwGBI_ER0QO_kl2NX97p5SBIlSwrZSBP_MTm7Ergzb8yPetLiCBIiCYMB9K3wtEaDIcQVRfrvKKU3KSyHFmLVodd4IyYvtOEtvMkMh11X-iGBQaQmDvpW7g2qwvvjX8tmBrj_NVXldV8Nd-3qzPgp23rh7YdYILdyXGwe210Qw1JofTJM9jAc=s94’;
+var S803_LOGO_URL = 'https://blogger.googleusercontent.com/img/a/AVvXsEhkrChEsEMwGBI_ER0QO_kl2NX97p5SBIlSwrZSBP_MTm7Ergzb8yPetLiCBIiCYMB9K3wtEaDIcQVRfrvKKU3KSyHFmLVodd4IyYvtOEtvMkMh11X-iGBQaQmDvpW7g2qwvvjX8tmBrj_NVXldV8Nd-3qzPgp23rh7YdYILdyXGwe210Qw1JofTJM9jAc=s94';
 
 // Main composite generator — returns a base64 PNG data URL
 async function generateMatchThumbnail(gd) {
-var c        = getCompetitors(gd);
-var homeName = (c.home.team && c.home.team.displayName) || ‘?’;
-var awayName = (c.away.team && c.away.team.displayName) || ‘?’;
-var homeLogo = (c.home.team && c.home.team.logo) || null;
-var awayLogo = (c.away.team && c.away.team.logo) || null;
-var lid      = gd.league.id;
+  var c        = getCompetitors(gd);
+  var homeName = (c.home.team && c.home.team.displayName) || '?';
+  var awayName = (c.away.team && c.away.team.displayName) || '?';
+  var homeLogo = (c.home.team && c.home.team.logo) || null;
+  var awayLogo = (c.away.team && c.away.team.logo) || null;
+  var lid      = gd.league.id;
 
-// If ESPN didn’t give logos, try TheSportsDB for both teams
-if (!homeLogo) {
-try {
-var ctrl1 = new AbortController();
-setTimeout(function(){ ctrl1.abort(); }, 4000);
-var r1 = await fetch(‘https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=’ + encodeURIComponent(homeName), { signal: ctrl1.signal });
-var d1 = await r1.json();
-homeLogo = (d1.teams && d1.teams[0] && d1.teams[0].strTeamBadge) || null;
-} catch(e) {}
-}
-if (!awayLogo) {
-try {
-var ctrl2 = new AbortController();
-setTimeout(function(){ ctrl2.abort(); }, 4000);
-var r2 = await fetch(‘https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=’ + encodeURIComponent(awayName), { signal: ctrl2.signal });
-var d2 = await r2.json();
-awayLogo = (d2.teams && d2.teams[0] && d2.teams[0].strTeamBadge) || null;
-} catch(e) {}
-}
+  // If ESPN didn't give logos, try TheSportsDB for both teams
+  if (!homeLogo) {
+    try {
+      var ctrl1 = new AbortController();
+      setTimeout(function(){ ctrl1.abort(); }, 4000);
+      var r1 = await fetch('https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=' + encodeURIComponent(homeName), { signal: ctrl1.signal });
+      var d1 = await r1.json();
+      homeLogo = (d1.teams && d1.teams[0] && d1.teams[0].strTeamBadge) || null;
+    } catch(e) {}
+  }
+  if (!awayLogo) {
+    try {
+      var ctrl2 = new AbortController();
+      setTimeout(function(){ ctrl2.abort(); }, 4000);
+      var r2 = await fetch('https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=' + encodeURIComponent(awayName), { signal: ctrl2.signal });
+      var d2 = await r2.json();
+      awayLogo = (d2.teams && d2.teams[0] && d2.teams[0].strTeamBadge) || null;
+    } catch(e) {}
+  }
 
-// Load all images in parallel — including S803 logo
-var leagueBadgeUrl = LEAGUE_BADGE[lid] || null;
-var results = await Promise.all([
-loadImageCORS(homeLogo),
-loadImageCORS(awayLogo),
-loadImageCORS(leagueBadgeUrl),
-loadImageCORS(S803_LOGO_URL),
-]);
-var homeImg   = results[0];
-var awayImg   = results[1];
-var leagueImg = results[2];
-var s803Img   = results[3];
+  // Load all images in parallel — including S803 logo
+  var leagueBadgeUrl = LEAGUE_BADGE[lid] || null;
+  var results = await Promise.all([
+    loadImageCORS(homeLogo),
+    loadImageCORS(awayLogo),
+    loadImageCORS(leagueBadgeUrl),
+    loadImageCORS(S803_LOGO_URL),
+  ]);
+  var homeImg   = results[0];
+  var awayImg   = results[1];
+  var leagueImg = results[2];
+  var s803Img   = results[3];
 
-// ── Draw canvas ────────────────────────────────────────────────────────
-var W = 800, H = 420;
-var canvas = document.createElement(‘canvas’);
-canvas.width = W; canvas.height = H;
-var ctx = canvas.getContext(‘2d’);
+  // ── Draw canvas ────────────────────────────────────────────────────────
+  var W = 800, H = 420;
+  var canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  var ctx = canvas.getContext('2d');
 
-var colors  = LEAGUE_COLORS[lid] || [’#0e1520’, ‘#0e1520’];
-var leftCol  = colors[0];
-var rightCol = colors[1];
+  var colors  = LEAGUE_COLORS[lid] || ['#0e1520', '#0e1520'];
+  var leftCol  = colors[0];
+  var rightCol = colors[1];
 
-// Split background
-var gL = ctx.createLinearGradient(0, 0, W / 2, 0);
-gL.addColorStop(0,   leftCol);
-gL.addColorStop(1,   shadeHex(leftCol, -20));
-ctx.fillStyle = gL;
-ctx.fillRect(0, 0, W / 2, H);
+  // Split background
+  var gL = ctx.createLinearGradient(0, 0, W / 2, 0);
+  gL.addColorStop(0,   leftCol);
+  gL.addColorStop(1,   shadeHex(leftCol, -20));
+  ctx.fillStyle = gL;
+  ctx.fillRect(0, 0, W / 2, H);
 
-var gR = ctx.createLinearGradient(W / 2, 0, W, 0);
-gR.addColorStop(0,   shadeHex(rightCol, -20));
-gR.addColorStop(1,   rightCol);
-ctx.fillStyle = gR;
-ctx.fillRect(W / 2, 0, W / 2, H);
+  var gR = ctx.createLinearGradient(W / 2, 0, W, 0);
+  gR.addColorStop(0,   shadeHex(rightCol, -20));
+  gR.addColorStop(1,   rightCol);
+  ctx.fillStyle = gR;
+  ctx.fillRect(W / 2, 0, W / 2, H);
 
-// Diagonal divider overlay
-ctx.save();
-var dg = ctx.createLinearGradient(W/2 - 60, 0, W/2 + 60, 0);
-dg.addColorStop(0,   ‘rgba(0,0,0,0)’);
-dg.addColorStop(0.5, ‘rgba(0,0,0,0.5)’);
-dg.addColorStop(1,   ‘rgba(0,0,0,0)’);
-ctx.fillStyle = dg;
-ctx.fillRect(W/2 - 60, 0, 120, H);
-ctx.restore();
+  // Diagonal divider overlay
+  ctx.save();
+  var dg = ctx.createLinearGradient(W/2 - 60, 0, W/2 + 60, 0);
+  dg.addColorStop(0,   'rgba(0,0,0,0)');
+  dg.addColorStop(0.5, 'rgba(0,0,0,0.5)');
+  dg.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.fillStyle = dg;
+  ctx.fillRect(W/2 - 60, 0, 120, H);
+  ctx.restore();
 
-// Gold diagonal stripe lines (FIFA-card style, like images 1 & 5)
-ctx.save();
-ctx.globalAlpha = 0.07;
-ctx.strokeStyle = ‘#d4af37’;
-ctx.lineWidth = 2;
-for (var i = -8; i < 20; i++) {
-ctx.beginPath();
-ctx.moveTo(i * 50, 0);
-ctx.lineTo(i * 50 + H, H);
-ctx.stroke();
-}
-ctx.globalAlpha = 1;
-ctx.restore();
+  // Gold diagonal stripe lines (FIFA-card style, like images 1 & 5)
+  ctx.save();
+  ctx.globalAlpha = 0.07;
+  ctx.strokeStyle = '#d4af37';
+  ctx.lineWidth = 2;
+  for (var i = -8; i < 20; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i * 50, 0);
+    ctx.lineTo(i * 50 + H, H);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
 
-// Noise grain overlay (subtle)
-ctx.save();
-ctx.globalAlpha = 0.03;
-for (var ny = 0; ny < H; ny += 4) {
-for (var nx = 0; nx < W; nx += 4) {
-if (Math.random() > 0.5) {
-ctx.fillStyle = ‘#fff’;
-ctx.fillRect(nx, ny, 2, 2);
-}
-}
-}
-ctx.globalAlpha = 1;
-ctx.restore();
+  // Noise grain overlay (subtle)
+  ctx.save();
+  ctx.globalAlpha = 0.03;
+  for (var ny = 0; ny < H; ny += 4) {
+    for (var nx = 0; nx < W; nx += 4) {
+      if (Math.random() > 0.5) {
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(nx, ny, 2, 2);
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
 
-// Team badges
-var badgeSize = 160;
-var cy = H / 2 - 20;
-drawTeamBadge(ctx, homeImg, homeName.slice(0,3), W * 0.22, cy, badgeSize);
-drawTeamBadge(ctx, awayImg, awayName.slice(0,3), W * 0.78, cy, badgeSize);
+  // Team badges
+  var badgeSize = 160;
+  var cy = H / 2 - 20;
+  drawTeamBadge(ctx, homeImg, homeName.slice(0,3), W * 0.22, cy, badgeSize);
+  drawTeamBadge(ctx, awayImg, awayName.slice(0,3), W * 0.78, cy, badgeSize);
 
-// Centre league badge in a rounded square (like image 2)
-if (leagueImg) {
-var lSize = 90;
-var lx = W / 2 - lSize / 2;
-var ly = cy - lSize / 2;
-ctx.save();
-roundRect(ctx, lx - 6, ly - 6, lSize + 12, lSize + 12, 14);
-ctx.fillStyle = ‘rgba(0,0,0,0.55)’;
-ctx.fill();
-roundRect(ctx, lx - 6, ly - 6, lSize + 12, lSize + 12, 14);
-ctx.strokeStyle = ‘rgba(255,255,255,0.15)’;
-ctx.lineWidth = 1.5;
-ctx.stroke();
-ctx.beginPath();
-roundRect(ctx, lx, ly, lSize, lSize, 10);
-ctx.clip();
-ctx.drawImage(leagueImg, lx, ly, lSize, lSize);
-ctx.restore();
-} else {
-// VS text fallback
-ctx.save();
-ctx.fillStyle = ‘rgba(255,255,255,0.9)’;
-ctx.font = ‘bold 28px Syne, Arial, sans-serif’;
-ctx.textAlign = ‘center’;
-ctx.textBaseline = ‘middle’;
-ctx.fillText(‘VS’, W / 2, cy);
-ctx.restore();
-}
+  // Centre league badge in a rounded square (like image 2)
+  if (leagueImg) {
+    var lSize = 90;
+    var lx = W / 2 - lSize / 2;
+    var ly = cy - lSize / 2;
+    ctx.save();
+    roundRect(ctx, lx - 6, ly - 6, lSize + 12, lSize + 12, 14);
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fill();
+    roundRect(ctx, lx - 6, ly - 6, lSize + 12, lSize + 12, 14);
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.beginPath();
+    roundRect(ctx, lx, ly, lSize, lSize, 10);
+    ctx.clip();
+    ctx.drawImage(leagueImg, lx, ly, lSize, lSize);
+    ctx.restore();
+  } else {
+    // VS text fallback
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.font = 'bold 28px Syne, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('VS', W / 2, cy);
+    ctx.restore();
+  }
 
-// Team name labels
-ctx.save();
-ctx.textAlign = ‘center’;
-ctx.textBaseline = ‘top’;
-ctx.font = ‘bold 18px Syne, Arial, sans-serif’;
+  // Team name labels
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.font = 'bold 18px Syne, Arial, sans-serif';
 
-// Home name
-ctx.fillStyle = ‘rgba(0,0,0,0.5)’;
-ctx.fillText(homeName, W * 0.22 + 1, cy + badgeSize / 2 + 16 + 1);
-ctx.fillStyle = ‘#ffffff’;
-ctx.fillText(homeName, W * 0.22, cy + badgeSize / 2 + 16);
+  // Home name
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  ctx.fillText(homeName, W * 0.22 + 1, cy + badgeSize / 2 + 16 + 1);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(homeName, W * 0.22, cy + badgeSize / 2 + 16);
 
-// Away name
-ctx.fillStyle = ‘rgba(0,0,0,0.5)’;
-ctx.fillText(awayName, W * 0.78 + 1, cy + badgeSize / 2 + 16 + 1);
-ctx.fillStyle = ‘#ffffff’;
-ctx.fillText(awayName, W * 0.78, cy + badgeSize / 2 + 16);
-ctx.restore();
+  // Away name
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  ctx.fillText(awayName, W * 0.78 + 1, cy + badgeSize / 2 + 16 + 1);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(awayName, W * 0.78, cy + badgeSize / 2 + 16);
+  ctx.restore();
 
-// ── Sports 803 logo — top-right corner ───────────────────────────────
-var logoSize = 46;   // size in px on the 800×420 canvas
-var logoPad  = 12;
-var logoX    = W - logoPad - logoSize;
-var logoY    = logoPad;
+  // ── Sports 803 logo — top-right corner ───────────────────────────────
+  var logoSize = 46;   // size in px on the 800×420 canvas
+  var logoPad  = 12;
+  var logoX    = W - logoPad - logoSize;
+  var logoY    = logoPad;
 
-if (s803Img) {
-ctx.save();
-// subtle dark pill background so logo always pops regardless of team colours
-var pillPad = 6;
-roundRect(ctx, logoX - pillPad, logoY - pillPad, logoSize + pillPad * 2, logoSize + pillPad * 2, (logoSize + pillPad * 2) / 2);
-ctx.fillStyle = ‘rgba(0,0,0,0.55)’;
-ctx.fill();
-roundRect(ctx, logoX - pillPad, logoY - pillPad, logoSize + pillPad * 2, logoSize + pillPad * 2, (logoSize + pillPad * 2) / 2);
-ctx.strokeStyle = ‘rgba(212,175,55,0.5)’;   // gold ring
-ctx.lineWidth = 1.5;
-ctx.stroke();
-// circular clip for the logo itself
-ctx.beginPath();
-ctx.arc(logoX + logoSize / 2, logoY + logoSize / 2, logoSize / 2, 0, Math.PI * 2);
-ctx.clip();
-ctx.drawImage(s803Img, logoX, logoY, logoSize, logoSize);
-ctx.restore();
-} else {
-// Text fallback if image fails CORS
-ctx.save();
-var pillW = 90, pillH = 26;
-var px = W - logoPad - pillW, py = logoPad;
-roundRect(ctx, px, py, pillW, pillH, pillH / 2);
-ctx.fillStyle = ‘rgba(0,0,0,0.65)’;
-ctx.fill();
-ctx.fillStyle = ‘#d4af37’;
-ctx.font = ‘bold 12px Syne, Arial, sans-serif’;
-ctx.textAlign = ‘center’;
-ctx.textBaseline = ‘middle’;
-ctx.fillText(‘SPORTS 803’, px + pillW / 2, py + pillH / 2);
-ctx.restore();
-}
+  if (s803Img) {
+    ctx.save();
+    // subtle dark pill background so logo always pops regardless of team colours
+    var pillPad = 6;
+    roundRect(ctx, logoX - pillPad, logoY - pillPad, logoSize + pillPad * 2, logoSize + pillPad * 2, (logoSize + pillPad * 2) / 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fill();
+    roundRect(ctx, logoX - pillPad, logoY - pillPad, logoSize + pillPad * 2, logoSize + pillPad * 2, (logoSize + pillPad * 2) / 2);
+    ctx.strokeStyle = 'rgba(212,175,55,0.5)';   // gold ring
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    // circular clip for the logo itself
+    ctx.beginPath();
+    ctx.arc(logoX + logoSize / 2, logoY + logoSize / 2, logoSize / 2, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(s803Img, logoX, logoY, logoSize, logoSize);
+    ctx.restore();
+  } else {
+    // Text fallback if image fails CORS
+    ctx.save();
+    var pillW = 90, pillH = 26;
+    var px = W - logoPad - pillW, py = logoPad;
+    roundRect(ctx, px, py, pillW, pillH, pillH / 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.65)';
+    ctx.fill();
+    ctx.fillStyle = '#d4af37';
+    ctx.font = 'bold 12px Syne, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('SPORTS 803', px + pillW / 2, py + pillH / 2);
+    ctx.restore();
+  }
 
-// Bottom bar: Sports 803 watermark
-ctx.save();
-var barH = 44;
-var barGrad = ctx.createLinearGradient(0, H - barH, W, H);
-barGrad.addColorStop(0, ‘rgba(0,0,0,0.75)’);
-barGrad.addColorStop(1, ‘rgba(0,0,0,0.75)’);
-ctx.fillStyle = barGrad;
-ctx.fillRect(0, H - barH, W, barH);
+  // Bottom bar: Sports 803 watermark
+  ctx.save();
+  var barH = 44;
+  var barGrad = ctx.createLinearGradient(0, H - barH, W, H);
+  barGrad.addColorStop(0, 'rgba(0,0,0,0.75)');
+  barGrad.addColorStop(1, 'rgba(0,0,0,0.75)');
+  ctx.fillStyle = barGrad;
+  ctx.fillRect(0, H - barH, W, barH);
 
-// Gold accent line above bar
-ctx.fillStyle = ‘#d4af37’;
-ctx.fillRect(0, H - barH, W, 2);
+  // Gold accent line above bar
+  ctx.fillStyle = '#d4af37';
+  ctx.fillRect(0, H - barH, W, 2);
 
-ctx.fillStyle = ‘#d4af37’;
-ctx.font = ‘bold 15px Syne, Arial, sans-serif’;
-ctx.textAlign = ‘left’;
-ctx.textBaseline = ‘middle’;
-ctx.fillText(‘⚡ SPORTS 803’, 20, H - barH / 2);
+  ctx.fillStyle = '#d4af37';
+  ctx.font = 'bold 15px Syne, Arial, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('⚡ SPORTS 803', 20, H - barH / 2);
 
-ctx.fillStyle = ‘rgba(255,255,255,0.6)’;
-ctx.font = ‘12px JetBrains Mono, monospace’;
-ctx.textAlign = ‘right’;
-ctx.fillText(‘Free Live Stream · sports803livestream.blogspot.com’, W - 20, H - barH / 2);
-ctx.restore();
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.font = '12px JetBrains Mono, monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('Free Live Stream · sports803livestream.blogspot.com', W - 20, H - barH / 2);
+  ctx.restore();
 
-// Try to export; canvas may be tainted if any image failed CORS
-try {
-return canvas.toDataURL(‘image/jpeg’, 0.92);
-} catch(e) {
-// Tainted canvas — redraw without external images and export clean version
-ctx.clearRect(0, 0, W, H);
-ctx.fillStyle = leftCol;  ctx.fillRect(0,   0, W/2, H);
-ctx.fillStyle = rightCol; ctx.fillRect(W/2, 0, W/2, H);
-drawInitialBadge(ctx, homeName.slice(0,3), W * 0.22, cy, badgeSize, ‘#1e2740’);
-drawInitialBadge(ctx, awayName.slice(0,3), W * 0.78, cy, badgeSize, ‘#1e2740’);
-ctx.fillStyle = ‘#ffffff’; ctx.font = ‘bold 24px Arial’; ctx.textAlign = ‘center’; ctx.textBaseline = ‘middle’;
-ctx.fillText(homeName + ’  vs  ’ + awayName, W/2, H/2);
-// S803 text badge fallback
-var fp = 8, fw = 84, fh = 24;
-roundRect(ctx, W - fp - fw, fp, fw, fh, fh/2);
-ctx.fillStyle = ‘rgba(0,0,0,0.65)’; ctx.fill();
-ctx.fillStyle = ‘#d4af37’; ctx.font = ‘bold 11px Arial’; ctx.textAlign = ‘center’; ctx.textBaseline = ‘middle’;
-ctx.fillText(‘SPORTS 803’, W - fp - fw/2, fp + fh/2);
-try { return canvas.toDataURL(‘image/jpeg’, 0.92); } catch(e2) { return null; }
-}
+  // Try to export; canvas may be tainted if any image failed CORS
+  try {
+    return canvas.toDataURL('image/jpeg', 0.92);
+  } catch(e) {
+    // Tainted canvas — redraw without external images and export clean version
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = leftCol;  ctx.fillRect(0,   0, W/2, H);
+    ctx.fillStyle = rightCol; ctx.fillRect(W/2, 0, W/2, H);
+    drawInitialBadge(ctx, homeName.slice(0,3), W * 0.22, cy, badgeSize, '#1e2740');
+    drawInitialBadge(ctx, awayName.slice(0,3), W * 0.78, cy, badgeSize, '#1e2740');
+    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 24px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(homeName + '  vs  ' + awayName, W/2, H/2);
+    // S803 text badge fallback
+    var fp = 8, fw = 84, fh = 24;
+    roundRect(ctx, W - fp - fw, fp, fw, fh, fh/2);
+    ctx.fillStyle = 'rgba(0,0,0,0.65)'; ctx.fill();
+    ctx.fillStyle = '#d4af37'; ctx.font = 'bold 11px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('SPORTS 803', W - fp - fw/2, fp + fh/2);
+    try { return canvas.toDataURL('image/jpeg', 0.92); } catch(e2) { return null; }
+  }
 }
 
 // Lighten/darken a hex colour by amount (-255 to 255)
 function shadeHex(hex, amt) {
-var num = parseInt((hex || ‘#111111’).replace(’#’,’’), 16);
-var r = Math.min(255, Math.max(0, (num >> 16) + amt));
-var g = Math.min(255, Math.max(0, ((num >> 8) & 0xff) + amt));
-var b = Math.min(255, Math.max(0, (num & 0xff) + amt));
-return ‘#’ + [r,g,b].map(function(v){ return (‘0’+v.toString(16)).slice(-2); }).join(’’);
+  var num = parseInt((hex || '#111111').replace('#',''), 16);
+  var r = Math.min(255, Math.max(0, (num >> 16) + amt));
+  var g = Math.min(255, Math.max(0, ((num >> 8) & 0xff) + amt));
+  var b = Math.min(255, Math.max(0, (num & 0xff) + amt));
+  return '#' + [r,g,b].map(function(v){ return ('0'+v.toString(16)).slice(-2); }).join('');
 }
 
 // Legacy
 
 function buildPostTitle(homeName, awayName, type, score, leagueName) {
-var sep = Math.random() > 0.5 ? ’ vs ’ : ’ x ‘;
-if (type === ‘preview’) {
-return homeName + sep + awayName + ’ - Free Live Stream | ’ + leagueName + ’ | Sports 803’;
-}
-return homeName + ’ ’ + score.home + ‘-’ + score.away + ’ ’ + awayName + ’ Highlights | ’ + leagueName + ’ | Sports 803’;
+  var sep = Math.random() > 0.5 ? ' vs ' : ' x ';
+  if (type === 'preview') {
+    return homeName + sep + awayName + ' - Free Live Stream | ' + leagueName + ' | Sports 803';
+  }
+  return homeName + ' ' + score.home + '-' + score.away + ' ' + awayName + ' Highlights | ' + leagueName + ' | Sports 803';
 }
 
 // ─── BLOGGER API ───────────────────────────────────────────────────────────
 async function postToBlogger(idx, type) {
-var gd      = detectedGames[idx];
-var btn     = event.currentTarget;
-var blogId  = document.getElementById(‘blog-id’).value.trim();
-var pubMode = document.getElementById(‘publish-mode’).value;
+  var gd      = detectedGames[idx];
+  var btn     = event.currentTarget;
+  var blogId  = document.getElementById('blog-id').value.trim();
+  var pubMode = document.getElementById('publish-mode').value;
 
-if (!oauthToken || Date.now() >= tokenExpiresAt) {
-toast(‘Please sign in with Google first’, ‘err’);
-log(‘err’, ‘Not signed in \u2014 click Sign in with Google’);
-return;
-}
-if (!blogId)      { toast(‘Enter your Blog ID first’, ‘err’); return; }
-if (!gd[type === ‘preview’ ? ‘preContent’ : ‘highlightContent’]) { toast(‘No content to post yet’, ‘err’); return; }
+  if (!oauthToken || Date.now() >= tokenExpiresAt) {
+    toast('Please sign in with Google first', 'err');
+    log('err', 'Not signed in \u2014 click Sign in with Google');
+    return;
+  }
+  if (!blogId)      { toast('Enter your Blog ID first', 'err'); return; }
+  if (!gd[type === 'preview' ? 'preContent' : 'highlightContent']) { toast('No content to post yet', 'err'); return; }
 
-btn.classList.add(‘loading’); btn.disabled = true;
+  btn.classList.add('loading'); btn.disabled = true;
 
-var c        = getCompetitors(gd);
-var score    = getScore(gd);
-var homeName = (c.home.team && c.home.team.displayName) || ‘?’;
-var awayName = (c.away.team && c.away.team.displayName) || ‘?’;
-var title    = buildPostTitle(homeName, awayName, type, score, gd.league.name);
+  var c        = getCompetitors(gd);
+  var score    = getScore(gd);
+  var homeName = (c.home.team && c.home.team.displayName) || '?';
+  var awayName = (c.away.team && c.away.team.displayName) || '?';
+  var title    = buildPostTitle(homeName, awayName, type, score, gd.league.name);
 
-var iframeSrcEl = document.getElementById(‘iframe-src-’ + idx);
-var iframeSrc   = iframeSrcEl ? iframeSrcEl.value.trim() : ‘’;
+  var iframeSrcEl = document.getElementById('iframe-src-' + idx);
+  var iframeSrc   = iframeSrcEl ? iframeSrcEl.value.trim() : '';
 
-var postContent = type === ‘preview’ ? gd.preContent : gd.highlightContent;
+  var postContent = type === 'preview' ? gd.preContent : gd.highlightContent;
 
-var thumbImg = gd.thumbUrl
-? ‘<div style="text-align:center;margin-bottom:18px;"><a href="https://alvinalexa.github.io/Todays-Events/" target="_blank"><img src="' + gd.thumbUrl + '" alt="' + title + '" style="max-width:100%;height:auto;border-radius:8px;" /></a></div>’
-: ‘’;
+  var thumbImg = gd.thumbUrl
+    ? '<div style="text-align:center;margin-bottom:18px;"><a href="https://alvinalexa.github.io/Todays-Events/" target="_blank"><img src="' + gd.thumbUrl + '" alt="' + title + '" style="max-width:100%;height:auto;border-radius:8px;" /></a></div>'
+    : '';
 
-var iframeHtml = iframeSrc
-? ‘<div style="margin:18px 0;">\n’
-+ ’<iframe loading=“lazy” class=“video-iframe” name=“search_iframe” ’
-+ ’sandbox=“allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation” ’
-+ ’allow=“encrypted-media” width=“100%” height=“500” ’
-+ ‘src=”’ + iframeSrc + ’” ’
-+ ‘frameborder=“0” scrolling=“no” allowfullscreen=“allowfullscreen”></iframe>\n’
-+ ‘</div>’
-: ‘’;
+  var iframeHtml = iframeSrc
+    ? '<div style="margin:18px 0;">\n'
+    + '<iframe loading="lazy" class="video-iframe" name="search_iframe" '
+    + 'sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" '
+    + 'allow="encrypted-media" width="100%" height="500" '
+    + 'src="' + iframeSrc + '" '
+    + 'frameborder="0" scrolling="no" allowfullscreen="allowfullscreen"></iframe>\n'
+    + '</div>'
+    : '';
 
-var paragraphs = postContent.split(’\n\n’).filter(function(p){ return p.trim(); });
-var bodyHtml   = paragraphs.map(function(p){ return ‘<p>’ + p.trim() + ‘</p>’; }).join(’\n’);
+  var paragraphs = postContent.split('\n\n').filter(function(p){ return p.trim(); });
+  var bodyHtml   = paragraphs.map(function(p){ return '<p>' + p.trim() + '</p>'; }).join('\n');
 
-var htmlContent = ‘<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.8;color:#333;">\n’
-+ thumbImg + ‘\n’
-+ bodyHtml + ‘\n’
-+ iframeHtml + ‘\n’
-+ ‘<p>\u{1F4FA} <strong>Watch Live Free on Sports 803</strong></p>\n’
-+ ‘</div>’;
+  var htmlContent = '<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.8;color:#333;">\n'
+    + thumbImg + '\n'
+    + bodyHtml + '\n'
+    + iframeHtml + '\n'
+    + '<p>\u{1F4FA} <strong>Watch Live Free on Sports 803</strong></p>\n'
+    + '</div>';
 
-var labels = [gd.league.label, ‘sports 803’, type === ‘highlights’ ? ‘highlights’ : ‘live stream’];
+  var labels = [gd.league.label, 'sports 803', type === 'highlights' ? 'highlights' : 'live stream'];
 
-try {
-var method = ‘POST’;
-var url    = ‘https://www.googleapis.com/blogger/v3/blogs/’ + blogId + ‘/posts/?isDraft=’ + (pubMode === ‘DRAFT’ ? ‘true’ : ‘false’);
-var body   = { title: title, content: htmlContent, labels: labels };
+  try {
+    var method = 'POST';
+    var url    = 'https://www.googleapis.com/blogger/v3/blogs/' + blogId + '/posts/?isDraft=' + (pubMode === 'DRAFT' ? 'true' : 'false');
+    var body   = { title: title, content: htmlContent, labels: labels };
 
-```
-if (type === 'highlights' && gd.blogPostId) {
-  method  = 'PUT';
-  url     = 'https://www.googleapis.com/blogger/v3/blogs/' + blogId + '/posts/' + gd.blogPostId;
-  body.id = gd.blogPostId;
-}
+    if (type === 'highlights' && gd.blogPostId) {
+      method  = 'PUT';
+      url     = 'https://www.googleapis.com/blogger/v3/blogs/' + blogId + '/posts/' + gd.blogPostId;
+      body.id = gd.blogPostId;
+    }
 
-var r = await fetch(url, {
-  method: method,
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + oauthToken,
-  },
-  body: JSON.stringify(body),
-});
+    var r = await fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + oauthToken,
+      },
+      body: JSON.stringify(body),
+    });
 
-if (!r.ok) {
-  var err = await r.json().catch(function(){ return {}; });
-  throw new Error((err.error && err.error.message) || 'Blogger API ' + r.status);
-}
+    if (!r.ok) {
+      var err = await r.json().catch(function(){ return {}; });
+      throw new Error((err.error && err.error.message) || 'Blogger API ' + r.status);
+    }
 
-var data = await r.json();
-if (type === 'preview') {
-  gd.blogPostId = data.id;
-  gd.status = pubMode === 'DRAFT' ? 'draft' : 'posted';
-} else {
-  gd.status = 'updated';
-}
+    var data = await r.json();
+    if (type === 'preview') {
+      gd.blogPostId = data.id;
+      gd.status = pubMode === 'DRAFT' ? 'draft' : 'posted';
+    } else {
+      gd.status = 'updated';
+    }
 
-renderGames();
-toast('\u2713 ' + (type === 'preview' ? 'Preview' : 'Highlights') + ' ' + (pubMode === 'DRAFT' ? 'saved as draft' : 'published') + '!', 'ok');
-log('ok', '\u2713 ' + (pubMode === 'DRAFT' ? 'Draft saved' : 'Published') + ': "' + title + '"');
-```
+    renderGames();
+    toast('\u2713 ' + (type === 'preview' ? 'Preview' : 'Highlights') + ' ' + (pubMode === 'DRAFT' ? 'saved as draft' : 'published') + '!', 'ok');
+    log('ok', '\u2713 ' + (pubMode === 'DRAFT' ? 'Draft saved' : 'Published') + ': "' + title + '"');
+  } catch(e) {
+    toast('Post failed: ' + e.message, 'err');
+    log('err', 'Blogger error: ' + e.message);
+  }
 
-} catch(e) {
-toast(’Post failed: ’ + e.message, ‘err’);
-log(‘err’, ’Blogger error: ’ + e.message);
-}
-
-btn.classList.remove(‘loading’); btn.disabled = false;
+  btn.classList.remove('loading'); btn.disabled = false;
 }
 
 // ─── LOG ───────────────────────────────────────────────────────────────────
 function log(type, msg) {
-var panel = document.getElementById(‘log-panel’);
-var ts    = new Date().toLocaleTimeString(‘en-US’, { hour:‘2-digit’, minute:‘2-digit’, second:‘2-digit’ });
-var line  = document.createElement(‘div’);
-line.className = ’log-line ’ + type;
-line.innerHTML = ‘<span class="ts">’ + ts + ‘</span><span class="msg">’ + msg + ‘</span>’;
-panel.appendChild(line);
-panel.scrollTop = panel.scrollHeight;
+  var panel = document.getElementById('log-panel');
+  var ts    = new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  var line  = document.createElement('div');
+  line.className = 'log-line ' + type;
+  line.innerHTML = '<span class="ts">' + ts + '</span><span class="msg">' + msg + '</span>';
+  panel.appendChild(line);
+  panel.scrollTop = panel.scrollHeight;
 }
 
 // ─── TOAST ─────────────────────────────────────────────────────────────────
 var toastTimer;
 function toast(msg, type) {
-var t = document.getElementById(‘toast’);
-t.textContent = msg;
-t.className   = ‘toast ’ + (type || ‘ok’) + ’ show’;
-clearTimeout(toastTimer);
-toastTimer = setTimeout(function(){ t.classList.remove(‘show’); }, 3000);
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast ' + (type || 'ok') + ' show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
 // ─── FIX #6: escHtml — use proper HTML entities, not decoded characters ───
 function escHtml(s) {
-return (s || ‘’)
-.replace(/&/g,  ‘&’)
-.replace(/</g,  ‘<’)
-.replace(/>/g,  ‘>’)
-.replace(/”/g,  ‘"’)
-.replace(/’/g,  ‘'’);
+  return (s || '')
+    .replace(/&/g,  '&amp;')
+    .replace(/</g,  '&lt;')
+    .replace(/>/g,  '&gt;')
+    .replace(/"/g,  '&quot;')
+    .replace(/'/g,  '&#39;');
 }
 </script>
-
 </body>
 </html>
