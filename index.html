@@ -878,12 +878,17 @@ select option { background: #141720; }
           <label class="input-label">Blog ID</label>
           <input type="text" id="blog-id" placeholder="3020785713747810415"/>
         </div>
+        <div class="input-group">
+          <label class="input-label">imgbb API Key <span class="badge-tip">FAST UPLOADS</span></label>
+          <input type="text" id="imgbb-key" placeholder="paste your imgbb API key"/>
+        </div>
         <button class="btn btn-secondary btn-full" onclick="saveConfig()">
-          <span class="btn-text">&#x1F4BE; Save Blog ID</span>
+          <span class="btn-text">&#x1F4BE; Save Config</span>
         </button>
         <div class="settings-note">
           Your Blog ID is the number in your Blogger dashboard URL.<br>
-          e.g. <strong>3020785713747810415</strong>
+          e.g. <strong>3020785713747810415</strong><br><br>
+          imgbb key speeds up posts — get one free at <a href="https://api.imgbb.com" target="_blank">api.imgbb.com</a>
         </div>
       </div>
     </div>
@@ -1028,6 +1033,9 @@ function espnUrl(leagueId) {
 // ─── INIT ──────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function() {
   loadConfig();
+  // Pre-fill imgbb key field if not already saved
+  var keyEl = document.getElementById('imgbb-key');
+  if (keyEl && !keyEl.value) keyEl.value = IMGBB_API_KEY;
   buildLeaguesGrid();
   setInterval(autoRefreshScores, 3 * 60 * 1000);
 });
@@ -1037,11 +1045,13 @@ var oauthToken     = null;
 var oauthUser      = null;
 var tokenExpiresAt = 0;
 var GOOGLE_CLIENT_ID = '';
+var IMGBB_API_KEY    = 'c8cd5657bfdfc6c298c9366deebfa7a7'; // default — overridden by saved config
 
 function loadConfig() {
   try {
     var saved = JSON.parse(localStorage.getItem('s803_config') || '{}');
     if (saved.blogId)        document.getElementById('blog-id').value = saved.blogId;
+    if (saved.imgbbKey)    { document.getElementById('imgbb-key').value = saved.imgbbKey; IMGBB_API_KEY = saved.imgbbKey; }
     if (saved.lang)          document.getElementById('post-lang').value = saved.lang;
     if (saved.style)         document.getElementById('post-style').value = saved.style;
     if (saved.publishMode)   document.getElementById('publish-mode').value = saved.publishMode;
@@ -1059,8 +1069,11 @@ function loadConfig() {
 }
 
 function saveConfig() {
+  var imgbbVal = document.getElementById('imgbb-key').value.trim();
+  if (imgbbVal) IMGBB_API_KEY = imgbbVal;
   config = {
     blogId:         document.getElementById('blog-id').value.trim(),
+    imgbbKey:       imgbbVal || IMGBB_API_KEY,
     lang:           document.getElementById('post-lang').value,
     style:          document.getElementById('post-style').value,
     publishMode:    document.getElementById('publish-mode').value,
@@ -2196,6 +2209,49 @@ function buildPostTitle(homeName, awayName, type, score, leagueName) {
   return homeName + ' ' + score.home + '-' + score.away + ' ' + awayName + ' Highlights | ' + leagueName + ' | Sports 803';
 }
 
+// ─── IMGBB UPLOAD ──────────────────────────────────────────────────────────
+// Uploads a base64 data URI to imgbb and returns a permanent direct image URL.
+// Falls back to the original base64 data URI if upload fails (no post blocked).
+async function uploadToImgbb(dataUrl) {
+  if (!IMGBB_API_KEY) return dataUrl; // no key — use base64 as-is
+  if (!dataUrl || !dataUrl.startsWith('data:')) return dataUrl;
+
+  // Strip the data URI header — imgbb wants raw base64 only
+  var base64 = dataUrl.split(',')[1];
+  if (!base64) return dataUrl;
+
+  try {
+    log('info', '\u2191 Uploading thumbnail to imgbb\u2026');
+    var formData = new FormData();
+    formData.append('key',   IMGBB_API_KEY);
+    formData.append('image', base64);
+    formData.append('name',  'sports803-' + Date.now());
+
+    var ctrl = new AbortController();
+    var timer = setTimeout(function(){ ctrl.abort(); }, 20000);
+
+    var r = await fetch('https://api.imgbb.com/1/upload', {
+      method: 'POST',
+      body:   formData,
+      signal: ctrl.signal,
+    });
+    clearTimeout(timer);
+
+    if (!r.ok) throw new Error('imgbb HTTP ' + r.status);
+    var data = await r.json();
+
+    if (data.success && data.data && data.data.url) {
+      var hostedUrl = data.data.url;
+      log('ok', '\u2713 Thumbnail hosted: ' + hostedUrl);
+      return hostedUrl;
+    }
+    throw new Error('imgbb response missing URL');
+  } catch(e) {
+    log('err', 'imgbb upload failed (' + e.message + ') — using base64 fallback');
+    return dataUrl; // graceful fallback
+  }
+}
+
 // ─── BLOGGER API ───────────────────────────────────────────────────────────
 async function postToBlogger(idx, type) {
   var gd      = detectedGames[idx];
@@ -2236,8 +2292,16 @@ async function postToBlogger(idx, type) {
 
   var postContent = type === 'preview' ? gd.preContent : gd.highlightContent;
 
-  var thumbImg = gd.thumbUrl
-    ? '<div style="text-align:center;margin-bottom:18px;"><a href="https://alvinalexa.github.io/Todays-Events/" target="_blank"><img src="' + gd.thumbUrl + '" alt="' + title + '" style="max-width:100%;height:auto;border-radius:8px;" /></a></div>'
+  // Upload thumbnail to imgbb (fast hosted URL) — falls back to base64 if it fails
+  var thumbSrc = gd.thumbUrl ? await uploadToImgbb(gd.thumbUrl) : null;
+  // Cache the hosted URL so highlights reuse it without re-uploading
+  if (thumbSrc && thumbSrc !== gd.thumbUrl && !thumbSrc.startsWith('data:')) {
+    gd.thumbUrlHosted = thumbSrc;
+  }
+  if (type === 'highlights' && gd.thumbUrlHosted) thumbSrc = gd.thumbUrlHosted;
+
+  var thumbImg = thumbSrc
+    ? '<div style="text-align:center;margin-bottom:18px;"><a href="https://alvinalexa.github.io/Todays-Events/" target="_blank"><img src="' + thumbSrc + '" alt="' + title + '" style="max-width:100%;height:auto;border-radius:8px;" /></a></div>'
     : '';
 
   var iframeHtml = iframeSrc
