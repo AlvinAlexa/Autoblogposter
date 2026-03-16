@@ -1749,20 +1749,17 @@ var LEAGUE_COLORS = {
   'tennis/atp':            ['#0d4c92','#1a1a2e'],
 };
 
-// Load an image cross-origin, resolving to null on CORS/network failure
+// Load an image cross-origin, resolving to null on CORS/network failure.
+// IMPORTANT: we NEVER retry without crossOrigin — a non-CORS image drawn onto
+// a canvas taints it permanently, making toDataURL() throw a SecurityError
+// even after clearRect(). Always resolve null on failure so we use text fallbacks.
 function loadImageCORS(url) {
   return new Promise(function(resolve) {
     if (!url) { resolve(null); return; }
     var img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload  = function() { resolve(img); };
-    img.onerror = function() {
-      // retry without crossOrigin (renders tainted canvas but we catch that)
-      var img2 = new Image();
-      img2.onload  = function() { resolve(img2); };
-      img2.onerror = function() { resolve(null); };
-      img2.src = url;
-    };
+    img.onerror = function() { resolve(null); };   // null, NOT a retry without CORS
     img.src = url;
     setTimeout(function() { resolve(null); }, 5000);
   });
@@ -1836,6 +1833,7 @@ async function generateMatchThumbnail(gd) {
   var lid      = gd.league.id;
 
   // If ESPN didn't give logos, try TheSportsDB for both teams
+  // ESPN CDN (a.espncdn.com) supports CORS — TheSportsDB also CORS-friendly
   if (!homeLogo) {
     try {
       var ctrl1 = new AbortController();
@@ -1855,18 +1853,27 @@ async function generateMatchThumbnail(gd) {
     } catch(e) {}
   }
 
-  // Load all images in parallel — including S803 logo
+  // Proxy ESPN logos through allorigins if they're from espncdn (known CORS issues on some endpoints)
+  function proxyIfESPN(url) {
+    if (!url) return url;
+    if (url.includes('espncdn.com') || url.includes('espn.com')) {
+      return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+    }
+    return url;
+  }
+  homeLogo = proxyIfESPN(homeLogo);
+  awayLogo = proxyIfESPN(awayLogo);
+
+  // Load all images in parallel — S803 branding drawn as styled text (no CORS risk)
   var leagueBadgeUrl = LEAGUE_BADGE[lid] || null;
   var results = await Promise.all([
     loadImageCORS(homeLogo),
     loadImageCORS(awayLogo),
     loadImageCORS(leagueBadgeUrl),
-    loadImageCORS(S803_LOGO_URL),
   ]);
   var homeImg   = results[0];
   var awayImg   = results[1];
   var leagueImg = results[2];
-  var s803Img   = results[3];
 
   // ── Draw canvas ────────────────────────────────────────────────────────
   var W = 800, H = 420;
@@ -1983,44 +1990,50 @@ async function generateMatchThumbnail(gd) {
   ctx.fillText(awayName, W * 0.78, cy + badgeSize / 2 + 16);
   ctx.restore();
 
-  // ── Sports 803 logo — top-right corner ───────────────────────────────
-  var logoSize = 46;   // size in px on the 800×420 canvas
-  var logoPad  = 12;
-  var logoX    = W - logoPad - logoSize;
-  var logoY    = logoPad;
+  // ── Sports 803 logo — top-right corner (pure canvas, zero CORS risk) ─
+  (function drawS803Badge() {
+    var padX   = 14, padY = 12;
+    var pillH  = 28, pillR = 14;
+    var icon   = '\u26A1';   // lightning bolt
+    var label  = 'SPORTS 803';
 
-  if (s803Img) {
     ctx.save();
-    // subtle dark pill background so logo always pops regardless of team colours
-    var pillPad = 6;
-    roundRect(ctx, logoX - pillPad, logoY - pillPad, logoSize + pillPad * 2, logoSize + pillPad * 2, (logoSize + pillPad * 2) / 2);
-    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.font = 'bold 11px Syne, Arial, sans-serif';
+    var labelW  = ctx.measureText(label).width;
+    ctx.font = '12px Arial';
+    var iconW   = ctx.measureText(icon).width;
+    var innerW  = iconW + 5 + labelW;
+    var pillW   = innerW + 22;
+
+    var px = W - padX - pillW;
+    var py = padY;
+
+    // dark pill
+    roundRect(ctx, px, py, pillW, pillH, pillR);
+    ctx.fillStyle = 'rgba(0,0,0,0.70)';
     ctx.fill();
-    roundRect(ctx, logoX - pillPad, logoY - pillPad, logoSize + pillPad * 2, logoSize + pillPad * 2, (logoSize + pillPad * 2) / 2);
-    ctx.strokeStyle = 'rgba(212,175,55,0.5)';   // gold ring
+    // gold border
+    roundRect(ctx, px, py, pillW, pillH, pillR);
+    ctx.strokeStyle = '#d4af37';
     ctx.lineWidth = 1.5;
     ctx.stroke();
-    // circular clip for the logo itself
-    ctx.beginPath();
-    ctx.arc(logoX + logoSize / 2, logoY + logoSize / 2, logoSize / 2, 0, Math.PI * 2);
-    ctx.clip();
-    ctx.drawImage(s803Img, logoX, logoY, logoSize, logoSize);
-    ctx.restore();
-  } else {
-    // Text fallback if image fails CORS
-    ctx.save();
-    var pillW = 90, pillH = 26;
-    var px = W - logoPad - pillW, py = logoPad;
-    roundRect(ctx, px, py, pillW, pillH, pillH / 2);
-    ctx.fillStyle = 'rgba(0,0,0,0.65)';
-    ctx.fill();
-    ctx.fillStyle = '#d4af37';
-    ctx.font = 'bold 12px Syne, Arial, sans-serif';
-    ctx.textAlign = 'center';
+
+    var textY = py + pillH / 2;
+    var textX = px + 11;
+
+    // lightning bolt in accent yellow
+    ctx.font = '12px Arial';
+    ctx.fillStyle = '#e8ff47';
+    ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText('SPORTS 803', px + pillW / 2, py + pillH / 2);
+    ctx.fillText(icon, textX, textY);
+
+    // SPORTS 803 in gold
+    ctx.font = 'bold 10.5px Syne, Arial, sans-serif';
+    ctx.fillStyle = '#d4af37';
+    ctx.fillText(label, textX + iconW + 5, textY);
     ctx.restore();
-  }
+  })();
 
   // Bottom bar: Sports 803 watermark
   ctx.save();
@@ -2047,25 +2060,44 @@ async function generateMatchThumbnail(gd) {
   ctx.fillText('Free Live Stream · sports803livestream.blogspot.com', W - 20, H - barH / 2);
   ctx.restore();
 
-  // Try to export; canvas may be tainted if any image failed CORS
+  // Try to export; if tainted (shouldn't happen now but just in case)
   try {
     return canvas.toDataURL('image/jpeg', 0.92);
   } catch(e) {
-    // Tainted canvas — redraw without external images and export clean version
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = leftCol;  ctx.fillRect(0,   0, W/2, H);
-    ctx.fillStyle = rightCol; ctx.fillRect(W/2, 0, W/2, H);
-    drawInitialBadge(ctx, homeName.slice(0,3), W * 0.22, cy, badgeSize, '#1e2740');
-    drawInitialBadge(ctx, awayName.slice(0,3), W * 0.78, cy, badgeSize, '#1e2740');
-    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 24px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(homeName + '  vs  ' + awayName, W/2, H/2);
-    // S803 text badge fallback
-    var fp = 8, fw = 84, fh = 24;
-    roundRect(ctx, W - fp - fw, fp, fw, fh, fh/2);
-    ctx.fillStyle = 'rgba(0,0,0,0.65)'; ctx.fill();
-    ctx.fillStyle = '#d4af37'; ctx.font = 'bold 11px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('SPORTS 803', W - fp - fw/2, fp + fh/2);
-    try { return canvas.toDataURL('image/jpeg', 0.92); } catch(e2) { return null; }
+    // Canvas tainted — build a completely new canvas (no images) so export works
+    var c2   = document.createElement('canvas');
+    c2.width = W; c2.height = H;
+    var cx2  = c2.getContext('2d');
+    cx2.fillStyle = leftCol;  cx2.fillRect(0,   0, W/2, H);
+    cx2.fillStyle = rightCol; cx2.fillRect(W/2, 0, W/2, H);
+    // diagonal blend
+    var dg2 = cx2.createLinearGradient(W/2-50,0,W/2+50,0);
+    dg2.addColorStop(0,'rgba(0,0,0,0)');
+    dg2.addColorStop(0.5,'rgba(0,0,0,0.45)');
+    dg2.addColorStop(1,'rgba(0,0,0,0)');
+    cx2.fillStyle = dg2; cx2.fillRect(W/2-50,0,100,H);
+    drawInitialBadge(cx2, homeName.slice(0,3), W*0.22, cy, badgeSize, '#1e2740');
+    drawInitialBadge(cx2, awayName.slice(0,3), W*0.78, cy, badgeSize, '#1e2740');
+    cx2.fillStyle='#fff'; cx2.font='bold 22px Arial'; cx2.textAlign='center'; cx2.textBaseline='middle';
+    cx2.fillText(homeName+'  vs  '+awayName, W/2, cy);
+    cx2.fillStyle='#fff'; cx2.font='bold 15px Arial'; cx2.textAlign='center';
+    cx2.fillText(homeName, W*0.22, cy+badgeSize/2+18);
+    cx2.fillText(awayName, W*0.78, cy+badgeSize/2+18);
+    // bottom bar
+    cx2.fillStyle='rgba(0,0,0,0.75)'; cx2.fillRect(0,H-44,W,44);
+    cx2.fillStyle='#d4af37'; cx2.fillRect(0,H-44,W,2);
+    cx2.font='bold 14px Arial'; cx2.textAlign='left'; cx2.textBaseline='middle';
+    cx2.fillText('\u26A1 SPORTS 803', 20, H-22);
+    cx2.fillStyle='rgba(255,255,255,0.55)'; cx2.font='11px Arial'; cx2.textAlign='right';
+    cx2.fillText('sports803livestream.blogspot.com', W-20, H-22);
+    // S803 pill top-right
+    roundRect(cx2, W-104, 10, 90, 24, 12);
+    cx2.fillStyle='rgba(0,0,0,0.65)'; cx2.fill();
+    roundRect(cx2, W-104, 10, 90, 24, 12);
+    cx2.strokeStyle='#d4af37'; cx2.lineWidth=1.5; cx2.stroke();
+    cx2.fillStyle='#d4af37'; cx2.font='bold 10px Arial'; cx2.textAlign='center'; cx2.textBaseline='middle';
+    cx2.fillText('\u26A1 SPORTS 803', W-104+45, 10+12);
+    try { return c2.toDataURL('image/jpeg', 0.92); } catch(e2) { return null; }
   }
 }
 
