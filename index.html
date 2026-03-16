@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -29,201 +30,201 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Syne', sans-serif;
-  font-size: 14px;
-  min-height: 100vh;
-  overflow-x: hidden;
+background: var(–bg);
+color: var(–text);
+font-family: ‘Syne’, sans-serif;
+font-size: 14px;
+min-height: 100vh;
+overflow-x: hidden;
 }
 
 /* ── NOISE TEXTURE ── */
 body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.03’/%3E%3C/svg%3E”);
+pointer-events: none;
+z-index: 0;
 }
 
 /* ── HEADER ── */
 .topbar {
-  background: var(--s1);
-  border-bottom: 1px solid var(--border);
-  padding: 0 24px;
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  height: 54px;
-  gap: 16px;
+background: var(–s1);
+border-bottom: 1px solid var(–border);
+padding: 0 24px;
+position: sticky;
+top: 0;
+z-index: 200;
+display: flex;
+align-items: center;
+height: 54px;
+gap: 16px;
 }
 
 .topbar-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+display: flex;
+align-items: center;
+gap: 10px;
+font-size: 15px;
+font-weight: 800;
+letter-spacing: -0.02em;
 }
 
 .topbar-logo .badge {
-  background: var(--accent);
-  color: #070809;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 3px 7px;
-  border-radius: 4px;
-  letter-spacing: 0.06em;
+background: var(–accent);
+color: #070809;
+font-size: 10px;
+font-weight: 800;
+padding: 3px 7px;
+border-radius: 4px;
+letter-spacing: 0.06em;
 }
 
 .topbar-sub {
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+font-size: 11px;
+color: var(–muted);
+letter-spacing: 0.08em;
+text-transform: uppercase;
 }
 
 .topbar-right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+margin-left: auto;
+display: flex;
+align-items: center;
+gap: 10px;
 }
 
 .pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  color: var(--muted);
+display: inline-flex;
+align-items: center;
+gap: 5px;
+font-size: 10px;
+font-weight: 600;
+letter-spacing: 0.06em;
+text-transform: uppercase;
+padding: 4px 10px;
+border-radius: 20px;
+border: 1px solid var(–border);
+color: var(–muted);
 }
 
-.pill.ok  { border-color: rgba(46,213,115,.4); color: var(--green); background: rgba(46,213,115,.07); }
-.pill.err { border-color: rgba(255,71,87,.4);  color: var(--red);   background: rgba(255,71,87,.07); }
-.pill.dot::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pill.ok  { border-color: rgba(46,213,115,.4); color: var(–green); background: rgba(46,213,115,.07); }
+.pill.err { border-color: rgba(255,71,87,.4);  color: var(–red);   background: rgba(255,71,87,.07); }
+.pill.dot::before { content: ‘’; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
 /* ── LAYOUT ── */
 .layout {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  min-height: calc(100vh - 54px);
-  position: relative;
-  z-index: 1;
+display: grid;
+grid-template-columns: 300px 1fr;
+min-height: calc(100vh - 54px);
+position: relative;
+z-index: 1;
 }
 
 /* ── SIDEBAR ── */
 .sidebar {
-  background: var(--s1);
-  border-right: 1px solid var(--border);
-  padding: 24px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  overflow-y: auto;
-  max-height: calc(100vh - 54px);
-  position: sticky;
-  top: 54px;
+background: var(–s1);
+border-right: 1px solid var(–border);
+padding: 24px 20px;
+display: flex;
+flex-direction: column;
+gap: 24px;
+overflow-y: auto;
+max-height: calc(100vh - 54px);
+position: sticky;
+top: 54px;
 }
 
 .sidebar-section { display: flex; flex-direction: column; gap: 10px; }
 
 .section-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--border);
+font-size: 9px;
+font-weight: 700;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+color: var(–muted);
+padding-bottom: 6px;
+border-bottom: 1px solid var(–border);
 }
 
 .input-group { display: flex; flex-direction: column; gap: 5px; }
 
 .input-label {
-  font-size: 11px;
-  color: var(--muted2);
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+font-size: 11px;
+color: var(–muted2);
+font-weight: 500;
+display: flex;
+align-items: center;
+gap: 6px;
 }
 
 .input-label .tip {
-  font-size: 9px;
-  background: var(--s3);
-  padding: 1px 5px;
-  border-radius: 3px;
-  color: var(--muted);
-  font-family: 'JetBrains Mono', monospace;
+font-size: 9px;
+background: var(–s3);
+padding: 1px 5px;
+border-radius: 3px;
+color: var(–muted);
+font-family: ‘JetBrains Mono’, monospace;
 }
 
-input[type="text"], input[type="password"], select, textarea {
-  background: var(--s2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  padding: 9px 11px;
-  border-radius: var(--r);
-  width: 100%;
-  outline: none;
-  transition: border-color .15s;
+input[type=“text”], input[type=“password”], select, textarea {
+background: var(–s2);
+border: 1px solid var(–border);
+color: var(–text);
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 11px;
+padding: 9px 11px;
+border-radius: var(–r);
+width: 100%;
+outline: none;
+transition: border-color .15s;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus,
+input[type=“text”]:focus,
+input[type=“password”]:focus,
 select:focus,
 textarea:focus {
-  border-color: var(--accent2);
+border-color: var(–accent2);
 }
 
 select option { background: #141720; }
 
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 10px 18px;
-  border-radius: var(--r);
-  border: none;
-  cursor: pointer;
-  transition: all .15s;
-  white-space: nowrap;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+font-family: ‘Syne’, sans-serif;
+font-weight: 700;
+font-size: 11px;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+padding: 10px 18px;
+border-radius: var(–r);
+border: none;
+cursor: pointer;
+transition: all .15s;
+white-space: nowrap;
 }
 
 .btn-primary {
-  background: var(--accent);
-  color: #070809;
+background: var(–accent);
+color: #070809;
 }
 .btn-primary:hover { background: #f5ff80; transform: translateY(-1px); }
 
 .btn-secondary {
-  background: var(--s3);
-  color: var(--text);
-  border: 1px solid var(--border2);
+background: var(–s3);
+color: var(–text);
+border: 1px solid var(–border2);
 }
-.btn-secondary:hover { border-color: var(--accent2); color: var(--accent2); }
+.btn-secondary:hover { border-color: var(–accent2); color: var(–accent2); }
 
 .btn-danger {
-  background: rgba(255,71,87,.12);
-  color: var(--red);
-  border: 1px solid rgba(255,71,87,.3);
+background: rgba(255,71,87,.12);
+color: var(–red);
+border: 1px solid rgba(255,71,87,.3);
 }
 .btn-danger:hover { background: rgba(255,71,87,.2); }
 
@@ -232,12 +233,12 @@ select option { background: #141720; }
 .btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 
 .btn .spin {
-  width: 12px; height: 12px;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin .6s linear infinite;
-  display: none;
+width: 12px; height: 12px;
+border: 2px solid currentColor;
+border-top-color: transparent;
+border-radius: 50%;
+animation: spin .6s linear infinite;
+display: none;
 }
 
 .btn.loading .spin { display: block; }
@@ -246,378 +247,380 @@ select option { background: #141720; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .leagues-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 6px;
 }
 
 .league-toggle {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  background: var(--s2);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 7px 10px;
-  cursor: pointer;
-  transition: all .15s;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--muted2);
-  user-select: none;
+display: flex;
+align-items: center;
+gap: 7px;
+background: var(–s2);
+border: 1px solid var(–border);
+border-radius: var(–r);
+padding: 7px 10px;
+cursor: pointer;
+transition: all .15s;
+font-size: 11px;
+font-weight: 500;
+color: var(–muted2);
+user-select: none;
 }
 .league-toggle.active {
-  border-color: var(--accent);
-  background: rgba(232,255,71,.08);
-  color: var(--text);
+border-color: var(–accent);
+background: rgba(232,255,71,.08);
+color: var(–text);
 }
 .league-toggle .lcheck {
-  width: 14px; height: 14px;
-  border: 1.5px solid var(--border2);
-  border-radius: 3px;
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px;
-  transition: all .15s;
+width: 14px; height: 14px;
+border: 1.5px solid var(–border2);
+border-radius: 3px;
+flex-shrink: 0;
+display: flex; align-items: center; justify-content: center;
+font-size: 9px;
+transition: all .15s;
 }
 .league-toggle.active .lcheck {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #070809;
+background: var(–accent);
+border-color: var(–accent);
+color: #070809;
 }
 
 /* ── MAIN ── */
 .main { padding: 28px 28px 60px; overflow-y: auto; }
 
 .main-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 28px;
+display: flex;
+align-items: flex-start;
+justify-content: space-between;
+gap: 16px;
+margin-bottom: 28px;
 }
 
 .main-title {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
+font-size: 22px;
+font-weight: 800;
+letter-spacing: -0.03em;
+line-height: 1.1;
 }
-.main-title span { color: var(--accent); }
+.main-title span { color: var(–accent); }
 
 .main-subtitle {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 4px;
-  font-weight: 400;
+font-size: 12px;
+color: var(–muted);
+margin-top: 4px;
+font-weight: 400;
 }
 
 .scan-actions { display: flex; gap: 8px; }
 
 /* ── GAME CARD ── */
 .games-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+display: grid;
+grid-template-columns: 1fr;
+gap: 12px;
 }
 
 .game-card {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  overflow: hidden;
-  transition: border-color .15s;
+background: var(–s1);
+border: 1px solid var(–border);
+border-radius: var(–r2);
+overflow: hidden;
+transition: border-color .15s;
 }
 
-.game-card:hover { border-color: var(--border2); }
+.game-card:hover { border-color: var(–border2); }
 
 .game-card-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 14px 16px;
+border-bottom: 1px solid var(–border);
 }
 
 .game-teams {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
+flex: 1;
+display: flex;
+align-items: center;
+gap: 10px;
+min-width: 0;
 }
 
 .team-block {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  min-width: 0;
+display: flex;
+align-items: center;
+gap: 8px;
+flex: 1;
+min-width: 0;
 }
 
 .team-logo {
-  width: 32px; height: 32px;
-  object-fit: contain;
-  flex-shrink: 0;
-  filter: drop-shadow(0 1px 4px rgba(0,0,0,.5));
+width: 32px; height: 32px;
+object-fit: contain;
+flex-shrink: 0;
+filter: drop-shadow(0 1px 4px rgba(0,0,0,.5));
 }
 
 .team-logo-placeholder {
-  width: 32px; height: 32px;
-  background: var(--s3);
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
+width: 32px; height: 32px;
+background: var(–s3);
+border: 1px solid var(–border);
+border-radius: 50%;
+display: flex; align-items: center; justify-content: center;
+font-size: 14px;
+flex-shrink: 0;
 }
 
 .team-name {
-  font-size: 13px;
-  font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+font-size: 13px;
+font-weight: 700;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
 }
 
 .vs-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  flex-shrink: 0;
-  width: 56px;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 3px;
+flex-shrink: 0;
+width: 56px;
 }
 
 .vs-score {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--text);
-  letter-spacing: 2px;
-  line-height: 1;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 18px;
+font-weight: 500;
+color: var(–text);
+letter-spacing: 2px;
+line-height: 1;
 }
 
 .vs-label {
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
+font-size: 9px;
+font-weight: 600;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(–muted);
 }
-.vs-label.live-lbl { color: var(--green); animation: pulse-live 1.5s infinite; }
-.vs-label.ft-lbl   { color: var(--muted); }
-.vs-label.pre-lbl  { color: var(--accent); }
+.vs-label.live-lbl { color: var(–green); animation: pulse-live 1.5s infinite; }
+.vs-label.ft-lbl   { color: var(–muted); }
+.vs-label.pre-lbl  { color: var(–accent); }
 
 @keyframes pulse-live { 0%,100%{opacity:1} 50%{opacity:.5} }
 
 .game-meta-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 5px;
-  flex-shrink: 0;
+display: flex;
+flex-direction: column;
+align-items: flex-end;
+gap: 5px;
+flex-shrink: 0;
 }
 
 .league-tag {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: 3px;
-  background: rgba(232,255,71,.1);
-  color: var(--accent);
-  border: 1px solid rgba(232,255,71,.2);
+font-size: 9px;
+font-weight: 700;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+padding: 2px 8px;
+border-radius: 3px;
+background: rgba(232,255,71,.1);
+color: var(–accent);
+border: 1px solid rgba(232,255,71,.2);
 }
 
 .game-time {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  color: var(--muted);
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 10px;
+color: var(–muted);
 }
 
 /* ── CONTENT PANEL ── */
 .game-content-panel {
-  padding: 14px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+padding: 14px 16px;
+display: flex;
+flex-direction: column;
+gap: 10px;
 }
 
 .content-tabs {
-  display: flex;
-  gap: 4px;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 10px;
-  margin-bottom: 4px;
+display: flex;
+gap: 4px;
+border-bottom: 1px solid var(–border);
+padding-bottom: 10px;
+margin-bottom: 4px;
 }
 
 .ctab {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  color: var(--muted);
-  border: 1px solid transparent;
-  background: none;
-  font-family: 'Syne', sans-serif;
-  transition: all .12s;
+font-size: 10px;
+font-weight: 700;
+letter-spacing: 0.06em;
+text-transform: uppercase;
+padding: 4px 12px;
+border-radius: 4px;
+cursor: pointer;
+color: var(–muted);
+border: 1px solid transparent;
+background: none;
+font-family: ‘Syne’, sans-serif;
+transition: all .12s;
 }
-.ctab.active { background: var(--s3); border-color: var(--border2); color: var(--text); }
-.ctab:hover:not(.active) { color: var(--muted2); }
+.ctab.active { background: var(–s3); border-color: var(–border2); color: var(–text); }
+.ctab:hover:not(.active) { color: var(–muted2); }
 
 .content-area {
-  min-height: 100px;
-  position: relative;
+min-height: 100px;
+position: relative;
 }
 
 .content-text {
-  font-size: 12px;
-  color: var(--muted2);
-  line-height: 1.7;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 300;
-  white-space: pre-wrap;
-  word-break: break-word;
+font-size: 12px;
+color: var(–muted2);
+line-height: 1.7;
+font-family: ‘JetBrains Mono’, monospace;
+font-weight: 300;
+white-space: pre-wrap;
+word-break: break-word;
 }
 
 .content-empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80px;
-  color: var(--muted);
-  font-size: 11px;
-  font-style: italic;
-  letter-spacing: 0.04em;
+display: flex;
+align-items: center;
+justify-content: center;
+height: 80px;
+color: var(–muted);
+font-size: 11px;
+font-style: italic;
+letter-spacing: 0.04em;
 }
 
 .content-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+display: flex;
+gap: 8px;
+flex-wrap: wrap;
 }
 
 /* ── STATUS BADGE ── */
 .post-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 20px;
+display: inline-flex;
+align-items: center;
+gap: 5px;
+font-size: 9px;
+font-weight: 700;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+padding: 3px 9px;
+border-radius: 20px;
 }
-.post-status.draft    { background: rgba(255,165,2,.1); color: var(--orange); border: 1px solid rgba(255,165,2,.3); }
-.post-status.posted   { background: rgba(46,213,115,.1); color: var(--green); border: 1px solid rgba(46,213,115,.3); }
-.post-status.updated  { background: rgba(0,212,255,.1); color: var(--accent2); border: 1px solid rgba(0,212,255,.3); }
-.post-status.idle     { background: var(--s3); color: var(--muted); border: 1px solid var(--border); }
+.post-status.draft    { background: rgba(255,165,2,.1); color: var(–orange); border: 1px solid rgba(255,165,2,.3); }
+.post-status.posted   { background: rgba(46,213,115,.1); color: var(–green); border: 1px solid rgba(46,213,115,.3); }
+.post-status.updated  { background: rgba(0,212,255,.1); color: var(–accent2); border: 1px solid rgba(0,212,255,.3); }
+.post-status.idle     { background: var(–s3); color: var(–muted); border: 1px solid var(–border); }
 
 /* ── LOG ── */
 .log-panel {
-  background: var(--s2);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 12px 14px;
-  max-height: 160px;
-  overflow-y: auto;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  line-height: 1.8;
-  color: var(--muted);
-  scrollbar-width: thin;
-  scrollbar-color: var(--border2) transparent;
+background: var(–s2);
+border: 1px solid var(–border);
+border-radius: var(–r);
+padding: 12px 14px;
+max-height: 160px;
+overflow-y: auto;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 10px;
+line-height: 1.8;
+color: var(–muted);
+scrollbar-width: thin;
+scrollbar-color: var(–border2) transparent;
 }
 
 .log-line { display: flex; gap: 10px; }
-.log-line .ts { color: var(--muted); flex-shrink: 0; }
-.log-line.info .msg { color: var(--muted2); }
-.log-line.ok   .msg { color: var(--green); }
-.log-line.err  .msg { color: var(--red); }
-.log-line.ai   .msg { color: var(--accent2); }
+.log-line .ts { color: var(–muted); flex-shrink: 0; }
+.log-line.info .msg { color: var(–muted2); }
+.log-line.ok   .msg { color: var(–green); }
+.log-line.err  .msg { color: var(–red); }
+.log-line.ai   .msg { color: var(–accent2); }
 
 /* ── EMPTY STATE ── */
 .empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 20px;
-  color: var(--muted);
-  text-align: center;
-  gap: 12px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 80px 20px;
+color: var(–muted);
+text-align: center;
+gap: 12px;
 }
 .empty-state .icon { font-size: 48px; opacity: .4; }
-.empty-state h3 { font-size: 16px; font-weight: 700; color: var(--muted2); }
+.empty-state h3 { font-size: 16px; font-weight: 700; color: var(–muted2); }
 .empty-state p { font-size: 12px; max-width: 340px; line-height: 1.6; }
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(–border2); border-radius: 3px; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 900px) {
-  .layout { grid-template-columns: 1fr; }
-  .sidebar { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
+.layout { grid-template-columns: 1fr; }
+.sidebar { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(–border); }
 }
 
 /* ── TOAST ── */
 .toast {
-  position: fixed;
-  bottom: 24px; right: 24px;
-  background: var(--s3);
-  border: 1px solid var(--border2);
-  border-radius: var(--r2);
-  padding: 12px 18px;
-  font-size: 12px;
-  font-weight: 600;
-  z-index: 999;
-  transform: translateY(80px);
-  opacity: 0;
-  transition: all .3s cubic-bezier(.34,1.56,.64,1);
-  max-width: 320px;
+position: fixed;
+bottom: 24px; right: 24px;
+background: var(–s3);
+border: 1px solid var(–border2);
+border-radius: var(–r2);
+padding: 12px 18px;
+font-size: 12px;
+font-weight: 600;
+z-index: 999;
+transform: translateY(80px);
+opacity: 0;
+transition: all .3s cubic-bezier(.34,1.56,.64,1);
+max-width: 320px;
 }
 .toast.show { transform: translateY(0); opacity: 1; }
-.toast.ok  { border-color: rgba(46,213,115,.5); color: var(--green); }
-.toast.err { border-color: rgba(255,71,87,.5); color: var(--red); }
+.toast.ok  { border-color: rgba(46,213,115,.5); color: var(–green); }
+.toast.err { border-color: rgba(255,71,87,.5); color: var(–red); }
 
 /* ── DIVIDER ── */
-.divider { height: 1px; background: var(--border); margin: 4px 0; }
+.divider { height: 1px; background: var(–border); margin: 4px 0; }
 
 .settings-note {
-  font-size: 10px;
-  color: var(--muted);
-  line-height: 1.6;
-  background: var(--s2);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 10px 12px;
+font-size: 10px;
+color: var(–muted);
+line-height: 1.6;
+background: var(–s2);
+border: 1px solid var(–border);
+border-radius: var(–r);
+padding: 10px 12px;
 }
-.settings-note a { color: var(--accent2); }
+.settings-note a { color: var(–accent2); }
 
 .highlight-badge {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 2px 6px;
-  border-radius: 3px;
-  background: rgba(0,212,255,.1);
-  color: var(--accent2);
-  border: 1px solid rgba(0,212,255,.2);
+font-size: 9px;
+font-weight: 700;
+letter-spacing: 0.06em;
+text-transform: uppercase;
+padding: 2px 6px;
+border-radius: 3px;
+background: rgba(0,212,255,.1);
+color: var(–accent2);
+border: 1px solid rgba(0,212,255,.2);
 }
 </style>
+
 </head>
 <body>
 
 <!-- TOPBAR -->
+
 <div class="topbar">
   <div class="topbar-logo">
     <span class="badge">S803</span>
@@ -633,106 +636,110 @@ select option { background: #141720; }
 <div class="layout">
 
   <!-- SIDEBAR -->
+
   <aside class="sidebar">
 
-    <!-- API KEYS -->
-    <div class="sidebar-section">
-      <div class="section-label">&#x1F510; Blogger Connection</div>
+```
+<!-- API KEYS -->
+<div class="sidebar-section">
+  <div class="section-label">&#x1F510; Blogger Connection</div>
 
-      <!-- NOT signed in -->
-      <div id="signin-block">
-        <button class="google-signin-btn" onclick="signInWithGoogle()">
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-          Sign in with Google
-        </button>
-        <div class="settings-note" style="margin-top:8px;">
-          Sign in with the Google account that <strong>owns</strong> your Sports 803 Blogger blog.
-          No passwords stored &#x2014; uses secure Google OAuth.
-        </div>
-      </div>
-
-      <!-- Signed in -->
-      <div class="signed-in-block" id="signedin-block">
-        <div class="user-info-row">
-          <img class="user-avatar" id="user-avatar" src="" alt="">
-          <div style="flex:1;min-width:0;">
-            <div class="user-name" id="user-name"></div>
-            <div class="user-email" id="user-email"></div>
-          </div>
-          <button class="signout-btn" onclick="signOut()">Sign out</button>
-        </div>
-        <div class="input-group">
-          <label class="input-label">Blog ID</label>
-          <input type="text" id="blog-id" placeholder="3020785713747810415"/>
-        </div>
-        <button class="btn btn-secondary btn-full" onclick="saveConfig()">
-          <span class="btn-text">&#x1F4BE; Save Blog ID</span>
-        </button>
-        <div class="settings-note">
-          Your Blog ID is the number in your Blogger dashboard URL.<br>
-          e.g. <strong>3020785713747810415</strong>
-        </div>
-      </div>
+  <!-- NOT signed in -->
+  <div id="signin-block">
+    <button class="google-signin-btn" onclick="signInWithGoogle()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+      Sign in with Google
+    </button>
+    <div class="settings-note" style="margin-top:8px;">
+      Sign in with the Google account that <strong>owns</strong> your Sports 803 Blogger blog.
+      No passwords stored &#x2014; uses secure Google OAuth.
     </div>
+  </div>
 
-    <div class="divider"></div>
-
-    <!-- LEAGUES -->
-    <div class="sidebar-section">
-      <div class="section-label">⚽ Leagues to Monitor</div>
-      <div class="leagues-grid" id="leagues-grid">
-        <!-- populated by JS -->
+  <!-- Signed in -->
+  <div class="signed-in-block" id="signedin-block">
+    <div class="user-info-row">
+      <img class="user-avatar" id="user-avatar" src="" alt="">
+      <div style="flex:1;min-width:0;">
+        <div class="user-name" id="user-name"></div>
+        <div class="user-email" id="user-email"></div>
       </div>
+      <button class="signout-btn" onclick="signOut()">Sign out</button>
     </div>
-
-    <div class="divider"></div>
-
-    <!-- POST SETTINGS -->
-    <div class="sidebar-section">
-      <div class="section-label">⚙️ Post Settings</div>
-      <div class="input-group">
-        <label class="input-label">Post Language</label>
-        <select id="post-lang">
-          <option value="English">English</option>
-          <option value="Spanish">Spanish</option>
-          <option value="French">French</option>
-          <option value="Arabic">Arabic</option>
-          <option value="Portuguese">Portuguese</option>
-          <option value="German">German</option>
-          <option value="Italian">Italian</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Writing Style</label>
-        <select id="post-style">
-          <option value="energetic and engaging">⚡ Energetic & Engaging</option>
-          <option value="professional journalist">📰 Professional Journalist</option>
-          <option value="casual and fun">😄 Casual & Fun</option>
-          <option value="analytical and tactical">🎯 Analytical & Tactical</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <label class="input-label">Publish Mode</label>
-        <select id="publish-mode">
-          <option value="DRAFT">Draft (review first)</option>
-          <option value="LIVE">Live (auto-publish)</option>
-        </select>
-      </div>
+    <div class="input-group">
+      <label class="input-label">Blog ID</label>
+      <input type="text" id="blog-id" placeholder="3020785713747810415"/>
     </div>
-
-    <div class="divider"></div>
-
-    <!-- LOG -->
-    <div class="sidebar-section">
-      <div class="section-label">📋 Activity Log</div>
-      <div class="log-panel" id="log-panel">
-        <div class="log-line info"><span class="ts">--:--</span><span class="msg">Dashboard ready.</span></div>
-      </div>
+    <button class="btn btn-secondary btn-full" onclick="saveConfig()">
+      <span class="btn-text">&#x1F4BE; Save Blog ID</span>
+    </button>
+    <div class="settings-note">
+      Your Blog ID is the number in your Blogger dashboard URL.<br>
+      e.g. <strong>3020785713747810415</strong>
     </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- LEAGUES -->
+<div class="sidebar-section">
+  <div class="section-label">⚽ Leagues to Monitor</div>
+  <div class="leagues-grid" id="leagues-grid">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- POST SETTINGS -->
+<div class="sidebar-section">
+  <div class="section-label">⚙️ Post Settings</div>
+  <div class="input-group">
+    <label class="input-label">Post Language</label>
+    <select id="post-lang">
+      <option value="English">English</option>
+      <option value="Spanish">Spanish</option>
+      <option value="French">French</option>
+      <option value="Arabic">Arabic</option>
+      <option value="Portuguese">Portuguese</option>
+      <option value="German">German</option>
+      <option value="Italian">Italian</option>
+    </select>
+  </div>
+  <div class="input-group">
+    <label class="input-label">Writing Style</label>
+    <select id="post-style">
+      <option value="energetic and engaging">⚡ Energetic & Engaging</option>
+      <option value="professional journalist">📰 Professional Journalist</option>
+      <option value="casual and fun">😄 Casual & Fun</option>
+      <option value="analytical and tactical">🎯 Analytical & Tactical</option>
+    </select>
+  </div>
+  <div class="input-group">
+    <label class="input-label">Publish Mode</label>
+    <select id="publish-mode">
+      <option value="DRAFT">Draft (review first)</option>
+      <option value="LIVE">Live (auto-publish)</option>
+    </select>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- LOG -->
+<div class="sidebar-section">
+  <div class="section-label">📋 Activity Log</div>
+  <div class="log-panel" id="log-panel">
+    <div class="log-line info"><span class="ts">--:--</span><span class="msg">Dashboard ready.</span></div>
+  </div>
+</div>
+```
 
   </aside>
 
   <!-- MAIN -->
+
   <main class="main">
     <div class="main-header">
       <div>
@@ -751,40 +758,62 @@ select option { background: #141720; }
       </div>
     </div>
 
-    <!-- GAMES CONTAINER -->
-    <div id="games-container">
-      <div class="empty-state">
-        <div class="icon">📡</div>
-        <h3>No games loaded yet</h3>
-        <p>Configure your API keys, select leagues and click <strong>Scan Leagues</strong> to detect today's matches and generate AI content automatically.</p>
-      </div>
-    </div>
+```
+<!-- GAMES CONTAINER -->
+<div id="games-container">
+  <div class="empty-state">
+    <div class="icon">📡</div>
+    <h3>No games loaded yet</h3>
+    <p>Configure your API keys, select leagues and click <strong>Scan Leagues</strong> to detect today's matches and generate AI content automatically.</p>
+  </div>
+</div>
+```
+
   </main>
 </div>
 
 <!-- TOAST -->
+
 <div class="toast" id="toast"></div>
 
 <script>
 // ─── CONFIG ────────────────────────────────────────────────────────────────
 const LEAGUES = [
-  { id: 'soccer/uefa.champions', name: 'UCL',          emoji: '\u{1F3C6}', label: 'champions league' },
-  { id: 'soccer/eng.1',          name: 'Premier Lg',   emoji: '\u{26BD}',  label: 'premier league'  },
-  { id: 'soccer/esp.1',          name: 'La Liga',      emoji: '\u{26BD}',  label: 'la liga'          },
-  { id: 'soccer/ita.1',          name: 'Serie A',      emoji: '\u{26BD}',  label: 'serie a'          },
-  { id: 'soccer/ger.1',          name: 'Bundesliga',   emoji: '\u{26BD}',  label: 'bundesliga'       },
-  { id: 'soccer/fra.1',          name: 'Ligue 1',      emoji: '\u{26BD}',  label: 'ligue 1'          },
-  { id: 'soccer/uefa.europa',    name: 'Europa Lg',    emoji: '\u{1F7E0}', label: 'europa league'    },
-  { id: 'soccer/eng.fa',         name: 'FA Cup',       emoji: '\u{1F3C6}', label: 'fa cup'           },
-  { id: 'basketball/nba',        name: 'NBA',          emoji: '\u{1F3C0}', label: 'nba'              },
-  { id: 'football/nfl',          name: 'NFL',          emoji: '\u{1F3C8}', label: 'nfl'              },
-  { id: 'hockey/nhl',            name: 'NHL',          emoji: '\u{1F3D2}', label: 'nhl'              },
-  { id: 'racing/f1',             name: 'Formula 1',    emoji: '\u{1F3CE}', label: 'f1'               },
-  { id: 'soccer/usa.1',          name: 'MLS',          emoji: '\u{26BD}',  label: 'mls'              },
-  { id: 'soccer/tur.1',          name: 'Super Lig',    emoji: '\u{26BD}',  label: 'turkish'          },
+  // ── FOOTBALL ──
+  { id: 'soccer/uefa.champions', name: 'UCL',          emoji: '\u{1F3C6}', label: 'champions league', espn: true },
+  { id: 'soccer/eng.1',          name: 'Premier Lg',   emoji: '\u{26BD}',  label: 'premier league',   espn: true },
+  { id: 'soccer/esp.1',          name: 'La Liga',      emoji: '\u{26BD}',  label: 'la liga',           espn: true },
+  { id: 'soccer/ita.1',          name: 'Serie A',      emoji: '\u{26BD}',  label: 'serie a',           espn: true },
+  { id: 'soccer/ger.1',          name: 'Bundesliga',   emoji: '\u{26BD}',  label: 'bundesliga',        espn: true },
+  { id: 'soccer/fra.1',          name: 'Ligue 1',      emoji: '\u{26BD}',  label: 'ligue 1',           espn: true },
+  { id: 'soccer/uefa.europa',    name: 'Europa Lg',    emoji: '\u{1F7E0}', label: 'europa league',     espn: true },
+  { id: 'soccer/eng.fa',         name: 'FA Cup',       emoji: '\u{26BD}',  label: 'fa cup',            espn: true },
+  { id: 'soccer/usa.1',          name: 'MLS',          emoji: '\u{26BD}',  label: 'mls',               espn: true },
+  { id: 'soccer/tur.1',          name: 'Super Lig',    emoji: '\u{26BD}',  label: 'turkish',           espn: true },
+  // ── BASKETBALL ──
+  { id: 'basketball/nba',        name: 'NBA',          emoji: '\u{1F3C0}', label: 'nba',               espn: true },
+  // ── AMERICAN FOOTBALL ──
+  { id: 'football/nfl',          name: 'NFL',          emoji: '\u{1F3C8}', label: 'nfl',               espn: true },
+  // ── ICE HOCKEY ──
+  { id: 'hockey/nhl',            name: 'NHL / Ice Hockey', emoji: '\u{1F3D2}', label: 'ice hockey',   espn: true },
+  // ── MOTORSPORT ──
+  { id: 'racing/f1',             name: 'Formula 1',    emoji: '\u{1F3CE}', label: 'f1',                espn: true },
+  { id: 'racing/motogp',         name: 'MotoGP',       emoji: '\u{1F3CD}', label: 'motogp',            espn: false },
+  { id: 'racing/indycar',        name: 'IndyCar',      emoji: '\u{1F3CE}', label: 'indycar',           espn: false },
+  { id: 'racing/lemans',         name: 'Le Mans / WEC',emoji: '\u{1F3CE}', label: 'le mans',           espn: false },
+  // ── COMBAT SPORTS ──
+  { id: 'mma/ufc',               name: 'UFC / MMA',    emoji: '\u{1F94A}', label: 'ufc',               espn: false },
+  { id: 'boxing/wbc',            name: 'Boxing',       emoji: '\u{1F94A}', label: 'boxing',            espn: false },
+  { id: 'wrestling/wwe',         name: 'WWE',          emoji: '\u{1F93C}', label: 'wwe',               espn: false },
+  // ── TENNIS ──
+  { id: 'tennis/atp',            name: 'Tennis',       emoji: '\u{1F3BE}', label: 'tennis',            espn: false },
+  // ── CYCLING ──
+  { id: 'cycling/road',          name: 'Cycling',      emoji: '\u{1F6B4}', label: 'cycling',           espn: false },
+  // ── CRICKET ──
+  { id: 'cricket/icc',           name: 'Cricket',      emoji: '\u{1F3CF}', label: 'cricket',           espn: false },
 ];
 
-const DEFAULT_ACTIVE = ['soccer/uefa.champions','soccer/eng.1','soccer/esp.1','soccer/ita.1','soccer/ger.1','racing/f1'];
+const DEFAULT_ACTIVE = ['soccer/uefa.champions','soccer/eng.1','soccer/esp.1','soccer/ita.1','soccer/ger.1','racing/f1','basketball/nba','mma/ufc','tennis/atp'];
 
 let activeLeagues  = new Set(DEFAULT_ACTIVE);
 let detectedGames  = [];
@@ -1052,6 +1081,26 @@ async function scanAllLeagues() {
     var league = selected[i];
     try {
       log('info', '→ Fetching ' + league.name + '...');
+      // Non-ESPN leagues: create a manual placeholder card
+      if (!league.espn) {
+        detectedGames.push({
+          espnEvent: {
+            id: 'manual-' + league.id + '-' + Date.now(),
+            name: league.name + ' Event',
+            date: new Date().toISOString(),
+            status: { type: { state: 'pre', shortDetail: 'Today' } },
+            competitions: [{ competitors: [
+              { homeAway: 'home', team: { displayName: league.name, logo: null }, score: '0' },
+              { homeAway: 'away', team: { displayName: 'Live Event',   logo: null }, score: '0' },
+            ], venue: {}, headlines: [] }]
+          },
+          league: league, preContent: null, highlightContent: null,
+          blogPostId: null, status: 'idle', thumbUrl: null, isManual: true
+        });
+        totalFound++;
+        log('ok', '\u2713 ' + league.name + ': added as manual event');
+        continue;
+      }
       var events = await fetchESPN(league.id);
       for (var j = 0; j < events.length; j++) {
         var ev = events[j];
@@ -1216,315 +1265,341 @@ function renderGames() {
           + '<div id="text-preview-' + idx + '">' + previewText + '</div>'
           + '<div id="text-highlights-' + idx + '" style="display:none">' + highlightText + '</div>'
         + '</div>'
-        + '<div class="content-actions">'
-          + '<button class="btn btn-secondary" onclick="regenPreview(' + idx + ')"><span class="btn-text">\u{1F504} Regen Preview</span><div class="spin"></div></button>'
-          + highlightBtns
-          + '<button class="btn btn-primary" onclick="postToBlogger(' + idx + ',\'preview\')" ' + postPreviewDisabled + '><span class="btn-text">\u{1F4E4} Post Preview</span><div class="spin"></div></button>'
-        + '</div>'
-      + '</div>'
-    + '</div>';
-  }
-  container.innerHTML = html;
+        + '<div class="iframe-row">'
+          + '<div class="iframe-label">&#x1F4FA; Stream URL (iframe src) <span class="badge-tip">OPTIONAL</span></div>'
+          + '<textarea class="iframe-input" id="iframe-src-' + idx + '" rows="2" placeholder="Paste the src= URL of your iframe here e.g. https://soulmap1.blogspot.com/p/media-player.html?mora=https://...m3u8"></textarea>'
+
+```
+    + '</div>'
+    + '<div class="content-actions">'
+      + '<button class="btn btn-secondary" onclick="regenPreview(' + idx + ')"><span class="btn-text">\u{1F504} Regen</span><div class="spin"></div></button>'
+      + highlightBtns
+      + '<button class="btn btn-primary" onclick="postToBlogger(' + idx + ',\'preview\')" ' + postPreviewDisabled + '><span class="btn-text">\u{1F4E4} Post Preview</span><div class="spin"></div></button>'
+    + '</div>'
+  + '</div>'
++ '</div>';
+```
+
+}
+container.innerHTML = html;
 }
 
 function switchTab(idx, tab, el) {
-  document.getElementById('tab-pre-' + idx).classList.toggle('active', tab === 'preview');
-  document.getElementById('tab-hl-'  + idx).classList.toggle('active', tab === 'highlights');
-  document.getElementById('text-preview-'    + idx).style.display = tab === 'preview'    ? 'block' : 'none';
-  document.getElementById('text-highlights-' + idx).style.display = tab === 'highlights' ? 'block' : 'none';
+document.getElementById(‘tab-pre-’ + idx).classList.toggle(‘active’, tab === ‘preview’);
+document.getElementById(‘tab-hl-’  + idx).classList.toggle(‘active’, tab === ‘highlights’);
+document.getElementById(‘text-preview-’    + idx).style.display = tab === ‘preview’    ? ‘block’ : ‘none’;
+document.getElementById(‘text-highlights-’ + idx).style.display = tab === ‘highlights’ ? ‘block’ : ‘none’;
 }
 
 // ─── CONTENT PHRASES ──────────────────────────────────────────────────────
 var PREVIEW_PHRASES = [
-  "This is set to be a thrilling encounter as both sides go head to head in an exciting",
-  "Football fans are in for a treat as two top-flight clubs clash in what promises to be a compelling",
-  "All eyes are on this fixture as both managers prepare their squads for a crucial",
-  "Expect fireworks as these two sides renew their rivalry in a high-stakes",
-  "Supporters will be glued to their screens for this highly anticipated",
+“This is set to be a thrilling encounter as both sides go head to head in an exciting”,
+“Football fans are in for a treat as two top-flight clubs clash in what promises to be a compelling”,
+“All eyes are on this fixture as both managers prepare their squads for a crucial”,
+“Expect fireworks as these two sides renew their rivalry in a high-stakes”,
+“Supporters will be glued to their screens for this highly anticipated”,
 ];
 var FORM_PHRASES = [
-  "Both teams arrive in good form, having picked up positive results in their recent outings.",
-  "Recent league form suggests this could be evenly contested, with neither side having a clear edge.",
-  "Head-to-head records show this fixture typically produces goals and drama in equal measure.",
-  "Momentum is firmly on one side heading into this contest following a run of impressive performances.",
-  "Key injuries and suspensions could play a decisive role in shaping the outcome of this fixture.",
+“Both teams arrive in good form, having picked up positive results in their recent outings.”,
+“Recent league form suggests this could be evenly contested, with neither side having a clear edge.”,
+“Head-to-head records show this fixture typically produces goals and drama in equal measure.”,
+“Momentum is firmly on one side heading into this contest following a run of impressive performances.”,
+“Key injuries and suspensions could play a decisive role in shaping the outcome of this fixture.”,
 ];
 var PLAYER_PHRASES = [
-  "All eyes will be on the attacking players who have been in devastating form this season.",
-  "The midfield battle could prove decisive, with creative players on both sides capable of turning the game.",
-  "Set pieces and dead-ball situations are likely to play a role, with both teams possessing aerial threats.",
-  "The defensive units will be tested by pacey forwards looking to exploit space behind the backline.",
-  "Experienced campaigners in both squads will be eager to stamp their authority on this fixture.",
+“All eyes will be on the attacking players who have been in devastating form this season.”,
+“The midfield battle could prove decisive, with creative players on both sides capable of turning the game.”,
+“Set pieces and dead-ball situations are likely to play a role, with both teams possessing aerial threats.”,
+“The defensive units will be tested by pacey forwards looking to exploit space behind the backline.”,
+“Experienced campaigners in both squads will be eager to stamp their authority on this fixture.”,
 ];
 var CTA_PHRASES = [
-  "Watch the full live stream free on Sports 803 — no subscription required, no hidden fees.",
-  "Stream every kick free on Sports 803, your go-to destination for live sports online.",
-  "Don't miss a single minute — catch the free live stream exclusively on Sports 803.",
-  "Follow every tackle, goal, and moment of magic live and free on Sports 803.",
-  "Tune in free on Sports 803 and enjoy the action from wherever you are.",
+“Watch the full live stream free on Sports 803 — no subscription required, no hidden fees.”,
+“Stream every kick free on Sports 803, your go-to destination for live sports online.”,
+“Don’t miss a single minute — catch the free live stream exclusively on Sports 803.”,
+“Follow every tackle, goal, and moment of magic live and free on Sports 803.”,
+“Tune in free on Sports 803 and enjoy the action from wherever you are.”,
 ];
 var HIGHLIGHT_PHRASES = [
-  "A dramatic contest delivered plenty of talking points as the final whistle confirmed",
-  "It was an enthralling battle that lived up to its billing and produced an exciting",
-  "Both sets of supporters were treated to a pulsating match that swung back and forth in a",
-  "The game had everything — goals, tension, and standout performances — in an unforgettable",
-  "Tactical battles and individual brilliance combined to produce a spectacular result in this",
+“A dramatic contest delivered plenty of talking points as the final whistle confirmed”,
+“It was an enthralling battle that lived up to its billing and produced an exciting”,
+“Both sets of supporters were treated to a pulsating match that swung back and forth in a”,
+“The game had everything — goals, tension, and standout performances — in an unforgettable”,
+“Tactical battles and individual brilliance combined to produce a spectacular result in this”,
 ];
 var HIGHLIGHT_RESULT = [
-  "The match statistics tell only part of the story in what was a gripping ninety minutes.",
-  "Goals, controversy, and breathtaking skill made this one of the most memorable fixtures of the season.",
-  "Tactical discipline and clinical finishing were the hallmarks of the winning performance today.",
-  "Both managers will have plenty to reflect on after a contest packed with incident and quality.",
-  "The game unfolded exactly as anticipated, with both teams creating plenty of goalscoring opportunities.",
+“The match statistics tell only part of the story in what was a gripping ninety minutes.”,
+“Goals, controversy, and breathtaking skill made this one of the most memorable fixtures of the season.”,
+“Tactical discipline and clinical finishing were the hallmarks of the winning performance today.”,
+“Both managers will have plenty to reflect on after a contest packed with incident and quality.”,
+“The game unfolded exactly as anticipated, with both teams creating plenty of goalscoring opportunities.”,
 ];
 var HIGHLIGHT_CTA = [
-  "Relive all the goals and highlights free on Sports 803 — full match replay now available.",
-  "Watch the extended highlights and full match replay free on Sports 803 anytime.",
-  "Sports 803 has your full match replay and extended highlights — stream free now.",
-  "Catch every goal and key moment again in the free full match replay on Sports 803.",
-  "The full match and highlights are waiting for you — watch free on Sports 803.",
+“Relive all the goals and highlights free on Sports 803 — full match replay now available.”,
+“Watch the extended highlights and full match replay free on Sports 803 anytime.”,
+“Sports 803 has your full match replay and extended highlights — stream free now.”,
+“Catch every goal and key moment again in the free full match replay on Sports 803.”,
+“The full match and highlights are waiting for you — watch free on Sports 803.”,
 ];
 
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function generatePreviewText(homeName, awayName, leagueName, venue, dateStr) {
-  var sep     = Math.random() > 0.5 ? ' vs ' : ' x ';
-  var venueTxt = venue   ? ' at ' + venue   : '';
-  var dateTxt  = dateStr ? ' on ' + dateStr : ' today';
-  var p1 = pick(PREVIEW_PHRASES) + ' ' + leagueName + ' clash. '
-         + homeName + sep + awayName + venueTxt + dateTxt
-         + ' — watch the free live stream on Sports 803.';
-  var p2 = pick(FORM_PHRASES) + ' ' + pick(PLAYER_PHRASES);
-  var p3 = pick(CTA_PHRASES);
-  var text = p1 + '\n\n' + p2 + '\n\n' + p3;
-  return text.length > 580 ? text.slice(0, 577) + '...' : text;
+var sep     = Math.random() > 0.5 ? ’ vs ’ : ’ x ‘;
+var venueTxt = venue   ? ’ at ’ + venue   : ‘’;
+var dateTxt  = dateStr ? ’ on ’ + dateStr : ’ today’;
+var p1 = pick(PREVIEW_PHRASES) + ’ ’ + leagueName + ’ clash. ’
++ homeName + sep + awayName + venueTxt + dateTxt
++ ’ — watch the free live stream on Sports 803.’;
+var p2 = pick(FORM_PHRASES) + ’ ’ + pick(PLAYER_PHRASES);
+var p3 = pick(CTA_PHRASES);
+var text = p1 + ‘\n\n’ + p2 + ‘\n\n’ + p3;
+return text.length > 580 ? text.slice(0, 577) + ‘…’ : text;
 }
 
 function generateHighlightText(homeName, awayName, homeScore, awayScore, leagueName, headlines) {
-  var scoreLine = homeName + ' ' + homeScore + '-' + awayScore + ' ' + awayName;
-  var hScore = parseInt(homeScore, 10);
-  var aScore = parseInt(awayScore, 10);
-  var winner = hScore > aScore ? homeName : aScore > hScore ? awayName : null;
-  var p1 = scoreLine + ' — ' + pick(HIGHLIGHT_PHRASES) + ' ' + leagueName + ' fixture. ' + (headlines || '');
-  var p2 = pick(HIGHLIGHT_RESULT) + ' ' + (winner ? winner + ' showed tremendous quality to secure the three points.' : 'Honours were shared after a hard-fought draw.');
-  var p3 = pick(HIGHLIGHT_CTA);
-  var text = p1 + '\n\n' + p2.trim() + '\n\n' + p3;
-  return text.length > 580 ? text.slice(0, 577) + '...' : text;
+var scoreLine = homeName + ’ ’ + homeScore + ‘-’ + awayScore + ’ ’ + awayName;
+var hScore = parseInt(homeScore, 10);
+var aScore = parseInt(awayScore, 10);
+var winner = hScore > aScore ? homeName : aScore > hScore ? awayName : null;
+var p1 = scoreLine + ’ — ’ + pick(HIGHLIGHT_PHRASES) + ’ ’ + leagueName + ’ fixture. ’ + (headlines || ‘’);
+var p2 = pick(HIGHLIGHT_RESULT) + ’ ’ + (winner ? winner + ’ showed tremendous quality to secure the three points.’ : ‘Honours were shared after a hard-fought draw.’);
+var p3 = pick(HIGHLIGHT_CTA);
+var text = p1 + ‘\n\n’ + p2.trim() + ‘\n\n’ + p3;
+return text.length > 580 ? text.slice(0, 577) + ‘…’ : text;
 }
 
 // ─── CONTENT GENERATORS ────────────────────────────────────────────────────
 async function generatePreviewContent(idx) {
-  var gd = detectedGames[idx];
-  if (!gd) return;
-  var c       = getCompetitors(gd);
-  var venue   = (gd.espnEvent.competitions && gd.espnEvent.competitions[0] && gd.espnEvent.competitions[0].venue && gd.espnEvent.competitions[0].venue.fullName) || '';
-  var rawDate = gd.espnEvent.date ? new Date(gd.espnEvent.date) : null;
-  var dateStr = rawDate ? rawDate.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }) : '';
-  var homeName = (c.home.team && c.home.team.displayName) || '?';
-  var awayName = (c.away.team && c.away.team.displayName) || '?';
+var gd = detectedGames[idx];
+if (!gd) return;
+var c       = getCompetitors(gd);
+var venue   = (gd.espnEvent.competitions && gd.espnEvent.competitions[0] && gd.espnEvent.competitions[0].venue && gd.espnEvent.competitions[0].venue.fullName) || ‘’;
+var rawDate = gd.espnEvent.date ? new Date(gd.espnEvent.date) : null;
+var dateStr = rawDate ? rawDate.toLocaleDateString(‘en-US’, { weekday:‘short’, month:‘short’, day:‘numeric’ }) : ‘’;
+var homeName = (c.home.team && c.home.team.displayName) || ‘?’;
+var awayName = (c.away.team && c.away.team.displayName) || ‘?’;
 
-  var thumb = await fetchMatchThumbnail(gd);
-  gd.thumbUrl = thumb;
+var thumb = await fetchMatchThumbnail(gd);
+gd.thumbUrl = thumb;
 
-  var text = generatePreviewText(homeName, awayName, gd.league.name, venue, dateStr);
-  gd.preContent = text;
+var text = generatePreviewText(homeName, awayName, gd.league.name, venue, dateStr);
+gd.preContent = text;
 
-  var el = document.getElementById('text-preview-' + idx);
-  if (el) el.innerHTML = '<div class="content-text">' + escHtml(text) + '</div>';
+var el = document.getElementById(‘text-preview-’ + idx);
+if (el) el.innerHTML = ‘<div class="content-text">’ + escHtml(text) + ‘</div>’;
 
-  var btn = document.querySelector('#card-' + idx + ' [onclick*="postToBlogger"][onclick*="preview"]');
-  if (btn) btn.removeAttribute('disabled');
-  log('ok', '\u2713 Content ready: ' + homeName + ' vs ' + awayName);
+var btn = document.querySelector(’#card-’ + idx + ’ [onclick*=“postToBlogger”][onclick*=“preview”]’);
+if (btn) btn.removeAttribute(‘disabled’);
+log(‘ok’, ’\u2713 Content ready: ’ + homeName + ’ vs ’ + awayName);
 }
 
 async function generateHighlightContent(idx) {
-  var gd = detectedGames[idx];
-  if (!gd) return;
-  var c        = getCompetitors(gd);
-  var score    = getScore(gd);
-  var homeName = (c.home.team && c.home.team.displayName) || '?';
-  var awayName = (c.away.team && c.away.team.displayName) || '?';
-  var headlines = (gd.espnEvent.competitions && gd.espnEvent.competitions[0] && gd.espnEvent.competitions[0].headlines && gd.espnEvent.competitions[0].headlines[0] && gd.espnEvent.competitions[0].headlines[0].description) || '';
+var gd = detectedGames[idx];
+if (!gd) return;
+var c        = getCompetitors(gd);
+var score    = getScore(gd);
+var homeName = (c.home.team && c.home.team.displayName) || ‘?’;
+var awayName = (c.away.team && c.away.team.displayName) || ‘?’;
+var headlines = (gd.espnEvent.competitions && gd.espnEvent.competitions[0] && gd.espnEvent.competitions[0].headlines && gd.espnEvent.competitions[0].headlines[0] && gd.espnEvent.competitions[0].headlines[0].description) || ‘’;
 
-  var text = generateHighlightText(homeName, awayName, score.home, score.away, gd.league.name, headlines);
-  gd.highlightContent = text;
+var text = generateHighlightText(homeName, awayName, score.home, score.away, gd.league.name, headlines);
+gd.highlightContent = text;
 
-  var el = document.getElementById('text-highlights-' + idx);
-  if (el) el.innerHTML = '<div class="content-text">' + escHtml(text) + '</div>';
-  log('ok', '\u2713 Highlights ready: ' + homeName + ' vs ' + awayName);
-  renderGames();
+var el = document.getElementById(‘text-highlights-’ + idx);
+if (el) el.innerHTML = ‘<div class="content-text">’ + escHtml(text) + ‘</div>’;
+log(‘ok’, ’\u2713 Highlights ready: ’ + homeName + ’ vs ’ + awayName);
+renderGames();
 }
 
 async function regenPreview(idx) {
-  detectedGames[idx].preContent = null;
-  var el = document.getElementById('text-preview-' + idx);
-  if (el) el.innerHTML = '<div class="content-empty">\u23F3 Regenerating...</div>';
-  await generatePreviewContent(idx);
+detectedGames[idx].preContent = null;
+var el = document.getElementById(‘text-preview-’ + idx);
+if (el) el.innerHTML = ‘<div class="content-empty">\u23F3 Regenerating…</div>’;
+await generatePreviewContent(idx);
 }
 
 async function regenHighlights(idx) {
-  detectedGames[idx].highlightContent = null;
-  var el = document.getElementById('text-highlights-' + idx);
-  if (el) el.innerHTML = '<div class="content-empty">\u23F3 Regenerating...</div>';
-  await generateHighlightContent(idx);
+detectedGames[idx].highlightContent = null;
+var el = document.getElementById(‘text-highlights-’ + idx);
+if (el) el.innerHTML = ‘<div class="content-empty">\u23F3 Regenerating…</div>’;
+await generateHighlightContent(idx);
 }
 
 // ─── THUMBNAIL FETCHER ────────────────────────────────────────────────────
 var LEAGUE_THUMBS = {
-  'soccer/uefa.champions': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/UEFA_Champions_League.svg/400px-UEFA_Champions_League.svg.png',
-  'soccer/eng.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Premier_League.svg/400px-Premier_League.svg.png',
-  'soccer/esp.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/LaLiga_2023_Horizontal_Logo.svg/400px-LaLiga_2023_Horizontal_Logo.svg.png',
-  'soccer/ita.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Serie_A_Made_in_Italy_logo.svg/400px-Serie_A_Made_in_Italy_logo.svg.png',
-  'soccer/ger.1':          'https://upload.wikimedia.org/wikinews/en/thumb/1/15/Bundesliga_logo.svg/400px-Bundesliga_logo.svg.png',
-  'soccer/fra.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Ligue_1_McDonald%27s_logo.svg/400px-Ligue_1_McDonald%27s_logo.svg.png',
-  'basketball/nba':        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/NBA_logo.svg/400px-NBA_logo.svg.png',
-  'racing/f1':             'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/400px-F1.svg.png',
-  'soccer/eng.fa':         'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/FA_Cup.svg/400px-FA_Cup.svg.png',
+‘soccer/uefa.champions’: ‘https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/UEFA_Champions_League.svg/400px-UEFA_Champions_League.svg.png’,
+‘soccer/eng.1’:          ‘https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Premier_League.svg/400px-Premier_League.svg.png’,
+‘soccer/esp.1’:          ‘https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/LaLiga_2023_Horizontal_Logo.svg/400px-LaLiga_2023_Horizontal_Logo.svg.png’,
+‘soccer/ita.1’:          ‘https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Serie_A_Made_in_Italy_logo.svg/400px-Serie_A_Made_in_Italy_logo.svg.png’,
+‘soccer/ger.1’:          ‘https://upload.wikimedia.org/wikinews/en/thumb/1/15/Bundesliga_logo.svg/400px-Bundesliga_logo.svg.png’,
+‘soccer/fra.1’:          ‘https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Ligue_1_McDonald%27s_logo.svg/400px-Ligue_1_McDonald%27s_logo.svg.png’,
+‘basketball/nba’:        ‘https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/NBA_logo.svg/400px-NBA_logo.svg.png’,
+‘racing/f1’:             ‘https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/400px-F1.svg.png’,
+‘soccer/eng.fa’:         ‘https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/FA_Cup.svg/400px-FA_Cup.svg.png’,
 };
 
 async function fetchMatchThumbnail(gd) {
-  var c = getCompetitors(gd);
-  // 1. ESPN team logo
-  var espnLogo = (c.home.team && c.home.team.logo) || null;
-  if (espnLogo) return espnLogo;
+var c = getCompetitors(gd);
+// 1. ESPN team logo
+var espnLogo = (c.home.team && c.home.team.logo) || null;
+if (espnLogo) return espnLogo;
 
-  // 2. TheSportsDB
-  var teamName = (c.home.team && c.home.team.displayName) || '';
-  if (teamName) {
-    try {
-      var controller = new AbortController();
-      setTimeout(function(){ controller.abort(); }, 4000);
-      var r = await fetch('https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=' + encodeURIComponent(teamName), { signal: controller.signal });
-      var d = await r.json();
-      var badge = (d.teams && d.teams[0] && (d.teams[0].strTeamBadge || d.teams[0].strTeamFanart1)) || null;
-      if (badge) return badge;
-    } catch(e) {}
-  }
+// 2. TheSportsDB
+var teamName = (c.home.team && c.home.team.displayName) || ‘’;
+if (teamName) {
+try {
+var controller = new AbortController();
+setTimeout(function(){ controller.abort(); }, 4000);
+var r = await fetch(‘https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=’ + encodeURIComponent(teamName), { signal: controller.signal });
+var d = await r.json();
+var badge = (d.teams && d.teams[0] && (d.teams[0].strTeamBadge || d.teams[0].strTeamFanart1)) || null;
+if (badge) return badge;
+} catch(e) {}
+}
 
-  // 3. League fallback
-  return LEAGUE_THUMBS[gd.league.id] || null;
+// 3. League fallback
+return LEAGUE_THUMBS[gd.league.id] || null;
 }
 
 // Build post title with vs or x format
 function buildPostTitle(homeName, awayName, type, score, leagueName) {
-  var sep = Math.random() > 0.5 ? ' vs ' : ' x ';
-  if (type === 'preview') {
-    return homeName + sep + awayName + ' - Free Live Stream | ' + leagueName + ' | Sports 803';
-  }
-  return homeName + ' ' + score.home + '-' + score.away + ' ' + awayName + ' Highlights | ' + leagueName + ' | Sports 803';
+var sep = Math.random() > 0.5 ? ’ vs ’ : ’ x ‘;
+if (type === ‘preview’) {
+return homeName + sep + awayName + ’ - Free Live Stream | ’ + leagueName + ’ | Sports 803’;
+}
+return homeName + ’ ’ + score.home + ‘-’ + score.away + ’ ’ + awayName + ’ Highlights | ’ + leagueName + ’ | Sports 803’;
 }
 
 // ─── BLOGGER API ───────────────────────────────────────────────────────────
 async function postToBlogger(idx, type) {
-  var gd      = detectedGames[idx];
-  var btn     = event.currentTarget;
-  var blogId  = document.getElementById('blog-id').value.trim();
-  var pubMode = document.getElementById('publish-mode').value;
+var gd      = detectedGames[idx];
+var btn     = event.currentTarget;
+var blogId  = document.getElementById(‘blog-id’).value.trim();
+var pubMode = document.getElementById(‘publish-mode’).value;
 
-  // Check OAuth token
-  if (!oauthToken || Date.now() >= tokenExpiresAt) {
-    toast('Please sign in with Google first', 'err');
-    log('err', 'Not signed in — click Sign in with Google');
-    return;
-  }
-  if (!blogId) { toast('Enter your Blog ID first', 'err'); return; }
+// Check OAuth token
+if (!oauthToken || Date.now() >= tokenExpiresAt) {
+toast(‘Please sign in with Google first’, ‘err’);
+log(‘err’, ‘Not signed in — click Sign in with Google’);
+return;
+}
+if (!blogId) { toast(‘Enter your Blog ID first’, ‘err’); return; }
 
-  var postContent = type === 'preview' ? gd.preContent : gd.highlightContent;
-  if (!postContent) { toast('No content to post yet', 'err'); return; }
+var postContent = type === ‘preview’ ? gd.preContent : gd.highlightContent;
+if (!postContent) { toast(‘No content to post yet’, ‘err’); return; }
 
-  btn.classList.add('loading'); btn.disabled = true;
+btn.classList.add(‘loading’); btn.disabled = true;
 
-  var c        = getCompetitors(gd);
-  var score    = getScore(gd);
-  var homeName = (c.home.team && c.home.team.displayName) || '?';
-  var awayName = (c.away.team && c.away.team.displayName) || '?';
-  var title    = buildPostTitle(homeName, awayName, type, score, gd.league.name);
+var c        = getCompetitors(gd);
+var score    = getScore(gd);
+var homeName = (c.home.team && c.home.team.displayName) || ‘?’;
+var awayName = (c.away.team && c.away.team.displayName) || ‘?’;
+var title    = buildPostTitle(homeName, awayName, type, score, gd.league.name);
 
-  var thumbImg = gd.thumbUrl
-    ? '<div style="text-align:center;margin-bottom:18px;"><a href="https://alvinalexa.github.io/Todays-Events/" target="_blank"><img src="' + gd.thumbUrl + '" alt="' + title + '" style="max-width:100%;height:auto;border-radius:8px;" /></a></div>'
-    : '';
+// Get iframe src from the input field
+var iframeSrcEl = document.getElementById(‘iframe-src-’ + idx);
+var iframeSrc   = iframeSrcEl ? iframeSrcEl.value.trim() : ‘’;
 
-  var paragraphs = postContent.split('\n\n').filter(function(p){ return p.trim(); });
-  var bodyHtml = paragraphs.map(function(p){ return '<p>' + p.trim() + '</p>'; }).join('\n');
+var thumbImg = gd.thumbUrl
+? ‘<div style="text-align:center;margin-bottom:18px;"><a href="https://alvinalexa.github.io/Todays-Events/" target="_blank"><img src="' + gd.thumbUrl + '" alt="' + title + '" style="max-width:100%;height:auto;border-radius:8px;" /></a></div>’
+: ‘’;
 
-  var htmlContent = '<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.8;color:#333;">\n'
-    + thumbImg + '\n'
-    + bodyHtml + '\n'
-    + '<p><strong>\u{1F4FA} Watch free on Sports 803:</strong> <a href="https://alvinalexa.github.io/Todays-Events/" target="_blank">alvinalexa.github.io/Todays-Events</a></p>\n'
-    + '</div>';
+var iframeHtml = iframeSrc
+? ‘<div style="margin:18px 0;">\n’
++ ’<iframe loading=“lazy” class=“video-iframe” name=“search_iframe” ’
++ ’sandbox=“allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation” ’
++ ’allow=“encrypted-media” width=“100%” height=“500” ’
++ ‘src=”’ + iframeSrc + ’” ’
++ ‘frameborder=“0” scrolling=“no” allowfullscreen=“allowfullscreen”></iframe>\n’
++ ‘</div>’
+: ‘’;
 
-  var labels = [gd.league.label, 'sports 803', type === 'highlights' ? 'highlights' : 'live stream'];
+var paragraphs = postContent.split(’\n\n’).filter(function(p){ return p.trim(); });
+var bodyHtml = paragraphs.map(function(p){ return ‘<p>’ + p.trim() + ‘</p>’; }).join(’\n’);
 
-  try {
-    var method = 'POST';
-    var url    = 'https://www.googleapis.com/blogger/v3/blogs/' + blogId + '/posts/?isDraft=' + (pubMode === 'DRAFT' ? 'true' : 'false');
-    var body   = { title: title, content: htmlContent, labels: labels };
+var htmlContent = ‘<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.8;color:#333;">\n’
++ thumbImg + ‘\n’
++ bodyHtml + ‘\n’
++ iframeHtml + ‘\n’
++ ‘<p>\u{1F4FA} <strong>Watch Live Free on Sports 803</strong></p>\n’
++ ‘</div>’;
 
-    if (type === 'highlights' && gd.blogPostId) {
-      method  = 'PUT';
-      url     = 'https://www.googleapis.com/blogger/v3/blogs/' + blogId + '/posts/' + gd.blogPostId;
-      body.id = gd.blogPostId;
-    }
+var labels = [gd.league.label, ‘sports 803’, type === ‘highlights’ ? ‘highlights’ : ‘live stream’];
 
-    var r = await fetch(url, {
-      method: method,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + oauthToken,
-      },
-      body: JSON.stringify(body),
-    });
+try {
+var method = ‘POST’;
+var url    = ‘https://www.googleapis.com/blogger/v3/blogs/’ + blogId + ‘/posts/?isDraft=’ + (pubMode === ‘DRAFT’ ? ‘true’ : ‘false’);
+var body   = { title: title, content: htmlContent, labels: labels };
 
-    if (!r.ok) {
-      var err = await r.json().catch(function(){ return {}; });
-      throw new Error((err.error && err.error.message) || 'Blogger API ' + r.status);
-    }
+```
+if (type === 'highlights' && gd.blogPostId) {
+  method  = 'PUT';
+  url     = 'https://www.googleapis.com/blogger/v3/blogs/' + blogId + '/posts/' + gd.blogPostId;
+  body.id = gd.blogPostId;
+}
 
-    var data = await r.json();
-    if (type === 'preview') {
-      gd.blogPostId = data.id;
-      gd.status = pubMode === 'DRAFT' ? 'draft' : 'posted';
-    } else {
-      gd.status = 'updated';
-    }
+var r = await fetch(url, {
+  method: method,
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + oauthToken,
+  },
+  body: JSON.stringify(body),
+});
 
-    renderGames();
-    toast('\u2713 ' + (type === 'preview' ? 'Preview' : 'Highlights') + ' ' + (pubMode === 'DRAFT' ? 'saved as draft' : 'published') + '!', 'ok');
-    log('ok', '\u2713 ' + (pubMode === 'DRAFT' ? 'Draft saved' : 'Published') + ': "' + title + '"');
+if (!r.ok) {
+  var err = await r.json().catch(function(){ return {}; });
+  throw new Error((err.error && err.error.message) || 'Blogger API ' + r.status);
+}
 
-  } catch(e) {
-    toast('Post failed: ' + e.message, 'err');
-    log('err', 'Blogger error: ' + e.message);
-  }
+var data = await r.json();
+if (type === 'preview') {
+  gd.blogPostId = data.id;
+  gd.status = pubMode === 'DRAFT' ? 'draft' : 'posted';
+} else {
+  gd.status = 'updated';
+}
 
-  btn.classList.remove('loading'); btn.disabled = false;
+renderGames();
+toast('\u2713 ' + (type === 'preview' ? 'Preview' : 'Highlights') + ' ' + (pubMode === 'DRAFT' ? 'saved as draft' : 'published') + '!', 'ok');
+log('ok', '\u2713 ' + (pubMode === 'DRAFT' ? 'Draft saved' : 'Published') + ': "' + title + '"');
+```
+
+} catch(e) {
+toast(’Post failed: ’ + e.message, ‘err’);
+log(‘err’, ’Blogger error: ’ + e.message);
+}
+
+btn.classList.remove(‘loading’); btn.disabled = false;
 }
 
 // ─── LOG ───────────────────────────────────────────────────────────────────
 function log(type, msg) {
-  var panel = document.getElementById('log-panel');
-  var ts    = new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-  var line  = document.createElement('div');
-  line.className = 'log-line ' + type;
-  line.innerHTML = '<span class="ts">' + ts + '</span><span class="msg">' + msg + '</span>';
-  panel.appendChild(line);
-  panel.scrollTop = panel.scrollHeight;
+var panel = document.getElementById(‘log-panel’);
+var ts    = new Date().toLocaleTimeString(‘en-US’, { hour:‘2-digit’, minute:‘2-digit’, second:‘2-digit’ });
+var line  = document.createElement(‘div’);
+line.className = ’log-line ’ + type;
+line.innerHTML = ‘<span class="ts">’ + ts + ‘</span><span class="msg">’ + msg + ‘</span>’;
+panel.appendChild(line);
+panel.scrollTop = panel.scrollHeight;
 }
 
 // ─── TOAST ─────────────────────────────────────────────────────────────────
 var toastTimer;
 function toast(msg, type) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast ' + (type || 'ok') + ' show';
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3000);
+var t = document.getElementById(‘toast’);
+t.textContent = msg;
+t.className = ‘toast ’ + (type || ‘ok’) + ’ show’;
+clearTimeout(toastTimer);
+toastTimer = setTimeout(function(){ t.classList.remove(‘show’); }, 3000);
 }
 
 // ─── UTILS ─────────────────────────────────────────────────────────────────
 function escHtml(s) {
-  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+return (s || ‘’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’);
 }
 </script>
+
 </body>
 </html>
