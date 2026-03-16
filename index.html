@@ -2317,7 +2317,7 @@ async function postToBlogger(idx, type) {
   var paragraphs = postContent.split('\n\n').filter(function(p){ return p.trim(); });
   var bodyHtml   = paragraphs.map(function(p){ return '<p>' + p.trim() + '</p>'; }).join('\n');
 
-  var htmlContent = '<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.8;color:#333;">\n'
+  var htmlContent = '<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.8;color:#f0f0f0;">\n'
     + thumbImg + '\n'
     + bodyHtml + '\n'
     + iframeHtml + '\n'
