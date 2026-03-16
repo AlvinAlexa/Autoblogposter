@@ -1478,7 +1478,7 @@ async function generatePreviewContent(idx) {
   var homeName = (c.home.team && c.home.team.displayName) || '?';
   var awayName = (c.away.team && c.away.team.displayName) || '?';
 
-  var thumb = await fetchMatchThumbnail(gd);
+  var thumb = await generateMatchThumbnail(gd);
   gd.thumbUrl = thumb;
 
   var text = generatePreviewText(homeName, awayName, gd.league.name, venue, dateStr);
@@ -1642,6 +1642,9 @@ function drawTeamBadge(ctx, img, initials, cx, cy, size) {
   ctx.restore();
 }
 
+// Sports 803 branding logo — shown small at top-right of every card
+var S803_LOGO_URL = 'https://blogger.googleusercontent.com/img/a/AVvXsEhkrChEsEMwGBI_ER0QO_kl2NX97p5SBIlSwrZSBP_MTm7Ergzb8yPetLiCBIiCYMB9K3wtEaDIcQVRfrvKKU3KSyHFmLVodd4IyYvtOEtvMkMh11X-iGBQaQmDvpW7g2qwvvjX8tmBrj_NVXldV8Nd-3qzPgp23rh7YdYILdyXGwe210Qw1JofTJM9jAc=s94';
+
 // Main composite generator — returns a base64 PNG data URL
 async function generateMatchThumbnail(gd) {
   var c        = getCompetitors(gd);
@@ -1671,16 +1674,18 @@ async function generateMatchThumbnail(gd) {
     } catch(e) {}
   }
 
-  // Load all images in parallel
+  // Load all images in parallel — including S803 logo
   var leagueBadgeUrl = LEAGUE_BADGE[lid] || null;
   var results = await Promise.all([
     loadImageCORS(homeLogo),
     loadImageCORS(awayLogo),
     loadImageCORS(leagueBadgeUrl),
+    loadImageCORS(S803_LOGO_URL),
   ]);
   var homeImg   = results[0];
   var awayImg   = results[1];
   var leagueImg = results[2];
+  var s803Img   = results[3];
 
   // ── Draw canvas ────────────────────────────────────────────────────────
   var W = 800, H = 420;
@@ -1797,6 +1802,45 @@ async function generateMatchThumbnail(gd) {
   ctx.fillText(awayName, W * 0.78, cy + badgeSize / 2 + 16);
   ctx.restore();
 
+  // ── Sports 803 logo — top-right corner ───────────────────────────────
+  var logoSize = 46;   // size in px on the 800×420 canvas
+  var logoPad  = 12;
+  var logoX    = W - logoPad - logoSize;
+  var logoY    = logoPad;
+
+  if (s803Img) {
+    ctx.save();
+    // subtle dark pill background so logo always pops regardless of team colours
+    var pillPad = 6;
+    roundRect(ctx, logoX - pillPad, logoY - pillPad, logoSize + pillPad * 2, logoSize + pillPad * 2, (logoSize + pillPad * 2) / 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fill();
+    roundRect(ctx, logoX - pillPad, logoY - pillPad, logoSize + pillPad * 2, logoSize + pillPad * 2, (logoSize + pillPad * 2) / 2);
+    ctx.strokeStyle = 'rgba(212,175,55,0.5)';   // gold ring
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    // circular clip for the logo itself
+    ctx.beginPath();
+    ctx.arc(logoX + logoSize / 2, logoY + logoSize / 2, logoSize / 2, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(s803Img, logoX, logoY, logoSize, logoSize);
+    ctx.restore();
+  } else {
+    // Text fallback if image fails CORS
+    ctx.save();
+    var pillW = 90, pillH = 26;
+    var px = W - logoPad - pillW, py = logoPad;
+    roundRect(ctx, px, py, pillW, pillH, pillH / 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.65)';
+    ctx.fill();
+    ctx.fillStyle = '#d4af37';
+    ctx.font = 'bold 12px Syne, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('SPORTS 803', px + pillW / 2, py + pillH / 2);
+    ctx.restore();
+  }
+
   // Bottom bar: Sports 803 watermark
   ctx.save();
   var barH = 44;
@@ -1826,14 +1870,20 @@ async function generateMatchThumbnail(gd) {
   try {
     return canvas.toDataURL('image/jpeg', 0.92);
   } catch(e) {
-    // Tainted canvas — redraw without images and export clean version
+    // Tainted canvas — redraw without external images and export clean version
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = leftCol;  ctx.fillRect(0,     0, W/2, H);
-    ctx.fillStyle = rightCol; ctx.fillRect(W/2,   0, W/2, H);
+    ctx.fillStyle = leftCol;  ctx.fillRect(0,   0, W/2, H);
+    ctx.fillStyle = rightCol; ctx.fillRect(W/2, 0, W/2, H);
     drawInitialBadge(ctx, homeName.slice(0,3), W * 0.22, cy, badgeSize, '#1e2740');
     drawInitialBadge(ctx, awayName.slice(0,3), W * 0.78, cy, badgeSize, '#1e2740');
-    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 24px Arial'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 24px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(homeName + '  vs  ' + awayName, W/2, H/2);
+    // S803 text badge fallback
+    var fp = 8, fw = 84, fh = 24;
+    roundRect(ctx, W - fp - fw, fp, fw, fh, fh/2);
+    ctx.fillStyle = 'rgba(0,0,0,0.65)'; ctx.fill();
+    ctx.fillStyle = '#d4af37'; ctx.font = 'bold 11px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('SPORTS 803', W - fp - fw/2, fp + fh/2);
     try { return canvas.toDataURL('image/jpeg', 0.92); } catch(e2) { return null; }
   }
 }
