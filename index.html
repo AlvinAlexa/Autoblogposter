@@ -1525,36 +1525,329 @@ async function regenHighlights(idx) {
 }
 
 // ─── THUMBNAIL FETCHER ────────────────────────────────────────────────────
-var LEAGUE_THUMBS = {
-  'soccer/uefa.champions': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/UEFA_Champions_League.svg/400px-UEFA_Champions_League.svg.png',
-  'soccer/eng.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Premier_League.svg/400px-Premier_League.svg.png',
-  'soccer/esp.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/LaLiga_2023_Horizontal_Logo.svg/400px-LaLiga_2023_Horizontal_Logo.svg.png',
-  'soccer/ita.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Serie_A_Made_in_Italy_logo.svg/400px-Serie_A_Made_in_Italy_logo.svg.png',
-  'soccer/ger.1':          'https://upload.wikimedia.org/wikinews/en/thumb/1/15/Bundesliga_logo.svg/400px-Bundesliga_logo.svg.png',
-  'soccer/fra.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Ligue_1_McDonald%27s_logo.svg/400px-Ligue_1_McDonald%27s_logo.svg.png',
-  'basketball/nba':        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/NBA_logo.svg/400px-NBA_logo.svg.png',
-  'racing/f1':             'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/400px-F1.svg.png',
-  'soccer/eng.fa':         'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/FA_Cup.svg/400px-FA_Cup.svg.png',
+// ─── LOGO SOURCES ─────────────────────────────────────────────────────────
+// ESPN team logos come directly from the scoreboard API (already in gd.espnEvent)
+// TheSportsDB free tier (v1/json/3/) needs no API key — CORS-friendly
+// Canvas composite works fully on GitHub Pages — no server needed
+
+// League center badge URLs (PNG, CORS-friendly via Wikimedia)
+var LEAGUE_BADGE = {
+  'soccer/uefa.champions': 'https://upload.wikimedia.org/wikipedia/en/thumb/b/bf/UEFA_Champions_League_logo_2.svg/200px-UEFA_Champions_League_logo_2.svg.png',
+  'soccer/eng.1':          'https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Premier_League_Logo.svg/200px-Premier_League_Logo.svg.png',
+  'soccer/esp.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/LaLiga_2023_Horizontal_Logo.svg/200px-LaLiga_2023_Horizontal_Logo.svg.png',
+  'soccer/ita.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Serie_A_Made_in_Italy_logo.svg/200px-Serie_A_Made_in_Italy_logo.svg.png',
+  'soccer/ger.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Bundesliga_logo_%282017%29.svg/200px-Bundesliga_logo_%282017%29.svg.png',
+  'soccer/fra.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Ligue1_logo_2024.svg/200px-Ligue1_logo_2024.svg.png',
+  'soccer/uefa.europa':    'https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/UEFA_Europa_League_logo_%282021%E2%80%93%29.svg/200px-UEFA_Europa_League_logo_%282021%E2%80%93%29.svg.png',
+  'soccer/eng.fa':         'https://upload.wikimedia.org/wikipedia/en/thumb/6/6d/The_FA_Cup.svg/200px-The_FA_Cup.svg.png',
+  'soccer/usa.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Major_League_Soccer_logo.svg/200px-Major_League_Soccer_logo.svg.png',
+  'soccer/tur.1':          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/S%C3%BCper_Lig_logo_%282022%29.svg/200px-S%C3%BCper_Lig_logo_%282022%29.svg.png',
+  'basketball/nba':        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/NBA_logo.svg/200px-NBA_logo.svg.png',
+  'football/nfl':          'https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/National_Football_League_logo.svg/200px-National_Football_League_logo.svg.png',
+  'hockey/nhl':            'https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/05_NHL_Shield.svg/200px-05_NHL_Shield.svg.png',
+  'racing/f1':             'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/200px-F1.svg.png',
+  'mma/ufc':               'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/UFC_Logo.svg/200px-UFC_Logo.svg.png',
+  'tennis/atp':            'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/ATP_Tour_logo.svg/200px-ATP_Tour_logo.svg.png',
 };
 
-async function fetchMatchThumbnail(gd) {
-  var c = getCompetitors(gd);
-  var espnLogo = (c.home.team && c.home.team.logo) || null;
-  if (espnLogo) return espnLogo;
+// Sport-category background colours: [leftHex, rightHex]
+var LEAGUE_COLORS = {
+  'soccer/uefa.champions': ['#0a1c3e','#0f2550'],
+  'soccer/eng.1':          ['#3d0014','#1a003a'],
+  'soccer/esp.1':          ['#c8002d','#003087'],
+  'soccer/ita.1':          ['#0a2240','#008c45'],
+  'soccer/ger.1':          ['#d20515','#1c1c1c'],
+  'soccer/fra.1':          ['#0a1e5e','#1a1a2e'],
+  'soccer/uefa.europa':    ['#f47920','#1a1a2e'],
+  'soccer/eng.fa':         ['#003090','#1a1a2e'],
+  'basketball/nba':        ['#1d428a','#c8102e'],
+  'football/nfl':          ['#013087','#d50a0a'],
+  'hockey/nhl':            ['#000e62','#1a1a1a'],
+  'racing/f1':             ['#e8002d','#1a1a1a'],
+  'mma/ufc':               ['#d20a11','#1a1a1a'],
+  'tennis/atp':            ['#0d4c92','#1a1a2e'],
+};
 
-  var teamName = (c.home.team && c.home.team.displayName) || '';
-  if (teamName) {
+// Load an image cross-origin, resolving to null on CORS/network failure
+function loadImageCORS(url) {
+  return new Promise(function(resolve) {
+    if (!url) { resolve(null); return; }
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload  = function() { resolve(img); };
+    img.onerror = function() {
+      // retry without crossOrigin (renders tainted canvas but we catch that)
+      var img2 = new Image();
+      img2.onload  = function() { resolve(img2); };
+      img2.onerror = function() { resolve(null); };
+      img2.src = url;
+    };
+    img.src = url;
+    setTimeout(function() { resolve(null); }, 5000);
+  });
+}
+
+// Draw rounded rectangle helper
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+// Draw a badge initial circle fallback (when image can't load)
+function drawInitialBadge(ctx, text, x, y, size, bg) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+  ctx.fillStyle = bg || '#1e2740';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold ' + Math.round(size * 0.36) + 'px Syne, Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText((text || '?').slice(0, 3).toUpperCase(), x, y);
+  ctx.restore();
+}
+
+// Draw team logo into a circle clip (or fallback initial badge)
+function drawTeamBadge(ctx, img, initials, cx, cy, size) {
+  var r = size / 2;
+  ctx.save();
+  // white circle background
+  ctx.beginPath();
+  ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  ctx.fill();
+
+  if (img) {
+    // circular clip
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(img, cx - r, cy - r, size, size);
+  } else {
+    drawInitialBadge(ctx, initials, cx, cy, size, '#1e2740');
+  }
+  ctx.restore();
+}
+
+// Main composite generator — returns a base64 PNG data URL
+async function generateMatchThumbnail(gd) {
+  var c        = getCompetitors(gd);
+  var homeName = (c.home.team && c.home.team.displayName) || '?';
+  var awayName = (c.away.team && c.away.team.displayName) || '?';
+  var homeLogo = (c.home.team && c.home.team.logo) || null;
+  var awayLogo = (c.away.team && c.away.team.logo) || null;
+  var lid      = gd.league.id;
+
+  // If ESPN didn't give logos, try TheSportsDB for both teams
+  if (!homeLogo) {
     try {
-      var controller = new AbortController();
-      setTimeout(function(){ controller.abort(); }, 4000);
-      var r = await fetch('https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=' + encodeURIComponent(teamName), { signal: controller.signal });
-      var d = await r.json();
-      var badge = (d.teams && d.teams[0] && (d.teams[0].strTeamBadge || d.teams[0].strTeamFanart1)) || null;
-      if (badge) return badge;
+      var ctrl1 = new AbortController();
+      setTimeout(function(){ ctrl1.abort(); }, 4000);
+      var r1 = await fetch('https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=' + encodeURIComponent(homeName), { signal: ctrl1.signal });
+      var d1 = await r1.json();
+      homeLogo = (d1.teams && d1.teams[0] && d1.teams[0].strTeamBadge) || null;
     } catch(e) {}
   }
-  return LEAGUE_THUMBS[gd.league.id] || null;
+  if (!awayLogo) {
+    try {
+      var ctrl2 = new AbortController();
+      setTimeout(function(){ ctrl2.abort(); }, 4000);
+      var r2 = await fetch('https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=' + encodeURIComponent(awayName), { signal: ctrl2.signal });
+      var d2 = await r2.json();
+      awayLogo = (d2.teams && d2.teams[0] && d2.teams[0].strTeamBadge) || null;
+    } catch(e) {}
+  }
+
+  // Load all images in parallel
+  var leagueBadgeUrl = LEAGUE_BADGE[lid] || null;
+  var results = await Promise.all([
+    loadImageCORS(homeLogo),
+    loadImageCORS(awayLogo),
+    loadImageCORS(leagueBadgeUrl),
+  ]);
+  var homeImg   = results[0];
+  var awayImg   = results[1];
+  var leagueImg = results[2];
+
+  // ── Draw canvas ────────────────────────────────────────────────────────
+  var W = 800, H = 420;
+  var canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  var ctx = canvas.getContext('2d');
+
+  var colors  = LEAGUE_COLORS[lid] || ['#0e1520', '#0e1520'];
+  var leftCol  = colors[0];
+  var rightCol = colors[1];
+
+  // Split background
+  var gL = ctx.createLinearGradient(0, 0, W / 2, 0);
+  gL.addColorStop(0,   leftCol);
+  gL.addColorStop(1,   shadeHex(leftCol, -20));
+  ctx.fillStyle = gL;
+  ctx.fillRect(0, 0, W / 2, H);
+
+  var gR = ctx.createLinearGradient(W / 2, 0, W, 0);
+  gR.addColorStop(0,   shadeHex(rightCol, -20));
+  gR.addColorStop(1,   rightCol);
+  ctx.fillStyle = gR;
+  ctx.fillRect(W / 2, 0, W / 2, H);
+
+  // Diagonal divider overlay
+  ctx.save();
+  var dg = ctx.createLinearGradient(W/2 - 60, 0, W/2 + 60, 0);
+  dg.addColorStop(0,   'rgba(0,0,0,0)');
+  dg.addColorStop(0.5, 'rgba(0,0,0,0.5)');
+  dg.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.fillStyle = dg;
+  ctx.fillRect(W/2 - 60, 0, 120, H);
+  ctx.restore();
+
+  // Gold diagonal stripe lines (FIFA-card style, like images 1 & 5)
+  ctx.save();
+  ctx.globalAlpha = 0.07;
+  ctx.strokeStyle = '#d4af37';
+  ctx.lineWidth = 2;
+  for (var i = -8; i < 20; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i * 50, 0);
+    ctx.lineTo(i * 50 + H, H);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+
+  // Noise grain overlay (subtle)
+  ctx.save();
+  ctx.globalAlpha = 0.03;
+  for (var ny = 0; ny < H; ny += 4) {
+    for (var nx = 0; nx < W; nx += 4) {
+      if (Math.random() > 0.5) {
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(nx, ny, 2, 2);
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+
+  // Team badges
+  var badgeSize = 160;
+  var cy = H / 2 - 20;
+  drawTeamBadge(ctx, homeImg, homeName.slice(0,3), W * 0.22, cy, badgeSize);
+  drawTeamBadge(ctx, awayImg, awayName.slice(0,3), W * 0.78, cy, badgeSize);
+
+  // Centre league badge in a rounded square (like image 2)
+  if (leagueImg) {
+    var lSize = 90;
+    var lx = W / 2 - lSize / 2;
+    var ly = cy - lSize / 2;
+    ctx.save();
+    roundRect(ctx, lx - 6, ly - 6, lSize + 12, lSize + 12, 14);
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fill();
+    roundRect(ctx, lx - 6, ly - 6, lSize + 12, lSize + 12, 14);
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.beginPath();
+    roundRect(ctx, lx, ly, lSize, lSize, 10);
+    ctx.clip();
+    ctx.drawImage(leagueImg, lx, ly, lSize, lSize);
+    ctx.restore();
+  } else {
+    // VS text fallback
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.font = 'bold 28px Syne, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('VS', W / 2, cy);
+    ctx.restore();
+  }
+
+  // Team name labels
+  ctx.save();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.font = 'bold 18px Syne, Arial, sans-serif';
+
+  // Home name
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  ctx.fillText(homeName, W * 0.22 + 1, cy + badgeSize / 2 + 16 + 1);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(homeName, W * 0.22, cy + badgeSize / 2 + 16);
+
+  // Away name
+  ctx.fillStyle = 'rgba(0,0,0,0.5)';
+  ctx.fillText(awayName, W * 0.78 + 1, cy + badgeSize / 2 + 16 + 1);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(awayName, W * 0.78, cy + badgeSize / 2 + 16);
+  ctx.restore();
+
+  // Bottom bar: Sports 803 watermark
+  ctx.save();
+  var barH = 44;
+  var barGrad = ctx.createLinearGradient(0, H - barH, W, H);
+  barGrad.addColorStop(0, 'rgba(0,0,0,0.75)');
+  barGrad.addColorStop(1, 'rgba(0,0,0,0.75)');
+  ctx.fillStyle = barGrad;
+  ctx.fillRect(0, H - barH, W, barH);
+
+  // Gold accent line above bar
+  ctx.fillStyle = '#d4af37';
+  ctx.fillRect(0, H - barH, W, 2);
+
+  ctx.fillStyle = '#d4af37';
+  ctx.font = 'bold 15px Syne, Arial, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('⚡ SPORTS 803', 20, H - barH / 2);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.font = '12px JetBrains Mono, monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('Free Live Stream · sports803livestream.blogspot.com', W - 20, H - barH / 2);
+  ctx.restore();
+
+  // Try to export; canvas may be tainted if any image failed CORS
+  try {
+    return canvas.toDataURL('image/jpeg', 0.92);
+  } catch(e) {
+    // Tainted canvas — redraw without images and export clean version
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = leftCol;  ctx.fillRect(0,     0, W/2, H);
+    ctx.fillStyle = rightCol; ctx.fillRect(W/2,   0, W/2, H);
+    drawInitialBadge(ctx, homeName.slice(0,3), W * 0.22, cy, badgeSize, '#1e2740');
+    drawInitialBadge(ctx, awayName.slice(0,3), W * 0.78, cy, badgeSize, '#1e2740');
+    ctx.fillStyle = '#ffffff'; ctx.font = 'bold 24px Arial'; ctx.textAlign = 'center';
+    ctx.fillText(homeName + '  vs  ' + awayName, W/2, H/2);
+    try { return canvas.toDataURL('image/jpeg', 0.92); } catch(e2) { return null; }
+  }
 }
+
+// Lighten/darken a hex colour by amount (-255 to 255)
+function shadeHex(hex, amt) {
+  var num = parseInt((hex || '#111111').replace('#',''), 16);
+  var r = Math.min(255, Math.max(0, (num >> 16) + amt));
+  var g = Math.min(255, Math.max(0, ((num >> 8) & 0xff) + amt));
+  var b = Math.min(255, Math.max(0, (num & 0xff) + amt));
+  return '#' + [r,g,b].map(function(v){ return ('0'+v.toString(16)).slice(-2); }).join('');
+}
+
+// Legacy
 
 function buildPostTitle(homeName, awayName, type, score, leagueName) {
   var sep = Math.random() > 0.5 ? ' vs ' : ' x ';
