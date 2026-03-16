@@ -467,7 +467,7 @@ select option { background: #141720; }
 
 .content-text {
   font-size: 12px;
-  color: var(--muted2);
+  color: var(--text);
   line-height: 1.7;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 300;
@@ -1496,55 +1496,106 @@ function switchTab(idx, tab, el) {
   document.getElementById('text-thumbnail-'  + idx).style.display = tab === 'thumbnail'  ? 'block' : 'none';
 }
 
-// ─── CONTENT PHRASES ───────────────────────────────────────────────────────
+// ─── CONTENT PHRASES ───────────────────────────────────────────────────────────────────────────
 var PREVIEW_PHRASES = [
   "This is set to be a thrilling encounter as both sides go head to head in an exciting",
   "Football fans are in for a treat as two top-flight clubs clash in what promises to be a compelling",
   "All eyes are on this fixture as both managers prepare their squads for a crucial",
   "Expect fireworks as these two sides renew their rivalry in a high-stakes",
   "Supporters will be glued to their screens for this highly anticipated",
+  "The stage is set for a memorable afternoon of football as two quality sides meet in a pivotal",
+  "It does not get much bigger than this as two heavyweights collide in a blockbuster",
+  "Bragging rights are firmly on the line as these two fierce rivals face off in a must-watch",
 ];
+
 var FORM_PHRASES = [
   "Both teams arrive in good form, having picked up positive results in their recent outings.",
   "Recent league form suggests this could be evenly contested, with neither side having a clear edge.",
   "Head-to-head records show this fixture typically produces goals and drama in equal measure.",
   "Momentum is firmly on one side heading into this contest following a run of impressive performances.",
   "Key injuries and suspensions could play a decisive role in shaping the outcome of this fixture.",
+  "The build-up to this game has been dominated by team news and tactical intrigue on both sides.",
+  "Both squads come into this fixture off the back of contrasting results, making the outcome difficult to predict.",
+  "Form tables and statistics only tell part of the story when these two sides meet — expect the unexpected.",
 ];
+
+var TACTICAL_PHRASES = [
+  "Expect a fascinating tactical battle between two well-organised sides who are difficult to break down.",
+  "The managers will both be well aware of their opponents' strengths, and early positioning will be critical.",
+  "Set pieces and dead-ball situations are likely to play a major role, with both teams possessing quality from restarts.",
+  "Pace on the counter-attack could be a decisive factor if either side can exploit space in behind the defence.",
+  "The battle for control in the middle of the park will shape the flow of this game from the very first whistle.",
+  "High pressing and intensity in the final third are expected to feature heavily as both teams push for control.",
+];
+
 var PLAYER_PHRASES = [
   "All eyes will be on the attacking players who have been in devastating form this season.",
   "The midfield battle could prove decisive, with creative players on both sides capable of turning the game.",
   "Set pieces and dead-ball situations are likely to play a role, with both teams possessing aerial threats.",
   "The defensive units will be tested by pacey forwards looking to exploit space behind the backline.",
   "Experienced campaigners in both squads will be eager to stamp their authority on this fixture.",
+  "Key individual matchups across the pitch could determine which side gains the upper hand on the day.",
+  "Goalkeepers will need to be at their very best as both sides carry a genuine threat from open play.",
+  "The wide areas are set to be a major battleground, with flying wingers on both sides ready to cause problems.",
 ];
+
 var CTA_PHRASES = [
-  "Watch the full live stream free on Sports 803 \u2014 no subscription required, no hidden fees.",
+  "Watch the full live stream free on Sports 803 — no subscription required, no hidden fees.",
   "Stream every kick free on Sports 803, your go-to destination for live sports online.",
-  "Don't miss a single minute \u2014 catch the free live stream exclusively on Sports 803.",
+  "Don’t miss a single minute — catch the free live stream exclusively on Sports 803.",
   "Follow every tackle, goal, and moment of magic live and free on Sports 803.",
   "Tune in free on Sports 803 and enjoy the action from wherever you are.",
+  "Bookmark Sports 803 now and never miss a moment of the action — always free, always live.",
+  "Join thousands of fans watching live on Sports 803 — the home of free sports streaming.",
+  "Head to Sports 803 for the full live stream — kick-off is fast approaching and entry is completely free.",
 ];
+
+var PREVIEW_CLOSING = [
+  "This is a fixture that rarely disappoints. Make sure you are tuned in from kick-off.",
+  "With so much at stake, both managers will have their squads fully prepared and ready for battle.",
+  "Whether you are a neutral or a die-hard fan, this is a game you simply cannot afford to miss.",
+  "All the ingredients are in place for a memorable match. Football does not get much better than this.",
+  "The anticipation is building and the stage is perfectly set for a top-quality contest.",
+];
+
 var HIGHLIGHT_PHRASES = [
   "A dramatic contest delivered plenty of talking points as the final whistle confirmed",
-  "It was an enthralling battle that lived up to its billing and produced an exciting",
-  "Both sets of supporters were treated to a pulsating match that swung back and forth in a",
-  "The game had everything \u2014 goals, tension, and standout performances \u2014 in an unforgettable",
+  "It was an enthralling battle that lived up to its billing, with the full-time score confirming",
+  "Both sets of supporters were treated to a pulsating match that swung back and forth before delivering",
+  "The game had everything — goals, tension, and standout performances — ending with",
   "Tactical battles and individual brilliance combined to produce a spectacular result in this",
+  "Ninety minutes of compelling football came to a close as the scoreboard confirmed",
+  "In what turned out to be a contest of real quality and character, the final outcome was",
+  "From the opening whistle to the final blow, this was a match that kept everyone on the edge of their seats, finishing",
 ];
+
+var HIGHLIGHT_ANALYSIS = [
+  "The first half set the tone, with both sides creating opportunities and refusing to sit back.",
+  "An absorbing opening period gave way to a more intense second half as both managers made tactical adjustments.",
+  "The game was closely fought throughout, with the winning moment coming when it mattered most.",
+  "Chances were created at both ends, but ultimately quality in the final third proved the difference.",
+  "The statistics make for interesting reading — possession was shared but the team that converted their chances most efficiently came out on top.",
+  "Both sides gave everything they had, and the crowd were treated to an absorbing spectacle of modern football.",
+];
+
 var HIGHLIGHT_RESULT = [
-  "The match statistics tell only part of the story in what was a gripping ninety minutes.",
+  "The match statistics tell only part of the story in what was a gripping ninety minutes of football.",
   "Goals, controversy, and breathtaking skill made this one of the most memorable fixtures of the season.",
   "Tactical discipline and clinical finishing were the hallmarks of the winning performance today.",
   "Both managers will have plenty to reflect on after a contest packed with incident and quality.",
-  "The game unfolded exactly as anticipated, with both teams creating plenty of goalscoring opportunities.",
+  "The game unfolded with dramatic twists, and both teams created plenty of goalscoring opportunities throughout.",
+  "It was the kind of match that reminds you why football remains the most captivating sport in the world.",
+  "Moments of individual brilliance proved the difference in a match that was fiercely competitive from start to finish.",
 ];
+
 var HIGHLIGHT_CTA = [
-  "Relive all the goals and highlights free on Sports 803 \u2014 full match replay now available.",
+  "Relive all the goals and highlights free on Sports 803 — full match replay now available.",
   "Watch the extended highlights and full match replay free on Sports 803 anytime.",
-  "Sports 803 has your full match replay and extended highlights \u2014 stream free now.",
+  "Sports 803 has your full match replay and extended highlights — stream free now.",
   "Catch every goal and key moment again in the free full match replay on Sports 803.",
-  "The full match and highlights are waiting for you \u2014 watch free on Sports 803.",
+  "The full match and highlights are waiting for you — watch free on Sports 803.",
+  "Head back to Sports 803 to rewatch every moment of this incredible match — completely free.",
+  "Don’t miss the extended highlights package on Sports 803 — all the best action from today’s game, free.",
 ];
 
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -1553,13 +1604,15 @@ function generatePreviewText(homeName, awayName, leagueName, venue, dateStr) {
   var sep      = Math.random() > 0.5 ? ' vs ' : ' x ';
   var venueTxt = venue   ? ' at ' + venue   : '';
   var dateTxt  = dateStr ? ' on ' + dateStr : ' today';
+
   var p1 = pick(PREVIEW_PHRASES) + ' ' + leagueName + ' clash. '
          + homeName + sep + awayName + venueTxt + dateTxt
-         + ' \u2014 watch the free live stream on Sports 803.';
-  var p2 = pick(FORM_PHRASES) + ' ' + pick(PLAYER_PHRASES);
-  var p3 = pick(CTA_PHRASES);
-  var text = p1 + '\n\n' + p2 + '\n\n' + p3;
-  return text.length > 580 ? text.slice(0, 577) + '\u2026' : text;
+         + ' — watch the free live stream on Sports 803.';
+  var p2 = pick(FORM_PHRASES) + ' ' + pick(TACTICAL_PHRASES);
+  var p3 = pick(PLAYER_PHRASES) + ' ' + pick(PREVIEW_CLOSING);
+  var p4 = pick(CTA_PHRASES);
+
+  return p1 + '\n\n' + p2 + '\n\n' + p3 + '\n\n' + p4;
 }
 
 function generateHighlightText(homeName, awayName, homeScore, awayScore, leagueName, headlines) {
@@ -1567,11 +1620,21 @@ function generateHighlightText(homeName, awayName, homeScore, awayScore, leagueN
   var hScore    = parseInt(homeScore, 10);
   var aScore    = parseInt(awayScore, 10);
   var winner    = hScore > aScore ? homeName : aScore > hScore ? awayName : null;
-  var p1 = scoreLine + ' \u2014 ' + pick(HIGHLIGHT_PHRASES) + ' ' + leagueName + ' fixture. ' + (headlines || '');
-  var p2 = pick(HIGHLIGHT_RESULT) + ' ' + (winner ? winner + ' showed tremendous quality to secure the three points.' : 'Honours were shared after a hard-fought draw.');
-  var p3 = pick(HIGHLIGHT_CTA);
-  var text = p1 + '\n\n' + p2.trim() + '\n\n' + p3;
-  return text.length > 580 ? text.slice(0, 577) + '\u2026' : text;
+  var margin    = Math.abs(hScore - aScore);
+  var resultStr = winner
+    ? winner + ' claimed a ' + (margin === 1 ? 'hard-fought' : margin >= 3 ? 'dominant' : 'well-deserved') + ' victory.'
+    : 'the two sides shared the spoils in an entertaining draw.';
+
+  var p1 = scoreLine + ' — ' + pick(HIGHLIGHT_PHRASES) + ' a ' + leagueName + ' fixture that had fans on the edge of their seats. '
+         + (headlines ? headlines + ' ' : '') + resultStr;
+  var p2 = pick(HIGHLIGHT_ANALYSIS) + ' ' + pick(HIGHLIGHT_RESULT);
+  var p3 = (winner
+    ? winner + ' will be delighted with the three points, while the defeated side will need to regroup quickly ahead of their next outing. '
+    : 'Both sides will take something from the game, though each will feel they had chances to claim all three points. ')
+    + 'The performance levels on display today underline just how competitive this competition continues to be.';
+  var p4 = pick(HIGHLIGHT_CTA);
+
+  return p1 + '\n\n' + p2 + '\n\n' + p3 + '\n\n' + p4;
 }
 
 // ─── CONTENT GENERATORS ────────────────────────────────────────────────────
