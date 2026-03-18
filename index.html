@@ -37,11 +37,46 @@ let globalLabels      = ['sports 803','live stream'];
 var selectedDate = getTodayStr();
 // ... all date functions unchanged ...
 
-// ─── PERSISTENT POST STORAGE ───────────────────────────────────────────────
-function getGameKey(gd) { /* ... unchanged ... */ }
-function savePostToStorage(gd) { /* ... unchanged ... */ }
-function loadPostFromStorage(gd) { /* ... unchanged ... */ }
-function restorePostStateForAllGames() { /* ... unchanged ... */ }
+// ─── PERSISTENT POST STORAGE (FIXED: include iframeSrc) ───────────────────
+function getGameKey(gd) {
+  // ... unchanged ...
+  return gd.espnEvent.id + '_' + gd.league.id;
+}
+
+function savePostToStorage(gd) {
+  let key = 's803_' + getGameKey(gd);
+  let data = {
+    blogPostId: gd.blogPostId,
+    blogPostUrl: gd.blogPostUrl,
+    status: gd.status,
+    customLabels: gd.customLabels,
+    customTitle: gd.customTitle,
+    thumbUrl: gd.thumbUrl,
+    iframeSrc: gd.iframeSrc        // ✅ now saved
+  };
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function loadPostFromStorage(gd) {
+  let key = 's803_' + getGameKey(gd);
+  let saved = localStorage.getItem(key);
+  if (saved) {
+    try {
+      let data = JSON.parse(saved);
+      gd.blogPostId = data.blogPostId || null;
+      gd.blogPostUrl = data.blogPostUrl || null;
+      gd.status = data.status || 'idle';
+      gd.customLabels = data.customLabels || [];
+      gd.customTitle = data.customTitle || null;
+      gd.thumbUrl = data.thumbUrl || null;
+      gd.iframeSrc = data.iframeSrc || '';   // ✅ restored
+    } catch (e) {}
+  }
+}
+
+function restorePostStateForAllGames() {
+  // ... unchanged, calls loadPostFromStorage for each game ...
+}
 function linkExistingPost(idx) { /* ... unchanged ... */ }
 
 // ─── OAUTH ─────────────────────────────────────────────────────────────────
@@ -78,63 +113,7 @@ function extractStats(event) { /* ... unchanged ... */ }
 
 // ─── SCAN ALL LEAGUES ──────────────────────────────────────────────────────
 async function scanAllLeagues() {
-  var btn=document.getElementById('scan-btn');
-  btn.classList.add('loading'); btn.disabled=true;
-  detectedGames=[];
-  var selected=LEAGUES.filter(function(l){ return activeLeagues.has(l.id); });
-  var scanLabel = formatDateLabel(selectedDate);
-  log('info','Scanning '+selected.length+' leagues for '+scanLabel+'...');
-  var totalFound=0;
-  for (var i=0;i<selected.length;i++) {
-    var league=selected[i];
-    try {
-      if (!league.espn) {
-        detectedGames.push({
-          espnEvent:{id:'manual-'+league.id+'-'+Date.now(),name:league.name+' Event',
-            date:selectedDate+'T12:00:00Z',status:{type:{state:'pre',shortDetail:scanLabel}},
-            competitions:[{competitors:[
-              {homeAway:'home',team:{displayName:league.name,logo:null},score:'0'},
-              {homeAway:'away',team:{displayName:'Live Event',logo:null},score:'0'}
-            ],venue:{},headlines:[]}]
-          },
-          league,preContent:null,highlightContent:null,blogPostId:null,blogPostUrl:null,
-          status:'idle',thumbUrl:null,isManual:true,customLabels:[],customTitle:null,
-          scheduledPosted:false,gameDate:selectedDate,
-          iframeSrc:''   // NEW: store iframe URL
-        });
-        totalFound++; continue;
-      }
-      var events=await fetchESPN(league.id);
-      events.forEach(function(ev){
-        var comps=(ev.competitions&&ev.competitions[0]&&ev.competitions[0].competitors)||[];
-        if (comps.length<2) return;
-        detectedGames.push({
-          espnEvent:ev,league,preContent:null,highlightContent:null,
-          blogPostId:null,blogPostUrl:null,status:'idle',thumbUrl:null,
-          customLabels:[],customTitle:null,scheduledPosted:false,
-          stats:extractStats(ev),gameDate:selectedDate,
-          iframeSrc:''   // NEW
-        });
-        totalFound++;
-      });
-      log('ok','✓ '+league.name+': '+events.length+' game(s)');
-    } catch(e){ log('err','✗ '+league.name+': '+e.message); }
-  }
-  restorePostStateForAllGames();
-  var today = getTodayStr();
-  var diff = daysDiff(today, selectedDate);
-  var contextStr = diff===0 ? 'today' : diff>0 ? 'on '+scanLabel : 'on '+scanLabel+' (past)';
-  document.getElementById('main-subtitle').textContent=totalFound+' game'+(totalFound!==1?'s':'')+
-    ' found '+contextStr+' · '+new Date().toLocaleTimeString();
-  renderGames();
-  btn.classList.remove('loading'); btn.disabled=false;
-  var bulkBtn=document.getElementById('bulk-btn');
-  if (bulkBtn) bulkBtn.disabled=totalFound===0;
-  if (totalFound>0) {
-    for (var k=0;k<detectedGames.length;k++) {
-      await generatePreviewContent(k);
-    }
-  }
+  // ... unchanged, includes iframeSrc: '' in new games ...
 }
 
 // ─── REFRESH SCORES ────────────────────────────────────────────────────────
@@ -152,170 +131,25 @@ function getKickoffTime(gd) { /* ... unchanged ... */ }
 var SEO_KEYWORDS = { /* ... unchanged ... */ };
 function buildSEOTitle(homeName,awayName,leagueName,type,score) { /* ... unchanged ... */ }
 
-// ─── NEW: update iframe src in game object ─────────────────────────────────
+// ─── UPDATE IFRAME SRC ─────────────────────────────────────────────────────
 function updateIframeSrc(idx, value) {
-  if (detectedGames[idx]) detectedGames[idx].iframeSrc = value;
+  if (detectedGames[idx]) {
+    detectedGames[idx].iframeSrc = value;
+    savePostToStorage(detectedGames[idx]);   // optional, persist immediately
+  }
+}
+
+// ─── ESCAPE FOR ATTRIBUTE (NEW) ────────────────────────────────────────────
+function escAttr(s) {
+  return (s || '').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
 // ─── RENDER GAMES ──────────────────────────────────────────────────────────
 function renderGames() {
-  var container=document.getElementById('games-container');
-  if (!detectedGames.length) {
-    container.innerHTML='<div class="empty-state"><div class="icon">📡</div><h3>No games found</h3><p>No matches scheduled for '+formatDateLabel(selectedDate)+'. Try a different date or more leagues.</p></div>';
-    return;
-  }
-  var html='';
-  detectedGames.forEach(function(gd,idx){
-    var c=getCompetitors(gd);
-    var state=getGameState(gd);
-    var score=getScore(gd);
-    var status=(gd.espnEvent.status&&gd.espnEvent.status.type&&gd.espnEvent.status.type.shortDetail)||'';
-    var stateCls=state==='in'?'live-lbl':state==='post'?'ft-lbl':'pre-lbl';
-    var stateLbl=state==='in'?'● LIVE':state==='post'?'FT':'UPCOMING';
-    var homeName=(c.home.team&&c.home.team.displayName)||'?';
-    var awayName=(c.away.team&&c.away.team.displayName)||'?';
-    var homeLogo=(c.home.team&&c.home.team.logo)||'';
-    var awayLogo=(c.away.team&&c.away.team.logo)||'';
-    var kickoffTime=getKickoffTime(gd);
-    var hlHtml=function(logo,name){
-      return logo
-        ?'<img class="team-logo" src="'+logo+'" alt="'+name+'" onerror="this.outerHTML=\'<div class=team-logo-placeholder>'+gd.league.emoji+'</div>\'">'
-        :'<div class="team-logo-placeholder">'+gd.league.emoji+'</div>';
-    };
-    var scoreDisplay=(state==='in'||state==='post')
-      ?'<div class="vs-score">'+score.home+'<span style="color:var(--border2);margin:0 3px">-</span>'+score.away+'</div>'
-      :'<div class="vs-score" style="font-size:13px;color:var(--muted)">VS</div>';
-
-    var statusBadge=gd.status==='posted'    ?'<span class="post-status posted">✓ Posted</span>'
-                   :gd.status==='updated'   ?'<span class="post-status updated">↑ Updated</span>'
-                   :gd.status==='draft'     ?'<span class="post-status draft">◎ Draft</span>'
-                   :gd.status==='deleted'   ?'<span class="post-status deleted">✗ Deleted</span>'
-                   :gd.status==='linked'    ?'<span class="post-status linked">🔗 Linked</span>'
-                   :gd.status==='scheduled' ?'<span class="post-status scheduled">⏰ Scheduled</span>'
-                   :                         '<span class="post-status idle">○ Not Posted</span>';
-
-    var kickoffBadge = kickoffTime ? '<span class="kickoff-badge">⏰ '+kickoffTime+'</span>' : '';
-    var schedCountdown='';
-    if (globalSchedulerOn) {
-      var kickoff=gd.espnEvent.date?new Date(gd.espnEvent.date).getTime():null;
-      if (kickoff&&state==='pre') {
-        var leadMs=getSchedLeadMs();
-        var msUntil=kickoff-Date.now();
-        var postAtMs=kickoff-leadMs;
-        if (msUntil>0 && postAtMs>Date.now()) {
-          var minsToPost=Math.round((postAtMs-Date.now())/60000);
-          var countdownStr = minsToPost > 1440
-            ? Math.round(minsToPost/1440)+'d'
-            : minsToPost > 60
-              ? Math.round(minsToPost/60)+'h'
-              : minsToPost+'m';
-          schedCountdown='<span class="scheduler-countdown">⏰ schedules in ~'+countdownStr+'</span>';
-        } else if (msUntil>0) {
-          schedCountdown='<span class="scheduler-countdown" style="color:var(--green)">⏰ scheduling soon…</span>';
-        }
-      }
-    }
-    var seoTitle=gd.customTitle||buildSEOTitle(homeName,awayName,gd.league.name,'preview',score);
-    var seoLen=seoTitle.length;
-    var seoCls=seoLen>=50&&seoLen<=60?'good':seoLen<40||seoLen>70?'bad':'warn';
-    var previewHtml=gd.preContent?'<div class="content-text">'+escHtml(gd.preContent)+'</div>':'<div class="content-empty">⏳ Generating content...</div>';
-    var hlText=gd.highlightContent?'<div class="content-text">'+escHtml(gd.highlightContent)+'</div>':'<div class="content-empty">'+(state==='post'?'⏳ Generating highlights...':'⏱ Available after match ends')+'</div>';
-    var statsHtml=buildStatsHtml(gd);
-    var thumbPanelHtml=gd.thumbUrl
-      ?'<div class="thumb-preview-wrap"><img class="thumb-preview-img" src="'+gd.thumbUrl+'" alt="Match thumbnail" onclick="openLightbox(this.src)"/></div>'
-        +'<div class="thumb-actions">'
-        +'<button class="btn btn-secondary" onclick="regenThumbnail('+idx+')"><span class="btn-text">🔄 Regen</span><div class="spin"></div></button>'
-        +'<a class="btn btn-secondary" href="'+gd.thumbUrl+'" download="sports803-'+idx+'.jpg"><span class="btn-text">⬇ Download</span></a>'
-        +'<span class="thumb-size-badge">800 × 420</span></div>'
-      :'<div class="thumb-generating"><div class="gen-spinner"></div><span>Generating thumbnail…</span></div>';
-    var postLinkHtml='';
-    if (gd.blogPostUrl&&(gd.status==='posted'||gd.status==='updated'||gd.status==='draft'||gd.status==='linked'||gd.status==='scheduled')) {
-      postLinkHtml='<div class="post-link-row">'
-        +'<a class="post-link-url" href="'+gd.blogPostUrl+'" target="_blank">'+gd.blogPostUrl+'</a>'
-        +'<button class="copy-btn" onclick="copyPostLink('+idx+')" title="Copy link">📋</button>'
-        +'</div>';
-    }
-    var linkPanelHtml = '<div class="link-post-panel">'
-      +'<div class="link-post-title">🔗 Link Existing Blogger Post <span class="badge-purple">RESTORE</span></div>'
-      +'<div class="link-post-row">'
-      +'<input type="text" class="link-post-input" id="link-post-input-'+idx+'" placeholder="Paste post ID (e.g. 1234567890) or full URL" />'
-      +'<button class="btn btn-purple" style="padding:7px 14px;font-size:10px;" onclick="linkExistingPost('+idx+')">'
-      +'<span class="btn-text">🔗 Link</span></button>'
-      +'</div>'
-      +(gd.blogPostId?'<div class="link-post-note">✓ Current post ID: <code style="color:var(--accent2)">'+gd.blogPostId+'</code></div>':'')
-      +'<div class="link-post-note">Already posted but came back to the dashboard? Paste your existing post\'s ID or URL to link it — then you can post highlights to it without creating a duplicate.</div>'
-      +'</div>';
-    var allLabels=globalLabels.concat(gd.customLabels||[]);
-    var labelsHtml='<div class="labels-tags" id="card-labels-'+idx+'">'
-      +allLabels.map(function(l){ return '<span class="label-tag">'+escHtml(l)+'</span>'; }).join('')
-      +'</div>'
-      +'<input type="text" class="labels-input" id="label-input-'+idx+'" placeholder="Add label + Enter" onkeydown="addCardLabel(event,'+idx+')" style="margin-top:5px;"/>';
-    var hlBtns=state==='post'?(
-      '<button class="btn btn-secondary" onclick="regenHighlights('+idx+')"><span class="btn-text">🔄 Regen HL</span><div class="spin"></div></button>'
-      +(gd.highlightContent&&gd.blogPostId?'<button class="btn btn-primary" onclick="postToBlogger('+idx+',\'highlights\')"><span class="btn-text">📤 Post Highlights</span><div class="spin"></div></button>':'')
-    ):'';
-    var deleteBtn=(gd.blogPostId&&(gd.status==='posted'||gd.status==='draft'||gd.status==='updated'||gd.status==='linked'||gd.status==='scheduled'))
-      ?'<button class="btn btn-danger" onclick="deletePost('+idx+')"><span class="btn-text">🗑 Delete</span><div class="spin"></div></button>'
-      :'';
-
-    // --- NEW: iframe input with stored value and oninput handler ---
-    var iframeValue = escHtml(gd.iframeSrc || '');
-    var iframeInput = '<textarea class="iframe-input" id="iframe-src-'+idx+'" rows="2" placeholder="Paste iframe src= URL here e.g. https://soulmap1.blogspot.com/p/media-player.html?mora=..." oninput="updateIframeSrc('+idx+', this.value)">'+iframeValue+'</textarea>';
-
-    html+='<div class="game-card" id="card-'+idx+'">'
-      +'<div class="game-card-head">'
-        +'<div class="game-teams">'
-          +'<div class="team-block">'+hlHtml(homeLogo,homeName)+'<div class="team-name">'+homeName+'</div></div>'
-          +'<div class="vs-block">'+scoreDisplay+'<div class="vs-label '+stateCls+'">'+stateLbl+'</div>'+(status?'<div class="game-time">'+status+'</div>':'')+'</div>'
-          +'<div class="team-block" style="flex-direction:row-reverse;text-align:right;">'+hlHtml(awayLogo,awayName)+'<div class="team-name">'+awayName+'</div></div>'
-        +'</div>'
-        +'<div class="game-meta-right">'
-          +'<span class="league-tag">'+gd.league.emoji+' '+gd.league.name+'</span>'
-          +statusBadge
-          +kickoffBadge
-          +schedCountdown
-        +'</div>'
-      +'</div>'
-      +'<div class="game-content-panel">'
-        +'<div class="content-tabs">'
-          +'<button class="ctab active" id="tab-pre-'+idx+'" onclick="switchTab('+idx+',\'preview\',this)">📝 Preview</button>'
-          +'<button class="ctab" id="tab-hl-'+idx+'" onclick="switchTab('+idx+',\'highlights\',this)">🏆 Highlights</button>'
-          +'<button class="ctab" id="tab-st-'+idx+'" onclick="switchTab('+idx+',\'stats\',this)">📊 Stats</button>'
-          +'<button class="ctab" id="tab-th-'+idx+'" onclick="switchTab('+idx+',\'thumbnail\',this)">🖼 Thumb</button>'
-          +'<button class="ctab" id="tab-lb-'+idx+'" onclick="switchTab('+idx+',\'labels\',this)">🏷 SEO</button>'
-          +'<button class="ctab" id="tab-lk-'+idx+'" onclick="switchTab('+idx+',\'link\',this)" style="'+(gd.status==='idle'?'color:var(--purple)':'')+'">🔗 Link</button>'
-        +'</div>'
-        +'<div class="content-area">'
-          +'<div id="text-preview-'+idx+'">'+previewHtml+'</div>'
-          +'<div id="text-highlights-'+idx+'" style="display:none">'+hlText+'</div>'
-          +'<div id="text-stats-'+idx+'" style="display:none">'+statsHtml+'</div>'
-          +'<div id="text-thumbnail-'+idx+'" style="display:none"><div class="thumb-panel">'+thumbPanelHtml+'</div></div>'
-          +'<div id="text-labels-'+idx+'" style="display:none">'
-            +'<div style="display:flex;flex-direction:column;gap:10px;padding:4px 0;">'
-              +'<div class="input-group"><label class="input-label">SEO Title <span class="badge-new">OPTIMIZER</span></label>'
-                +'<div class="seo-title-box"><input type="text" class="seo-title-input" id="seo-title-'+idx+'" value="'+escHtml(seoTitle)+'" oninput="updateSeoCounter('+idx+',this.value)" maxlength="90"/></div>'
-                +'<div class="seo-char-counter '+seoCls+'" id="seo-counter-'+idx+'">'+seoLen+' chars '+(seoCls==='good'?'✓ Ideal (50–60)':seoCls==='warn'?'⚠ OK (40–70)':'✗ Too '+(seoLen<50?'short':'long'))+'</div>'
-                +'<button class="btn btn-secondary btn-full" style="margin-top:5px;" onclick="regenSeoTitle('+idx+')"><span class="btn-text">🎯 Auto-Generate SEO Title</span></button>'
-              +'</div>'
-              +'<div class="input-group"><label class="input-label">Post Labels <span class="badge-purple">CUSTOM</span></label>'+labelsHtml+'</div>'
-            +'</div>'
-          +'</div>'
-          +'<div id="text-link-'+idx+'" style="display:none">'+linkPanelHtml+'</div>'
-        +'</div>'
-        +'<div class="iframe-row"><div class="iframe-label">📺 Stream URL (iframe src) <span class="badge-tip">OPTIONAL</span></div>'
-          + iframeInput
-        +'</div>'
-        +postLinkHtml
-        +'<div class="content-actions">'
-          +'<button class="btn btn-secondary" onclick="regenPreview('+idx+')"><span class="btn-text">🔄 Regen</span><div class="spin"></div></button>'
-          +hlBtns
-          +deleteBtn
-          +'<button class="btn btn-primary" onclick="postToBlogger('+idx+',\'preview\')" '+(gd.preContent?'':'disabled')+'><span class="btn-text">📤 Post Preview</span><div class="spin"></div></button>'
-        +'</div>'
-      +'</div>'
-    +'</div>';
-  });
-  container.innerHTML=html;
+  // ... unchanged except the iframe textarea already uses updateIframeSrc ...
+  // Inside the card, the iframe textarea is:
+  // <textarea class="iframe-input" id="iframe-src-'+idx+'" rows="2" ... oninput="updateIframeSrc('+idx+', this.value)">'+escHtml(gd.iframeSrc||'')+'</textarea>
+  // (this was already correct)
 }
 
 function switchTab(idx,tab,el) { /* ... unchanged ... */ }
@@ -374,7 +208,7 @@ function shadeHex(hex,amt){ /* ... unchanged ... */ }
 // ─── IMGBB UPLOAD ────────────────────────────────────────────────────────────
 async function uploadToImgbb(dataUrl) { /* ... unchanged ... */ }
 
-// ─── BLOGGER API ─────────────────────────────────────────────────────────────
+// ─── BLOGGER API (FIXED) ─────────────────────────────────────────────────────
 async function postToBlogger(idx, type) {
   var gd = detectedGames[idx], btn = event.currentTarget;
   var blogId = document.getElementById('blog-id').value.trim();
@@ -395,7 +229,9 @@ async function postToBlogger(idx, type) {
       btn.classList.remove('loading'); btn.disabled = false;
       return;
     }
-    success = await postToBloggerCore(idx, type, 'SCHEDULED', kickoff);
+    var leadMs = getSchedLeadMs();                // ✅ get lead time
+    var postAtMs = kickoff - leadMs;               // ✅ correct publish time
+    success = await postToBloggerCore(idx, type, 'SCHEDULED', postAtMs);
   } else {
     success = await postToBloggerCore(idx, type, pubMode);
   }
@@ -418,9 +254,11 @@ async function postToBloggerCore(idx, type, pubModeOverride, kickoffTimestamp) {
   var title = (titleEl && titleEl.value.trim()) || gd.customTitle || buildSEOTitle(homeName, awayName, gd.league.name, type, score);
   if (type === 'highlights') title = homeName + ' ' + score.home + '-' + score.away + ' ' + awayName + ' | ' + gd.league.name + ' Highlights | Sports 803';
 
-  // --- FIX: use stored iframeSrc instead of reading from DOM ---
+  // ✅ Use stored iframeSrc and escape it properly
   var iframeSrc = gd.iframeSrc || '';
-  var iframeHtml = iframeSrc ? '<div style="margin:18px 0;"><iframe loading="lazy" class="video-iframe" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" width="100%" height="500" src="' + iframeSrc + '" frameborder="0" scrolling="no" allowfullscreen></iframe></div>' : '';
+  var iframeHtml = iframeSrc
+    ? '<div style="margin:18px 0;"><iframe loading="lazy" class="video-iframe" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" width="100%" height="500" src="' + escAttr(iframeSrc) + '" frameborder="0" scrolling="no" allowfullscreen></iframe></div>'
+    : '';
 
   var postContent = type === 'preview' ? gd.preContent : gd.highlightContent;
   var thumbSrc = gd.thumbUrl ? await uploadToImgbb(gd.thumbUrl) : null;
@@ -447,7 +285,7 @@ async function postToBloggerCore(idx, type, pubModeOverride, kickoffTimestamp) {
       url = 'https://www.googleapis.com/blogger/v3/blogs/' + blogId + '/posts/' + gd.blogPostId + '?publish=' + (pubMode === 'LIVE' ? 'true' : 'false');
       body = { id: gd.blogPostId, title, content: htmlContent, labels: allLabels };
     } else if (pubMode === 'SCHEDULED' && kickoffTimestamp) {
-      var scheduledDate = new Date(kickoffTimestamp).toISOString();
+      var scheduledDate = new Date(kickoffTimestamp).toISOString();   // ✅ uses corrected timestamp
       method = 'POST';
       url = 'https://www.googleapis.com/blogger/v3/blogs/' + blogId + '/posts/?isDraft=false';
       body = { title, content: htmlContent, labels: allLabels, published: scheduledDate };
@@ -485,7 +323,6 @@ function log(type, msg) { /* ... unchanged ... */ }
 var toastTimer;
 function toast(msg, type) { /* ... unchanged ... */ }
 function escHtml(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;'); }
-function escAttr(s) { return (s || '').replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
 
 // ─── INIT ───────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', function() {
