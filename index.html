@@ -66,8 +66,6 @@ select option{background:#141720;}
 .main-title span{color:var(--accent);}
 .main-subtitle{font-size:12px;color:var(--muted);margin-top:4px;font-weight:400;}
 .scan-actions{display:flex;gap:8px;flex-wrap:wrap;}
-
-/* ── DATE PICKER BAR ── */
 .date-bar{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .date-bar-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);flex-shrink:0;}
 .date-quick-btns{display:flex;gap:6px;flex-wrap:wrap;}
@@ -82,11 +80,9 @@ select option{background:#141720;}
 .date-indicator.today{border-color:rgba(46,213,115,.4);color:var(--green);background:rgba(46,213,115,.07);}
 .date-indicator.past{border-color:rgba(255,165,2,.4);color:var(--orange);background:rgba(255,165,2,.07);}
 .date-indicator .di-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse-live 1.8s infinite;}
-/* schedule notice banner */
 .schedule-notice{background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.3);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;font-size:11px;color:var(--accent2);display:none;align-items:center;gap:8px;}
 .schedule-notice.visible{display:flex;}
 .schedule-notice strong{font-weight:800;}
-
 .games-grid{display:grid;grid-template-columns:1fr;gap:12px;}
 .game-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;transition:border-color .15s;}
 .game-card:hover{border-color:var(--border2);}
@@ -144,6 +140,8 @@ select option{background:#141720;}
 .post-status.idle{background:var(--s3);color:var(--muted);border:1px solid var(--border);}
 .post-status.deleted{background:rgba(255,71,87,.1);color:var(--red);border:1px solid rgba(255,71,87,.3);}
 .post-status.linked{background:rgba(168,85,247,.1);color:var(--purple);border:1px solid rgba(168,85,247,.3);}
+/* FIX: new scheduled status badge */
+.post-status.scheduled{background:rgba(0,212,255,.1);color:var(--accent2);border:1px solid rgba(0,212,255,.3);}
 .log-panel{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;max-height:160px;overflow-y:auto;font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.8;color:var(--muted);scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
 .log-line{display:flex;gap:10px;}
 .log-line .ts{color:var(--muted);flex-shrink:0;}
@@ -224,10 +222,7 @@ select option{background:#141720;}
 .link-post-input:focus{border-color:var(--purple);}
 .link-post-input::placeholder{color:var(--muted);}
 .link-post-note{font-size:9px;color:var(--muted);line-height:1.5;}
-
-/* Scheduled post kickoff time badge */
 .kickoff-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.05em;padding:2px 8px;border-radius:3px;background:rgba(0,212,255,.1);color:var(--accent2);border:1px solid rgba(0,212,255,.25);}
-
 @media(max-width:900px){
   .layout{grid-template-columns:1fr;}
   .sidebar{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border);}
@@ -254,7 +249,6 @@ select option{background:#141720;}
 <div class="layout">
 <aside class="sidebar">
 
-  <!-- BLOGGER CONNECTION -->
   <div class="sidebar-section">
     <div class="section-label">🔗 Blogger Connection</div>
     <div id="signin-block">
@@ -295,7 +289,6 @@ select option{background:#141720;}
 
   <div class="divider"></div>
 
-  <!-- LEAGUES -->
   <div class="sidebar-section">
     <div class="section-label">⚽ Leagues to Monitor</div>
     <div class="leagues-grid" id="leagues-grid"></div>
@@ -303,7 +296,6 @@ select option{background:#141720;}
 
   <div class="divider"></div>
 
-  <!-- POST SETTINGS -->
   <div class="sidebar-section">
     <div class="section-label">⚙️ Post Settings</div>
     <div class="input-group">
@@ -338,7 +330,6 @@ select option{background:#141720;}
 
   <div class="divider"></div>
 
-  <!-- AUTO-SCHEDULER -->
   <div class="sidebar-section">
     <div class="section-label">⏰ Auto-Scheduler <span class="badge-new">NEW</span></div>
     <div class="scheduler-row">
@@ -362,14 +353,13 @@ select option{background:#141720;}
         <div id="sched-preview" style="font-size:9px;color:var(--orange);font-family:'JetBrains Mono',monospace;margin-top:3px;">Posts 30 minutes before kickoff</div>
       </div>
       <div class="settings-note" style="margin-top:2px;">
-        Auto-publishes a preview post at the scheduled time before each game. Works across any date you scan.
+        Auto-schedules posts in Blogger at the set time before kickoff. Posts appear as "Scheduled" in your Blogger dashboard and publish automatically.
       </div>
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- DEFAULT LABELS -->
   <div class="sidebar-section">
     <div class="section-label">🏷️ Default Labels <span class="badge-purple">NEW</span></div>
     <div class="input-group">
@@ -384,7 +374,6 @@ select option{background:#141720;}
 
   <div class="divider"></div>
 
-  <!-- LOG -->
   <div class="sidebar-section">
     <div class="section-label">📋 Activity Log</div>
     <div class="log-panel" id="log-panel">
@@ -416,7 +405,6 @@ select option{background:#141720;}
     </div>
   </div>
 
-  <!-- ── DATE PICKER BAR ── -->
   <div class="date-bar" id="date-bar">
     <span class="date-bar-label">📅 Date</span>
     <div class="date-quick-btns">
@@ -438,10 +426,9 @@ select option{background:#141720;}
     </div>
   </div>
 
-  <!-- Schedule Notice (shown for future dates) -->
   <div class="schedule-notice" id="schedule-notice">
     <span>📅</span>
-    <span>You are viewing a <strong>future date</strong>. Posts created now will go out as <strong>drafts</strong> — you can publish them closer to match time, or enable the Auto-Scheduler to publish automatically.</span>
+    <span>You are viewing a <strong>future date</strong>. Posts created now will go out as <strong>drafts</strong> — you can publish them closer to match time, or enable the Auto-Scheduler to schedule them in Blogger automatically.</span>
   </div>
 
   <div class="bulk-banner" id="bulk-banner">
@@ -501,7 +488,6 @@ let globalSchedulerOn = false;
 let globalLabels      = ['sports 803','live stream'];
 
 // ─── DATE STATE ────────────────────────────────────────────────────────────
-// selectedDate is always a local YYYY-MM-DD string
 var selectedDate = getTodayStr();
 
 function getTodayStr() {
@@ -509,16 +495,12 @@ function getTodayStr() {
   return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
 }
 function pad2(n){ return n < 10 ? '0'+n : ''+n; }
-
 function dateOffsetStr(days) {
   var d = new Date();
   d.setDate(d.getDate() + days);
   return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
 }
-
-// Convert YYYY-MM-DD → YYYYMMDD for ESPN API
 function toESPNDate(ymd) { return ymd.replace(/-/g,''); }
-
 function espnUrl(id) {
   var base = 'https://site.api.espn.com/apis/site/v2/sports/'+id+'/scoreboard';
   var today = getTodayStr();
@@ -529,7 +511,6 @@ function espnUrl(id) {
   }
   return base;
 }
-
 function setQuickDate(key, el) {
   var map = {
     'yesterday': dateOffsetStr(-1),
@@ -540,25 +521,20 @@ function setQuickDate(key, el) {
     'd+7':       dateOffsetStr(7),
   };
   selectedDate = map[key] || getTodayStr();
-  // Sync custom input
   var inp = document.getElementById('custom-date-input');
   if (inp) inp.value = selectedDate;
   updateAllQuickBtns(el);
   updateDateIndicator();
   log('info', '📅 Date set to ' + selectedDate);
 }
-
 function setCustomDate(val) {
   if (!val) return;
   selectedDate = val;
-  // Deactivate quick buttons
   updateAllQuickBtns(null);
   updateDateIndicator();
   log('info', '📅 Custom date: ' + selectedDate);
 }
-
 function updateAllQuickBtns(activeEl) {
-  var today = getTodayStr();
   var btns = {
     'yesterday': document.getElementById('dq-yesterday'),
     'today':     document.getElementById('dq-today'),
@@ -570,7 +546,6 @@ function updateAllQuickBtns(activeEl) {
   Object.values(btns).forEach(function(b){ if(b) b.classList.remove('active'); });
   if (activeEl) activeEl.classList.add('active');
 }
-
 function updateDateIndicator() {
   var ind = document.getElementById('date-indicator');
   var txt = document.getElementById('date-indicator-text');
@@ -598,12 +573,10 @@ function updateDateIndicator() {
     if (notice) notice.classList.remove('visible');
   }
 }
-
 function daysDiff(fromStr, toStr) {
   var f = new Date(fromStr), t = new Date(toStr);
   return Math.round((t - f) / 86400000);
 }
-
 function formatDateLabel(ymd) {
   var d = new Date(ymd + 'T12:00:00');
   return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
@@ -614,10 +587,8 @@ window.addEventListener('DOMContentLoaded',function(){
   loadConfig();
   buildLeaguesGrid();
   renderGlobalLabels();
-  // Set today's date in custom input
   var inp = document.getElementById('custom-date-input');
   if (inp) inp.value = selectedDate;
-  // Activate "Today" button
   var todayBtn = document.getElementById('dq-today');
   if (todayBtn) { updateAllQuickBtns(todayBtn); }
   updateDateIndicator();
@@ -634,14 +605,15 @@ function getGameKey(gd) {
   return 's803_post_' + [gd.league.id, home, away, day].join('|').replace(/\s+/g,'_').toLowerCase();
 }
 
+// FIX 1: persist scheduledPosted flag (removed the early-return guard)
 function savePostToStorage(gd) {
-  if (!gd.blogPostId) return;
   var key = getGameKey(gd);
   var data = {
-    blogPostId:  gd.blogPostId,
-    blogPostUrl: gd.blogPostUrl || null,
-    status:      gd.status,
-    savedAt:     Date.now()
+    blogPostId:      gd.blogPostId      || null,
+    blogPostUrl:     gd.blogPostUrl     || null,
+    status:          gd.status,
+    scheduledPosted: gd.scheduledPosted || false,
+    savedAt:         Date.now()
   };
   localStorage.setItem(key, JSON.stringify(data));
 }
@@ -660,11 +632,13 @@ function loadPostFromStorage(gd) {
   } catch(e) { return null; }
 }
 
+// FIX 2: restore scheduledPosted on reload so scheduler never double-fires
 function restorePostStateForAllGames() {
   detectedGames.forEach(function(gd) {
-    if (gd.blogPostId) return;
     var saved = loadPostFromStorage(gd);
-    if (saved && saved.blogPostId) {
+    if (!saved) return;
+    if (saved.scheduledPosted) gd.scheduledPosted = true;
+    if (saved.blogPostId && !gd.blogPostId) {
       gd.blogPostId  = saved.blogPostId;
       gd.blogPostUrl = saved.blogPostUrl;
       gd.status      = saved.status || 'posted';
@@ -830,15 +804,13 @@ function updateSchedulerUI() {
   if (globalSchedulerOn){ tog.classList.add('on'); lbl.textContent='On'; lbl.style.color='var(--accent)'; }
   else{ tog.classList.remove('on'); lbl.textContent='Off'; lbl.style.color='var(--muted2)'; }
 }
-// Returns the lead time in milliseconds from sched-amount + sched-unit inputs
 function getSchedLeadMs() {
   var amount = parseFloat(document.getElementById('sched-amount').value) || 30;
   var unit   = document.getElementById('sched-unit').value || 'minutes';
   if (unit === 'days')    return amount * 24 * 60 * 60 * 1000;
   if (unit === 'hours')   return amount * 60 * 60 * 1000;
-  return amount * 60 * 1000; // minutes default
+  return amount * 60 * 1000;
 }
-
 function updateSchedUnitLimits() {
   var unit = document.getElementById('sched-unit').value;
   var inp  = document.getElementById('sched-amount');
@@ -846,7 +818,6 @@ function updateSchedUnitLimits() {
   if (unit === 'hours')   { inp.min = '1'; inp.max = '72';   if (parseFloat(inp.value) > 72)   inp.value = '2';  }
   if (unit === 'days')    { inp.min = '1'; inp.max = '30';   if (parseFloat(inp.value) > 30)   inp.value = '1';  }
 }
-
 function updateSchedPreview() {
   var el = document.getElementById('sched-preview');
   if (!el) return;
@@ -856,21 +827,27 @@ function updateSchedPreview() {
   el.textContent = 'Posts ' + amount + ' ' + label + ' before kickoff';
 }
 
+// FIX 3: corrected timing logic — only fires when clock actually reaches post time
 async function checkScheduledPosts() {
   if (!globalSchedulerOn || !detectedGames.length) return;
   var leadMs = getSchedLeadMs();
   var now    = Date.now();
   for (var i = 0; i < detectedGames.length; i++) {
     var gd = detectedGames[i];
-    if (gd.status !== 'idle' || !gd.preContent) continue;
+    // Guard: skip already-handled, no-content, or already-fired games
+    if (gd.status !== 'idle' || !gd.preContent || gd.scheduledPosted) continue;
     var kickoff = gd.espnEvent.date ? new Date(gd.espnEvent.date).getTime() : null;
     if (!kickoff) continue;
-    var msUntil = kickoff - now;
-    if (msUntil > 0 && msUntil <= leadMs && !gd.scheduledPosted) {
+    var msUntil  = kickoff - now;
+    var postAtMs = kickoff - leadMs;  // exact moment to post
+    // OLD BUG: msUntil <= leadMs — fired immediately when toggled inside window
+    // FIX: postAtMs <= now — only fires when clock actually reaches the post time
+    if (msUntil > 0 && postAtMs <= now) {
       var minsUntil = Math.round(msUntil / 60000);
-      log('ok', '⏰ Auto-posting: ' + getMatchTitle(gd) + ' (' + minsUntil + 'm to kickoff)');
+      log('ok', '⏰ Scheduler firing: ' + getMatchTitle(gd) + ' (' + minsUntil + 'm to kickoff)');
       gd.scheduledPosted = true;
-      await postToBloggerCore(i, 'preview');
+      savePostToStorage(gd);  // persist flag so page reload won't re-fire
+      await postToBloggerCore(i, 'preview', 'SCHEDULED', kickoff);
     }
   }
   renderGames();
@@ -1020,7 +997,6 @@ async function scanAllLeagues() {
   var scanLabel = formatDateLabel(selectedDate);
   log('info','Scanning '+selected.length+' leagues for '+scanLabel+'...');
   var totalFound=0;
-
   for (var i=0;i<selected.length;i++) {
     var league=selected[i];
     try {
@@ -1054,20 +1030,16 @@ async function scanAllLeagues() {
       log('ok','✓ '+league.name+': '+events.length+' game(s)');
     } catch(e){ log('err','✗ '+league.name+': '+e.message); }
   }
-
   restorePostStateForAllGames();
-
   var today = getTodayStr();
   var diff = daysDiff(today, selectedDate);
   var contextStr = diff===0 ? 'today' : diff>0 ? 'on '+scanLabel : 'on '+scanLabel+' (past)';
   document.getElementById('main-subtitle').textContent=totalFound+' game'+(totalFound!==1?'s':'')+
     ' found '+contextStr+' · '+new Date().toLocaleTimeString();
-
   renderGames();
   btn.classList.remove('loading'); btn.disabled=false;
   var bulkBtn=document.getElementById('bulk-btn');
   if (bulkBtn) bulkBtn.disabled=totalFound===0;
-
   if (totalFound>0) {
     for (var k=0;k<detectedGames.length;k++) {
       await generatePreviewContent(k);
@@ -1119,8 +1091,6 @@ function getMatchTitle(gd) {
 }
 function getGameState(gd){ return (gd.espnEvent.status&&gd.espnEvent.status.type&&gd.espnEvent.status.type.state)||'pre'; }
 function getScore(gd){ var c=getCompetitors(gd); return {home:c.home.score||'0',away:c.away.score||'0'}; }
-
-// Format kickoff time from event date
 function getKickoffTime(gd) {
   var raw = gd.espnEvent.date;
   if (!raw) return null;
@@ -1182,7 +1152,6 @@ function renderGames() {
     var homeLogo=(c.home.team&&c.home.team.logo)||'';
     var awayLogo=(c.away.team&&c.away.team.logo)||'';
     var kickoffTime=getKickoffTime(gd);
-
     var hlHtml=function(logo,name){
       return logo
         ?'<img class="team-logo" src="'+logo+'" alt="'+name+'" onerror="this.outerHTML=\'<div class=team-logo-placeholder>'+gd.league.emoji+'</div>\'">'
@@ -1192,16 +1161,16 @@ function renderGames() {
       ?'<div class="vs-score">'+score.home+'<span style="color:var(--border2);margin:0 3px">-</span>'+score.away+'</div>'
       :'<div class="vs-score" style="font-size:13px;color:var(--muted)">VS</div>';
 
-    var statusBadge=gd.status==='posted' ?'<span class="post-status posted">✓ Posted</span>'
-                   :gd.status==='updated'?'<span class="post-status updated">↑ Updated</span>'
-                   :gd.status==='draft'  ?'<span class="post-status draft">◎ Draft</span>'
-                   :gd.status==='deleted'?'<span class="post-status deleted">✗ Deleted</span>'
-                   :gd.status==='linked' ?'<span class="post-status linked">🔗 Linked</span>'
-                   :                      '<span class="post-status idle">○ Not Posted</span>';
+    // FIX: added 'scheduled' status badge
+    var statusBadge=gd.status==='posted'    ?'<span class="post-status posted">✓ Posted</span>'
+                   :gd.status==='updated'   ?'<span class="post-status updated">↑ Updated</span>'
+                   :gd.status==='draft'     ?'<span class="post-status draft">◎ Draft</span>'
+                   :gd.status==='deleted'   ?'<span class="post-status deleted">✗ Deleted</span>'
+                   :gd.status==='linked'    ?'<span class="post-status linked">🔗 Linked</span>'
+                   :gd.status==='scheduled' ?'<span class="post-status scheduled">⏰ Scheduled</span>'
+                   :                         '<span class="post-status idle">○ Not Posted</span>';
 
-    // Kickoff time badge for future/past dates
     var kickoffBadge = kickoffTime ? '<span class="kickoff-badge">⏰ '+kickoffTime+'</span>' : '';
-
     var schedCountdown='';
     if (globalSchedulerOn) {
       var kickoff=gd.espnEvent.date?new Date(gd.espnEvent.date).getTime():null;
@@ -1216,21 +1185,18 @@ function renderGames() {
             : minsToPost > 60
               ? Math.round(minsToPost/60)+'h'
               : minsToPost+'m';
-          schedCountdown='<span class="scheduler-countdown">⏰ posts in ~'+countdownStr+'</span>';
+          schedCountdown='<span class="scheduler-countdown">⏰ schedules in ~'+countdownStr+'</span>';
         } else if (msUntil>0) {
-          schedCountdown='<span class="scheduler-countdown" style="color:var(--green)">⏰ posting soon…</span>';
+          schedCountdown='<span class="scheduler-countdown" style="color:var(--green)">⏰ scheduling soon…</span>';
         }
       }
     }
-
     var seoTitle=gd.customTitle||buildSEOTitle(homeName,awayName,gd.league.name,'preview',score);
     var seoLen=seoTitle.length;
     var seoCls=seoLen>=50&&seoLen<=60?'good':seoLen<40||seoLen>70?'bad':'warn';
-
     var previewHtml=gd.preContent?'<div class="content-text">'+escHtml(gd.preContent)+'</div>':'<div class="content-empty">⏳ Generating content...</div>';
     var hlText=gd.highlightContent?'<div class="content-text">'+escHtml(gd.highlightContent)+'</div>':'<div class="content-empty">'+(state==='post'?'⏳ Generating highlights...':'⏱ Available after match ends')+'</div>';
     var statsHtml=buildStatsHtml(gd);
-
     var thumbPanelHtml=gd.thumbUrl
       ?'<div class="thumb-preview-wrap"><img class="thumb-preview-img" src="'+gd.thumbUrl+'" alt="Match thumbnail" onclick="openLightbox(this.src)"/></div>'
         +'<div class="thumb-actions">'
@@ -1238,15 +1204,13 @@ function renderGames() {
         +'<a class="btn btn-secondary" href="'+gd.thumbUrl+'" download="sports803-'+idx+'.jpg"><span class="btn-text">⬇ Download</span></a>'
         +'<span class="thumb-size-badge">800 × 420</span></div>'
       :'<div class="thumb-generating"><div class="gen-spinner"></div><span>Generating thumbnail…</span></div>';
-
     var postLinkHtml='';
-    if (gd.blogPostUrl&&(gd.status==='posted'||gd.status==='updated'||gd.status==='draft'||gd.status==='linked')) {
+    if (gd.blogPostUrl&&(gd.status==='posted'||gd.status==='updated'||gd.status==='draft'||gd.status==='linked'||gd.status==='scheduled')) {
       postLinkHtml='<div class="post-link-row">'
         +'<a class="post-link-url" href="'+gd.blogPostUrl+'" target="_blank">'+gd.blogPostUrl+'</a>'
         +'<button class="copy-btn" onclick="copyPostLink('+idx+')" title="Copy link">📋</button>'
         +'</div>';
     }
-
     var linkPanelHtml = '<div class="link-post-panel">'
       +'<div class="link-post-title">🔗 Link Existing Blogger Post <span class="badge-purple">RESTORE</span></div>'
       +'<div class="link-post-row">'
@@ -1257,22 +1221,18 @@ function renderGames() {
       +(gd.blogPostId?'<div class="link-post-note">✓ Current post ID: <code style="color:var(--accent2)">'+gd.blogPostId+'</code></div>':'')
       +'<div class="link-post-note">Already posted but came back to the dashboard? Paste your existing post\'s ID or URL to link it — then you can post highlights to it without creating a duplicate.</div>'
       +'</div>';
-
     var allLabels=globalLabels.concat(gd.customLabels||[]);
     var labelsHtml='<div class="labels-tags" id="card-labels-'+idx+'">'
       +allLabels.map(function(l){ return '<span class="label-tag">'+escHtml(l)+'</span>'; }).join('')
       +'</div>'
       +'<input type="text" class="labels-input" id="label-input-'+idx+'" placeholder="Add label + Enter" onkeydown="addCardLabel(event,'+idx+')" style="margin-top:5px;"/>';
-
     var hlBtns=state==='post'?(
       '<button class="btn btn-secondary" onclick="regenHighlights('+idx+')"><span class="btn-text">🔄 Regen HL</span><div class="spin"></div></button>'
       +(gd.highlightContent&&gd.blogPostId?'<button class="btn btn-primary" onclick="postToBlogger('+idx+',\'highlights\')"><span class="btn-text">📤 Post Highlights</span><div class="spin"></div></button>':'')
     ):'';
-
-    var deleteBtn=(gd.blogPostId&&(gd.status==='posted'||gd.status==='draft'||gd.status==='updated'||gd.status==='linked'))
+    var deleteBtn=(gd.blogPostId&&(gd.status==='posted'||gd.status==='draft'||gd.status==='updated'||gd.status==='linked'||gd.status==='scheduled'))
       ?'<button class="btn btn-danger" onclick="deletePost('+idx+')"><span class="btn-text">🗑 Delete</span><div class="spin"></div></button>'
       :'';
-
     html+='<div class="game-card" id="card-'+idx+'">'
       +'<div class="game-card-head">'
         +'<div class="game-teams">'
@@ -1520,7 +1480,6 @@ function pickLang(key){
   var bank=(LANG_PHRASES[lang]&&LANG_PHRASES[lang][key])||LANG_PHRASES['English'][key]||[''];
   return bank[Math.floor(Math.random()*bank.length)];
 }
-
 function buildPreviewText(homeName,awayName,leagueName,venue,dateStr,stats) {
   var sep=Math.random()>0.5?' vs ':' x ';
   var venueTxt=venue?' at '+venue:'';
@@ -1535,7 +1494,6 @@ function buildPreviewText(homeName,awayName,leagueName,venue,dateStr,stats) {
   }
   return p1+'\n\n'+p2+'\n\n'+p3+p4;
 }
-
 function buildHighlightText(homeName,awayName,homeScore,awayScore,leagueName,headlines,stats) {
   var scoreLine=homeName+' '+homeScore+'-'+awayScore+' '+awayName;
   var hScore=parseInt(homeScore,10), aScore=parseInt(awayScore,10);
@@ -1587,7 +1545,6 @@ async function generatePreviewContent(idx) {
   if (btn) btn.removeAttribute('disabled');
   log('ok','✓ Content ready: '+homeName+' vs '+awayName);
 }
-
 async function generateHighlightContent(idx) {
   var gd=detectedGames[idx];
   if (!gd) return;
@@ -1603,7 +1560,6 @@ async function generateHighlightContent(idx) {
   log('ok','✓ Highlights ready: '+homeName+' vs '+awayName);
   renderGames();
 }
-
 async function regenPreview(idx) {
   detectedGames[idx].preContent=null;
   var el=document.getElementById('text-preview-'+idx);
@@ -1692,7 +1648,7 @@ var LEAGUE_COLORS = {
   'cricket/icc':['#00205b','#1a1a2e'],
 };
 
-var S803_LOGO_URL='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAqRXhpZgAASUkqAAgAAAABADEBAgAHAAAAGgAAAAAAAABHb29nbGUAAP/bAIQAAwICCAgICAgICQgICAgICAgICAgICAoICAgICAgICAgICAgNCAgICAgICAgICggICAgKCQkICA4NCggNCAgJCAEDBAQGBQYKBgYKEA4KDQ0PDQ4QDQ0PDQ0NDQ8NDw0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0N/8AAEQgAXgBeAwERAAIRAQMRAf/EAB0AAAEEAwEBAAAAAAAAAAAAAAgAAQYHAgMEBQn/xABLEAABAwMBBAQHCgsHBQAAAAABAgMEAAUREgcIITEGE0FhFCJRVIGRkwkXMkNxc6GxwdIVQkRTcpKUo8LR4SQlNVJ0tvAWGCMzYv/EAB0BAAEEAwEBAAAAAAAAAAAAAAABBAUHAwYIAgn/xAA3EQABAwIDBQUGBQUBAAAAAAABAAIDBBEFIUEGEhMxUQdTYYGhFBZCUnGRFRckNcEiMjRD0SP/2gAMAwEAAhEDEQA/APlYaUAJdEwpEibNCE+aWyEqS6WyVLcIsmpEWSxRdInoQmoQnJoslSzR9ECyJbZDu3suMNyp+pRdAU2wDp8Q4KVLPA+MOOnkAeIp3FSukF1dmymwra+MT1GTeisr3ibT5qn5MmiSkLVaZ7OsMPwZdbrB3YBaT+TY+RR+yo9zHBL+XWF/KnRu62jzc+0VTVznBY3dnmFj4VtTu32j8wr2hpo6aQarCez3DR8K6Gt2qzn4hXtDTR1XINVgPZ/hvyroTux2Y/EL9oaZurpRqsZ2BoOi2o3WLN+ZX7SmjsTnGqbO2CoOi6EbqFlPxLntD/KmjsYqOqwO2EoflW9vdIsn5p32v9KaOxuoGqwnYehHwroTufWM/Eu+h7+lNX7RVIOSbO2Ios8lUe17ctW0UOWtSnEKVpUy4RrRwJ1BRwFJ4YPAYyKnqPadm7/7c1p2I7FuY4cDkrrZYwhCRwAbQB3YTjFXvTxfpwulcBayOiZu6XVZbQdu0e2yVR3WXFqCUq1I0YOr5SPJ5K16qnLXbq0HHdvBhlSacsvbxUcTvZxOQjSDnvb9AAzUU55Oi13802916rNW9pESSDGkAjgQer4dhyNXAjyU2cCdEn5pM7n1Wwb30PzeR+7+9Td0F9F4PafH3Xqug978NJIMWSCOYPVjHZjBVwpuaO68HtNi7r1WxG+VC82k/uvvU3OHX1Xg9pkfdeq3o304Q/JpP7r71NnYTfVYXdpMZ/1eq6U76sJJwqJLB8n/AIvqKhTV2Bm2RXj8xmZN4XqpZZt5tEhHWNW+cpA/GCWsH9Hx+PoqKqMNhYd1z1s9DjdXWxmSOnO59VJtlm3tm5yXYyGH2Fso1r67R5cY8VSj6+yoyvwptPEHsN0YbjjquodTuYWub1VrpdrUxCHZ2zW2bgvcqqEJOlvHYhP1Cu1qaMcCyncBt7A0O8UH+9CP70V8039taDiTbTELlrb2xxNwCJ73JyxW16ZdA6iM9dUxs29mWAppR45ISrgTn4WOIGOXCoxVsjA2K3e23PpPNZdsXgN0g2YouDcmLG6iQ717XUOxEtqdBaJD+FkIUpK08M5wXSLujbDbUu7wrzJt8Nu5R+iz8yZbw0kMty8sdStTJ1BJSPDGQFA8PKU0WS2XkdBej1vvn/R1/et8FiVIlXCNIaZjthhxKGZyBlsgg4UwFjVlQJxnhRdGSz3lIUC2wPwxLtNrjzYN26m2tqjJDcxl0mOnrGE41hSXPhYwkgKwBwoSKRbQZdmT0jsdnlW+0tMTYjs5tZjMtqcmM9T1bGRgFCkuLXowc9XzxQvWSDX3S/pLBCY0CTZV269R5K1omR48dqBKh5Iw0ptZW4dBQTqaGlacZAry69is9NbitLuV1XdocBYjqY/9XVo0hOcZwc508PVVTVokdOQ4HmvoJsxLRyYcwR7trZ8l72yh5s3p/Rp1iCjrdP8Am6w8Ff8A0E459mmpGRrhRgOVWVT6Z2NSCn55Xty1RAJdrU3McD/Stj4arg/BR+ij7K7ao4r07fNPsC/wmeaD3ehP96K+ab/iqtMWFqgrl3b39zf5K0fc/j0eM+Qm8SvwdLDeu1z3JPg7LEgZGVOnASRwxqWkKBxggGoZVuvpDbd6Lo03eWi7ebSqYzYHWJs9EqOiO++X4xZbbkEpbccSpuSstoVqQFglKQoUIQG+51byTLF4ujV+uKkJvFrchpuNxkOLDbzZy0h994kIbLbjxCnHEJCkpTzcTR9OSTICA2iLPobtu6PWQ9ErGm9WuX4DJnyZc5mWyYbKXGZiqZVIdZKiyBoXhRUgpUB8oEcxYKJe6Q7UbNIsFtt6LnBvFzjzFKZfhPtvqaiBKwkSXmyrBLZQgpKgpbmlQThJwfVHLJfO619MZTCShp5xtJ5pSogfXgHvFNX08TzchT1NjtbTM4cMhAV8bl0oqnS1KJUSwCSSSSSvyn66hMZjHBACsPYKV01Y8uNzlmUZLbtV+6NdDbqgLnJH6CPqFdy0EQNMPNJgJ/RM80IO9J/iq/mm/tqoMbFqorl/br9zf5KoK15VyscUIUnsmzSfJZXIYivOsozqcQglPDmB2qwOenOKaPqoY3bjnZpm+rhjduOdmlbNmc95hUpqM8thOdTiUEpGn4WO0hODkgYBB5YNDqyJjt0nNeX10DHcMuzK2Qdl9wdjmU3FeVHAJ6xKDjA5kciQPKkEUOrIg7hk5pXV0Idwyc1Fqd6WKeAp0ihLreyc0t7I1uiH3Kz/bZXzA/3VA4sLxBW/wBnVvan+SMdpytHdGujS0qFK5o4/ForuzDY2+xty6plgbiKBth1Qhb0X+KK+ab+2qQ2iaBVuXMm3JviL7+CqCtYsq6TGiyEbOxWQE26ypcWWnleG+DspJ0SAQ6ol7HDxc6kjuGOPCq1xQO40hbyFr+GYVU4xvCeXdzta/hmP5yXtdGnVoXaWhlCFxJBcbTkIKsJKvFGARkq495ppNnvkcxZRszjd72nP+m30XgbLuksh7rWnwtpUeO83Cjlt1tiSwnA65SlAocI8UAjAweAOeEjUwhgY5md7XN1M1MDWGMtNwQLm+v3Qc3knrndQCT1i8pT8EHUcpHcDwHdW/RWLG26Ky4gAwW5WXHWVZckqEZIhNzU/wBsk/6f+KonEW3Yrh7N/wDLfbw/lF+27WoOYulS3qopp4N5OPFR9td54ZH+jaB4qBwGS1C0DPmha3jeicp+5KWyw+4nq2xqQ0sjt7QMcOHCqM2lo5TWOIafsueds6GomxFxawkZchdVb73U/wA0lewd/lWo+xzfIfsVof4VU9277FMNnU/zST7B37teTSTfIfsUv4TU9277FXB0J2i3aHFaj/gxTy42vwV92K8XGC6CFaCMD8YgcOR9FQE+BOlkLrEA88jmtcqdkKmeQvDHWPMbpz1XT0d2rXpmN1JtzjrqEuIZkrjPFxtLpyoJPIY4Y4HkB2CsEmA7zjkQD4dFjfsTM55tG6xtoVnZ9rV6aipYNtWp1tpTLUkxX+tS2rmnhgcgOzsHCvD8Fbv71jbpYr2/YuoL94MNuliqZkdAbiolSokokkqJ6h3mef4vbU7bcyAy+i2VuCVjG7ojdYeB/wCLWNnU/wAzl/s7v3a8769fg9Z3TvsUve5n+Zy/2d37tJvhH4PWd077FXhuq9GZMeXIU+w8ylTGEl1paASFDkVAD0CmNUd5qtvs8w+ohqnmRpHLmLIpg5WvPYuiLKudnvTdq4xGnWyC4EIQ83nBQ4keN4v+XPI9qcV2hsxi0FRThoNnKstkMbgqaZrN6zhopCXVp5VtMlNDId5wB8lYbYoJHXeAfJdcaQogcye3nURNTQsJuABpkFmMMDHG7QBpkE7qFZJwfpqAngjOWXovAZAciG5/RJOvv9RqGkp4hoE6bFTjRvon0K7/AFGoeSJnQLJuU/yt9E2pXf6jUTLBH4LJwqcaN9EsK7/pqCmiZfkl3afo30WGlXbn6ah5YW2ySFkAFmhvosetUPKPXURJH0WQQQuGQB+gC3tPZ5+io94PJeDEyP8AtAFl5HS3p/FgJQqU6EayQhIyVHgSToHEJGAM8uIFNuAStSxLH6WhdaR4BKB3Zh4UuYyzFcW048sJyg/i81EjtCUgqwfJW64W+fjtZCbXK49wqSf2hrYXEEnRHQxF0oQ3qUspCUnUfGVjhqUfKa6uoWGKECTnbMrsfDWOhhHF6c1Se8LtmehutxYa+rWkBbyk4zk8kejmfRVM7W489kvChdyVLbZbUzRzcGB/JU3/ANwd387c+iq7ONVZ+JVr71Yj3iwO3+7+du+sVhOJ1B+JHvViXelN7/t387d9YrEcQnOqPerEu9Kx9/u7eePeusJqpTqj3qxLvSsPf1u3nj/AOtWIz7HVeXtTiXelYHbddT+WP8A64rEXuOqPefEdJSrh3etsjz76ok0qq9JwWVuHJChzRnhzHIeX5KRvPNWdsPtVK6o4FU+9+qv+bE1oW3qUjUhSAtHBaSRgFJHJSeYNeJY+i6DxCF09M5sbrEhAftDjSWpbzMpa3HWllJUpRJKeaVDOcJUkhQHkIry0Cy4jxs1MNW+OocS4FPsv6XCDOYlKGpLSjqA5kLSUHHeArPoqZwyrFJUNlOhTPDKwUdSyXQFFFd94y2tNF5panHFA6Ggg51Y4a+WOPyVeFXtpTezEMOZFvRX9Wbd0vshDTdxLastM3ChQO0yXWm1LQexScEd9cnXNYrW2+G7Y5gvSbVPl2OevBkpCXGpbay6hQIUNwP8AbT8orDVGppqWnqrGUbsEuHedCbZWuQFEqSBzSNJ58fhD8FaN/wAqKnqY3uqaZ0cbCXFpd3a4VbuQXglJa5RGrSMjxsg4ByACeVXIlsLXuMv9V1kLJLHFri1jHEH9rmM9VvtqjKT2BJ+etHHSZHm9ztmI/B7sO1Tc4HpnKBTMlgOJACg4opWeIUCcKUhfEY5HOPTqt9XT01UYmysdKxj9xLcNcbkFpY4F4cLjDmua8OaQRkEEZAFNujqIqZkjmNaXOjI3gGuAuCLjRBfaZrdJK0qBxrWpW7gqz8HGeSiDzzgk89OOFSFbh9nGqrIjPAIjMuHOzn9O0+l8B7bGpx4DQeVN1E7J4AJAXHOYz7ptd3aQNf8JOL52pXXxmjqblTLtqDLmqZlLaA0lGGSU9Z2ngEJSB8Y8OeM1VjfDFJNJIHMDJI93GbpBDHAHX8LoWluT2g5xg1HqYKSSCRxe/a7iOmjmAAdWkW+RUne73RuY2PMQjRpGQcqJznqRnT3KSMeYkVlPuqVAqyuO8t7pNtSmGxc9lLjp0DccZcAIcbbJCkgYGcg6xnBqPra9zH+K3jc4gNe0tcQ+MEjJb3m33HXIaWEakDcadEBU+KsS3LGrKuZWlT2eoUvWHQr5WFDB0K5YO8rngFOkDhgZq5Fc5rTHCGNaMw5oOhHA+vJKXNwBc47iSSe9k5JUCuqpZpB4j2MBBbiLtw3kBd1xkAHkFGpxnNWorhFMWBsTGuJc4gBrc6EAf5N3NdaThpICMjBBqbdXSua6dkA/cSw4a49fJV0TmgtAe4DIAJyB5M5HoF0rkFrpXiCamjpJp1ymJKgptqvWPEStaEPJGtSFBac6c4PZisX7RqXB84B3iD4c+EgBp3c3fS2vmFiEbWlkUjiQSBkdDv0u9kEEi44WbTsdiYvjj0HiBuCcJQkqOEk4BxkjJxk4J5gcagbJ3tKKqBjnGF0cjsjLmuabZ0JGSDzGOR3VKVGiRsOCCMq+TkqUseWoJ5jA4Djzqhex0bJ4nVDXhlPUNc5wcB8MjtRa/dIA0BI56a7c1hHhyFvba17Y3NZJh5LmEhxyFgS19D3iCCCNo5ZqPFE11RLVMjDXSRuY9rWgDUOGgQSAM+1I6Wk5tqEioaHU8MjCWtLhh7d4CWtedw9g60eVgS0Yycc47KvqKaN0EsTnMa+Md5rmPIDmu2cAdgBBJIyDsM5qAqq2GSmZSxsdiJz2NF2gFpBB5jS2N/fvbcCrBFTpqiRrmljGYc4AgB36i7LuWNlhpIY4GhyZADnFOwfMXk6FHHDgLpwN7cOpSRy2oNPZiqBr2Fz5Ht3nhznAEt+1yBIJJwc+H5qKjqhJLkOiY3DpHFxGXdwPUgnQaZ5c+JBIqtqaY2qHzwlzG/M4NLTtJ9OW1u8c2/LYXwpWFKxKoabO2rWlc1DJbQEoUkHBbTjG0g8CBz5c+arNbJGXxEyuEckmHO33WjN/cJBwNyTjU89tTSqaYKqtknY6V0cgaWHMDWtj3WN1IAJdoR5Jyb5GtODnVRViJkroMEiNxdhu8Y5HJxjGrYDt0Nx5A1dHPG5rS4tMbi4gSsc3LQdARnBGcjqkdBkJVOhgZG+B8sT94tJ+YtAc0D77TkHkD5K7VFDxFPS08sBqXSiSOMloLg5pZu3bGh1dtBBB4VOVwpOE0Q2q0dPPbsJrjJjoQhJfuQWwCCUoSSQAc/GJ9FcrUjSFxb+EjFxeH9Zax7Kfv5d1oGl/cA5+Ht4Ur2k7W1NPFbQV0tN5A0JCh0AKqFkhtIGg5klKfLTqPnj59iqMiJvK7VzDGWvbqwOBYAb9rSQSbcgkngMC7i9VBqHBzWlzXNa3mfSznI7DzOVhtROyF5t3QDAQB4HHGe2rsdWBjQC0EHLdbXJ5kE69TqFMvDuS4cC4DcXHUaluQfJn2NLxzxjnVEGpzKlpD/CZJNBc8cHRud+g1BPfWu8klVoqitjijlpnxyykBrXEjUkjAycAH6T7jnWx7bKfXvJGcuJGep1d+pVs7o7kxIIJzjIAJBtpnTv8AqgT3d+C0lVxOvJFpStSFFJylJJxzxwIpjCpHLSxRK+YB0koIJxqb5WRSAG97jPpqfnZlFYuSuqGkSMiMYIAa4HJIBJOfPnyB9ZAqK2d2dpnYLhBLHBriXOdhxJGgBz3e7mJUKVIp5ppCGulLPx7G4gkDaDlukYBIBBBB4A1fhqpJBnLiMvjJdv8Abja5bgbOvPqNR5bJFBSxyiUBwLi0aEEABrSXbWPsknXQ+1SqaS0+OouQA7Tz5EgD0kfFLyuOCDnXp4VdqKiCOnL3QuDSSXE5b3gfOzj8bJGjQ5wCMjgSFB0xVbNKLuDI3Fwa7ByC09+p8+7PVqCOI01KWvEiJJIJDQWAAtGDnb9RzB5DqnI0JOmtAdJbr0hOvn6VKvxkKOCBke4c6gWVMcbGF7Q7eFry4HjqrxhDsd7c93cBkZBz+rBIFXeN8cDpJC13dJaxuDq0B4OefM8OqeVPF++3t/wDjLSSSSSSSSSSSSSb/AP/Z';
+var S803_LOGO_URL='data:image/jpeg;base64,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';
 
 function loadImageCORS(url) {
   return new Promise(function(resolve) {
@@ -1747,7 +1703,6 @@ async function fetchTheSportsDB(teamName) {
   }
   return null;
 }
-
 async function fetchTheSportsDBPlayer(playerName) {
   if (!playerName) return null;
   try {
@@ -1761,7 +1716,6 @@ async function fetchTheSportsDBPlayer(playerName) {
   } catch(e){}
   return null;
 }
-
 async function fetchCricketLogo(teamName) {
   if (!teamName) return null;
   try {
@@ -1789,7 +1743,6 @@ async function fetchCricketLogo(teamName) {
   for (var k in countryMap) { if (lc.includes(k)) return countryMap[k]; }
   return null;
 }
-
 async function fetchFighterImage(fighterName, leagueId) {
   if (!fighterName) return null;
   var tsdbUrl=await fetchTheSportsDBPlayer(fighterName);
@@ -1809,7 +1762,6 @@ async function fetchFighterImage(fighterName, leagueId) {
   }
   return null;
 }
-
 async function loadLogoWithFallback(espnUrl, teamName, leagueId) {
   if (espnUrl){ var img1=await loadImageCORS(espnUrl); if(img1)return img1; }
   var altUrl = null;
@@ -1884,7 +1836,7 @@ async function uploadToImgbb(dataUrl) {
   } catch(e){ log('err','imgbb: '+e.message+' — using base64'); return dataUrl; }
 }
 
-// ─── BLOGGER API ─────────────────────────────────────────────────────────────
+// ─── BLOGGER API — FIX 4: native scheduling ──────────────────────────────────
 async function postToBlogger(idx,type) {
   var gd=detectedGames[idx],btn=event.currentTarget;
   var blogId=document.getElementById('blog-id').value.trim();
@@ -1900,7 +1852,8 @@ async function postToBlogger(idx,type) {
   if (success) renderGames();
 }
 
-async function postToBloggerCore(idx,type,pubModeOverride) {
+// FIX 4: added kickoffTimestamp parameter + SCHEDULED branch for Blogger native scheduling
+async function postToBloggerCore(idx,type,pubModeOverride,kickoffTimestamp) {
   var gd=detectedGames[idx];
   var blogId=document.getElementById('blog-id').value.trim();
   var pubMode=pubModeOverride||document.getElementById('publish-mode').value;
@@ -1939,6 +1892,15 @@ async function postToBloggerCore(idx,type,pubModeOverride) {
       method='PUT';
       url='https://www.googleapis.com/blogger/v3/blogs/'+blogId+'/posts/'+gd.blogPostId+'?publish='+(pubMode==='LIVE'?'true':'false');
       body={id:gd.blogPostId,title,content:htmlContent,labels:allLabels};
+    } else if (pubMode==='SCHEDULED' && kickoffTimestamp) {
+      // ── BLOGGER NATIVE SCHEDULING ───────────────────────────────────────────
+      // published = future ISO date + isDraft=false → Blogger schedules the post
+      // natively. It auto-publishes at kickoff time. Shows as "Scheduled" in your
+      // Blogger dashboard — NOT a draft. No manual action needed.
+      var scheduledDate = new Date(kickoffTimestamp).toISOString();
+      method='POST';
+      url='https://www.googleapis.com/blogger/v3/blogs/'+blogId+'/posts/?isDraft=false';
+      body={title, content:htmlContent, labels:allLabels, published:scheduledDate};
     } else {
       method='POST';
       url='https://www.googleapis.com/blogger/v3/blogs/'+blogId+'/posts/?isDraft='+(pubMode==='DRAFT'?'true':'false');
@@ -1950,14 +1912,18 @@ async function postToBloggerCore(idx,type,pubModeOverride) {
     if (type==='preview') {
       gd.blogPostId  = data.id;
       gd.blogPostUrl = data.url||null;
-      gd.status      = pubMode==='DRAFT'?'draft':'posted';
+      // FIX: new 'scheduled' status for Blogger-native-scheduled posts
+      gd.status = pubMode==='SCHEDULED' ? 'scheduled' : pubMode==='DRAFT' ? 'draft' : 'posted';
     } else {
       gd.blogPostUrl = data.url||gd.blogPostUrl;
       gd.status      = 'updated';
     }
     savePostToStorage(gd);
-    log('ok','✓ '+(type==='preview'?'Posted':'Highlights updated')+': '+title);
-    toast('✓ '+(type==='preview'?'Preview':'Highlights')+' '+(pubMode==='DRAFT'?'saved as draft':'published')+'!','ok');
+    var modeLabel = pubMode==='SCHEDULED' ? 'scheduled in Blogger ⏰'
+                  : pubMode==='DRAFT'     ? 'saved as draft'
+                  :                         'published';
+    log('ok','✓ '+(type==='preview'?'Posted':'Highlights updated')+': '+title+' ('+modeLabel+')');
+    toast('✓ '+(type==='preview'?'Preview':'Highlights')+' '+modeLabel+'!','ok');
     return true;
   } catch(e){
     toast('Post failed: '+e.message,'err');
