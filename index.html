@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -827,26 +828,28 @@ function updateSchedPreview() {
   el.textContent = 'Posts ' + amount + ' ' + label + ' before kickoff';
 }
 
-// FIX 3: checkScheduledPosts — auto-schedule newly generated content when scheduler is ON
-// This runs every 60s and catches any game that has preview content but hasn't been
-// scheduled yet. It uses Blogger native scheduling (published = kickoff time).
+// FIX 3: corrected timing logic — only fires when clock actually reaches post time
 async function checkScheduledPosts() {
   if (!globalSchedulerOn || !detectedGames.length) return;
-  var now = Date.now();
+  var leadMs = getSchedLeadMs();
+  var now    = Date.now();
   for (var i = 0; i < detectedGames.length; i++) {
     var gd = detectedGames[i];
-    // Skip: already scheduled/posted/handled, no content yet, or already fired
+    // Guard: skip already-handled, no-content, or already-fired games
     if (gd.status !== 'idle' || !gd.preContent || gd.scheduledPosted) continue;
     var kickoff = gd.espnEvent.date ? new Date(gd.espnEvent.date).getTime() : null;
     if (!kickoff) continue;
-    // Only schedule posts for games that haven't kicked off yet
-    if (kickoff <= now) continue;
-    var minsUntil = Math.round((kickoff - now) / 60000);
-    log('ok', '⏰ Auto-scheduling: ' + getMatchTitle(gd) + ' (kicks off in ' + minsUntil + 'm)');
-    gd.scheduledPosted = true;
-    savePostToStorage(gd);
-    await postToBloggerCore(i, 'preview', 'SCHEDULED', kickoff);
-    await sleep(500); // small delay between posts
+    var msUntil  = kickoff - now;
+    var postAtMs = kickoff - leadMs;  // exact moment to post
+    // OLD BUG: msUntil <= leadMs — fired immediately when toggled inside window
+    // FIX: postAtMs <= now — only fires when clock actually reaches the post time
+    if (msUntil > 0 && postAtMs <= now) {
+      var minsUntil = Math.round(msUntil / 60000);
+      log('ok', '⏰ Scheduler firing: ' + getMatchTitle(gd) + ' (' + minsUntil + 'm to kickoff)');
+      gd.scheduledPosted = true;
+      savePostToStorage(gd);  // persist flag so page reload won't re-fire
+      await postToBloggerCore(i, 'preview', 'SCHEDULED', kickoff);
+    }
   }
   renderGames();
 }
@@ -1542,17 +1545,6 @@ async function generatePreviewContent(idx) {
   var btn=document.querySelector('#card-'+idx+' [onclick*="postToBlogger"][onclick*="preview"]');
   if (btn) btn.removeAttribute('disabled');
   log('ok','✓ Content ready: '+homeName+' vs '+awayName);
-  // FIX: if scheduler is ON and game is in the future, schedule immediately
-  if (globalSchedulerOn && gd.status === 'idle' && !gd.scheduledPosted) {
-    var kickoffTs = gd.espnEvent.date ? new Date(gd.espnEvent.date).getTime() : null;
-    if (kickoffTs && kickoffTs > Date.now()) {
-      gd.scheduledPosted = true;
-      savePostToStorage(gd);
-      log('ok', '⏰ Scheduler: queuing Blogger schedule for ' + homeName + ' vs ' + awayName);
-      await postToBloggerCore(idx, 'preview', 'SCHEDULED', kickoffTs);
-      renderGames();
-    }
-  }
 }
 async function generateHighlightContent(idx) {
   var gd=detectedGames[idx];
@@ -1657,7 +1649,7 @@ var LEAGUE_COLORS = {
   'cricket/icc':['#00205b','#1a1a2e'],
 };
 
-var S803_LOGO_URL='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAqRXhpZgAASUkqAAgAAAABADEBAgAHAAAAGgAAAAAAAABHb29nbGUAAP/bAIQAAwICCAgICAgICQgICAgICAgICAgICAoICAgICAgICAgICAgNCAgICAgICAgICggICAgKCQkICA4NCggNCAgJCAEDBAQGBQYKBgYKEA4KDQ0PDQ4QDQ0PDQ0NDQ8NDw0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0N/8AAEQgAXgBeAwERAAIRAQMRAf/EAB0AAAEEAwEBAAAAAAAAAAAAAAgAAQYHAgMEBQn/xABLEAABAwMBBAQHCgsHBQAAAAABAgMEAAUREgcIITEGE0FhFCJRVIGRkwkXMkNxc6GxwdIVQkRTcpKUo8LR4SQlNVJ0tvAWGCMzYv/EAB0BAAEEAwEBAAAAAAAAAAAAAAABBAUHAwYIAgn/xAA3EQABAwIDBQUGBQUBAAAAAAABAAIDBBEFIUEGEhMxUQdTYYGhFBZCUnGRFRckNcEiMjRD0SP/2gAMAwEAAhEDEQA/APlYaUAJdEwpEibNCE+aWyEqS6WyVLcIsmpEWSxRdInoQmoQnJoslSzR9ECyJbZDu3suMNyp+pRdAU2wDp8Q4KVLPA+MOOnkAeIp3FSukF1dmymwra+MT1GTeisr3ibT5qn5MmiSkLVaZ7OsMPwZdbrB3YBaT+TY+RR+yo9zHBL+XWF/KnRu62jzc+0VTVznBY3dnmFj4VtTu32j8wr2hpo6aQarCez3DR8K6Gt2qzn4hXtDTR1XINVgPZ/hvyroTux2Y/EL9oaZurpRqsZ2BoOi2o3WLN+ZX7SmjsTnGqbO2CoOi6EbqFlPxLntD/KmjsYqOqwO2EoflW9vdIsn5p32v9KaOxuoGqwnYehHwroTufWM/Eu+h7+lNX7RVIOSbO2Ios8lUe17ctW0UOWtSnEKVpUy4RrRwJ1BRwFJ4YPAYyKnqPadm7/7c1p2I7FuY4cDkrrZYwhCRwAbQB3YTjFXvTxfpwulcBayOiZu6XVZbQdu0e2yVR3WXFqCUq1I0YOr5SPJ5K16qnLXbq0HHdvBhlSacsvbxUcTvZxOQjSDnvb9AAzUU55Oi13802916rNW9pESSDGkAjgQer4dhyNXAjyU2cCdEn5pM7n1Wwb30PzeR+7+9Td0F9F4PafH3Xqug978NJIMWSCOYPVjHZjBVwpuaO68HtNi7r1WxG+VC82k/uvvU3OHX1Xg9pkfdeq3o304Q/JpP7r71NnYTfVYXdpMZ/1eq6U76sJJwqJLB8n/AIvqKhTV2Bm2RXj8xmZN4XqpZZt5tEhHWNW+cpA/GCWsH9Hx+PoqKqMNhYd1z1s9DjdXWxmSOnO59VJtlm3tm5yXYyGH2Fso1r67R5cY8VSj6+yoyvwptPEHsN0YbjjquodTuYWub1VrpdrUxCHZ2zW2bgvcqqEJOlvHYhP1Cu1qaMcCyncBt7A0O8UH+9CP70V8039taDiTbTELlrb2xxNwCJ73JyxW16ZdA6iM9dUxs29mWAppR45ISrgTn4WOIGOXCoxVsjA2K3e23PpPNZdsXgN0g2YouDcmLG6iQ717XUOxEtqdBaJD+FkIUpK08M5wXSLujbDbUu7wrzJt8Nu5R+iz8yZbw0kMty8sdStTJ1BJSPDGQFA8PKU0WS2XkdBej1vvn/R1/et8FiVIlXCNIaZjthhxKGZyBlsgg4UwFjVlQJxnhRdGSz3lIUC2wPwxLtNrjzYN26m2tqjJDcxl0mOnrGE41hSXPhYwkgKwBwoSKRbQZdmT0jsdnlW+0tMTYjs5tZjMtqcmM9T1bGRgFCkuLXowc9XzxQvWSDX3S/pLBCY0CTZV269R5K1omR48dqBKh5Iw0ptZW4dBQTqaGlacZAry69is9NbitLuV1XdocBYjqY/9XVo0hOcZwc508PVVTVokdOQ4HmvoJsxLRyYcwR7trZ8l72yh5s3p/Rp1iCjrdP8Am6w8Ff8A0E459mmpGRrhRgOVWVT6Z2NSCn55Xty1RAJdrU3McD/Stj4arg/BR+ij7K7ao4r07fNPsC/wmeaD3ehP96K+ab/iqtMWFqgrl3b39zf5K0fc/j0eM+Qm8SvwdLDeu1z3JPg7LEgZGVOnASRwxqWkKBxggGoZVuvpDbd6Lo03eWi7ebSqYzYHWJs9EqOiO++X4xZbbkEpbccSpuSstoVqQFglKQoUIQG+51byTLF4ujV+uKkJvFrchpuNxkOLDbzZy0h994kIbLbjxCnHEJCkpTzcTR9OSTICA2iLPobtu6PWQ9ErGm9WuX4DJnyZc5mWyYbKXGZiqZVIdZKiyBoXhRUgpUB8oEcxYKJe6Q7UbNIsFtt6LnBvFzjzFKZfhPtvqaiBKwkSXmyrBLZQgpKgpbmlQThJwfVHLJfO619MZTCShp5xtJ5pSogfXgHvFNX08TzchT1NjtbTM4cMhAV8bl0oqnS1KJUSwCSSSSSb/AP/Z';
+var S803_LOGO_URL='data:image/jpeg;base64,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';
 
 function loadImageCORS(url) {
   return new Promise(function(resolve) {
@@ -1846,28 +1838,32 @@ async function uploadToImgbb(dataUrl) {
 }
 
 // ─── BLOGGER API — FIX 4: native scheduling ──────────────────────────────────
-async function postToBlogger(idx,type) {
-  var gd=detectedGames[idx],btn=event.currentTarget;
-  var blogId=document.getElementById('blog-id').value.trim();
-  if (!oauthToken||Date.now()>=tokenExpiresAt){ toast('Sign in first','err'); return; }
-  if (!blogId){ toast('Enter Blog ID first','err'); return; }
-  if (type==='highlights'&&!gd.highlightContent){ toast('No highlights content yet','err'); return; }
-  if (type==='highlights'&&!gd.blogPostId){ toast('Post Preview first (or link an existing post)','err'); return; }
-  if (type==='preview'&&!gd.preContent){ toast('No preview content yet','err'); return; }
-  btn.classList.add('loading'); btn.disabled=true;
-  // FIX: when auto-scheduler is ON, always schedule at kickoff time regardless of dropdown
+async function postToBlogger(idx, type) {
+  var gd = detectedGames[idx], btn = event.currentTarget;
+  var blogId = document.getElementById('blog-id').value.trim();
   var pubMode = document.getElementById('publish-mode').value;
-  var kickoffTs = null;
-  if (globalSchedulerOn && type === 'preview') {
-    var kickoffRaw = gd.espnEvent.date ? new Date(gd.espnEvent.date).getTime() : null;
-    if (kickoffRaw && kickoffRaw > Date.now()) {
-      // Game is in the future — use Blogger native scheduling at kickoff time
-      pubMode = 'SCHEDULED';
-      kickoffTs = kickoffRaw;
+  if (!oauthToken || Date.now() >= tokenExpiresAt) { toast('Sign in first', 'err'); return; }
+  if (!blogId) { toast('Enter Blog ID first', 'err'); return; }
+  if (type === 'highlights' && !gd.highlightContent) { toast('No highlights content yet', 'err'); return; }
+  if (type === 'highlights' && !gd.blogPostId) { toast('Post Preview first (or link an existing post)', 'err'); return; }
+  if (type === 'preview' && !gd.preContent) { toast('No preview content yet', 'err'); return; }
+  btn.classList.add('loading'); btn.disabled = true;
+  var success;
+
+  // --- NEW: if scheduler is on and it's a preview for a future game, force SCHEDULED mode ---
+  if (globalSchedulerOn && type === 'preview' && getGameState(gd) === 'pre') {
+    var kickoff = gd.espnEvent.date ? new Date(gd.espnEvent.date).getTime() : null;
+    if (!kickoff) {
+      toast('Cannot schedule: missing kickoff time', 'err');
+      btn.classList.remove('loading'); btn.disabled = false;
+      return;
     }
+    success = await postToBloggerCore(idx, type, 'SCHEDULED', kickoff);
+  } else {
+    success = await postToBloggerCore(idx, type, pubMode);
   }
-  var success=await postToBloggerCore(idx,type,pubMode,kickoffTs);
-  btn.classList.remove('loading'); btn.disabled=false;
+
+  btn.classList.remove('loading'); btn.disabled = false;
   if (success) renderGames();
 }
 
@@ -1975,3 +1971,4 @@ function escAttr(s){ return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); 
 </script>
 </body>
 </html>
+```
