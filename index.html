@@ -32,8 +32,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .input-group{display:flex;flex-direction:column;gap:5px;}
 .input-label{font-size:11px;color:var(--muted2);font-weight:500;display:flex;align-items:center;gap:6px;}
 .input-label .tip{font-size:9px;background:var(--s3);padding:1px 5px;border-radius:3px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-input[type="text"],input[type="password"],input[type="number"],select,textarea{background:var(--s2);border:1px solid var(--border);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;padding:9px 11px;border-radius:var(--r);width:100%;outline:none;transition:border-color .15s;}
-input[type="text"]:focus,input[type="password"]:focus,input[type="number"]:focus,select:focus,textarea:focus{border-color:var(--accent2);}
+input[type="text"],input[type="password"],input[type="number"],input[type="date"],select,textarea{background:var(--s2);border:1px solid var(--border);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;padding:9px 11px;border-radius:var(--r);width:100%;outline:none;transition:border-color .15s;}
+input[type="text"]:focus,input[type="password"]:focus,input[type="number"]:focus,input[type="date"]:focus,select:focus,textarea:focus{border-color:var(--accent2);}
+input[type="date"]{color-scheme:dark;}
 select option{background:#141720;}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:10px 18px;border-radius:var(--r);border:none;cursor:pointer;transition:all .15s;white-space:nowrap;}
 .btn-primary{background:var(--accent);color:#070809;}
@@ -46,6 +47,8 @@ select option{background:#141720;}
 .btn-purple:hover{background:rgba(168,85,247,.25);}
 .btn-orange{background:rgba(255,165,2,.12);color:var(--orange);border:1px solid rgba(255,165,2,.3);}
 .btn-orange:hover{background:rgba(255,165,2,.2);}
+.btn-cyan{background:rgba(0,212,255,.1);color:var(--accent2);border:1px solid rgba(0,212,255,.35);}
+.btn-cyan:hover{background:rgba(0,212,255,.2);}
 .btn-full{width:100%;}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
 .btn .spin{width:12px;height:12px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;display:none;}
@@ -58,11 +61,32 @@ select option{background:#141720;}
 .league-toggle .lcheck{width:14px;height:14px;border:1.5px solid var(--border2);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .15s;}
 .league-toggle.active .lcheck{background:var(--accent);border-color:var(--accent);color:#070809;}
 .main{padding:28px 28px 60px;overflow-y:auto;}
-.main-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:28px;}
+.main-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px;}
 .main-title{font-size:22px;font-weight:800;letter-spacing:-0.03em;line-height:1.1;}
 .main-title span{color:var(--accent);}
 .main-subtitle{font-size:12px;color:var(--muted);margin-top:4px;font-weight:400;}
 .scan-actions{display:flex;gap:8px;flex-wrap:wrap;}
+
+/* ── DATE PICKER BAR ── */
+.date-bar{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.date-bar-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted2);flex-shrink:0;}
+.date-quick-btns{display:flex;gap:6px;flex-wrap:wrap;}
+.date-quick-btn{display:inline-flex;align-items:center;gap:5px;font-family:'Syne',sans-serif;font-weight:700;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;padding:6px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--s2);color:var(--muted2);cursor:pointer;transition:all .15s;}
+.date-quick-btn:hover{border-color:var(--accent2);color:var(--accent2);}
+.date-quick-btn.active{background:rgba(232,255,71,.1);border-color:var(--accent);color:var(--accent);}
+.date-separator{width:1px;height:24px;background:var(--border);flex-shrink:0;}
+.date-custom-wrap{display:flex;align-items:center;gap:8px;flex:1;min-width:180px;}
+.date-custom-wrap input[type="date"]{flex:1;padding:6px 10px;font-size:10px;border-radius:6px;min-width:140px;}
+.date-indicator{display:inline-flex;align-items:center;gap:6px;margin-left:auto;background:var(--s3);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:700;color:var(--muted2);letter-spacing:0.06em;}
+.date-indicator.future{border-color:rgba(0,212,255,.4);color:var(--accent2);background:rgba(0,212,255,.07);}
+.date-indicator.today{border-color:rgba(46,213,115,.4);color:var(--green);background:rgba(46,213,115,.07);}
+.date-indicator.past{border-color:rgba(255,165,2,.4);color:var(--orange);background:rgba(255,165,2,.07);}
+.date-indicator .di-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse-live 1.8s infinite;}
+/* schedule notice banner */
+.schedule-notice{background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.3);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;font-size:11px;color:var(--accent2);display:none;align-items:center;gap:8px;}
+.schedule-notice.visible{display:flex;}
+.schedule-notice strong{font-weight:800;}
+
 .games-grid{display:grid;grid-template-columns:1fr;gap:12px;}
 .game-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;transition:border-color .15s;}
 .game-card:hover{border-color:var(--border2);}
@@ -109,6 +133,7 @@ select option{background:#141720;}
 .badge-tip{font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:2px 6px;border-radius:3px;background:rgba(0,212,255,.1);color:var(--accent2);border:1px solid rgba(0,212,255,.2);}
 .badge-new{font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:2px 6px;border-radius:3px;background:rgba(46,213,115,.1);color:var(--green);border:1px solid rgba(46,213,115,.3);}
 .badge-purple{font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:2px 6px;border-radius:3px;background:rgba(168,85,247,.1);color:var(--purple);border:1px solid rgba(168,85,247,.3);}
+.badge-cyan{font-size:9px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:2px 6px;border-radius:3px;background:rgba(0,212,255,.1);color:var(--accent2);border:1px solid rgba(0,212,255,.3);}
 .iframe-input{background:var(--s2);border:1px solid var(--border);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:10px;padding:8px 10px;border-radius:var(--r);width:100%;outline:none;resize:vertical;transition:border-color .15s;}
 .iframe-input:focus{border-color:var(--accent2);}
 .iframe-input::placeholder{color:var(--muted);}
@@ -151,27 +176,23 @@ select option{background:#141720;}
 .user-email{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .signout-btn{margin-left:auto;flex-shrink:0;background:rgba(255,71,87,.1);color:var(--red);border:1px solid rgba(255,71,87,.25);border-radius:6px;padding:4px 10px;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:background .15s;}
 .signout-btn:hover{background:rgba(255,71,87,.2);}
-/* Labels */
 .labels-input{background:var(--s2);border:1px solid var(--border);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:10px;padding:7px 10px;border-radius:var(--r);width:100%;outline:none;transition:border-color .15s;}
 .labels-input:focus{border-color:var(--purple);}
 .labels-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
 .label-tag{display:inline-flex;align-items:center;gap:4px;background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.35);color:var(--purple);font-size:9px;font-weight:600;padding:2px 7px;border-radius:12px;cursor:pointer;}
 .label-tag:hover{background:rgba(168,85,247,.25);}
 .label-tag .rm{font-size:11px;line-height:1;}
-/* SEO title */
 .seo-title-box{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;}
 .seo-title-input{background:transparent;border:none;color:var(--text);font-family:'Syne',sans-serif;font-size:11px;font-weight:600;width:100%;outline:none;}
 .seo-char-counter{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--muted);margin-top:4px;}
 .seo-char-counter.good{color:var(--green);}
 .seo-char-counter.warn{color:var(--orange);}
 .seo-char-counter.bad{color:var(--red);}
-/* Post link row */
 .post-link-row{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid rgba(46,213,115,.25);border-radius:var(--r);padding:7px 10px;margin-top:4px;}
 .post-link-url{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none;}
 .post-link-url:hover{text-decoration:underline;}
 .copy-btn{flex-shrink:0;background:transparent;border:none;cursor:pointer;color:var(--muted2);font-size:13px;padding:0;transition:color .12s;}
 .copy-btn:hover{color:var(--green);}
-/* Scheduler */
 .scheduler-row{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:7px;}
 .scheduler-inner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .scheduler-label{font-size:10px;color:var(--muted2);font-weight:600;}
@@ -181,13 +202,11 @@ select option{background:#141720;}
 .toggle-knob{position:absolute;top:2px;left:2px;width:12px;height:12px;background:var(--muted2);border-radius:50%;transition:transform .2s,background .2s;}
 .toggle-switch.on .toggle-knob{transform:translateX(14px);background:var(--accent);}
 .scheduler-countdown{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--orange);}
-/* Bulk banner */
 .bulk-banner{background:var(--s2);border:1px solid var(--border2);border-radius:var(--r2);padding:12px 16px;margin-bottom:16px;display:none;}
 .bulk-banner.visible{display:block;}
 .bulk-bar-wrap{background:var(--s3);border-radius:4px;height:6px;overflow:hidden;margin:8px 0;}
 .bulk-bar{height:100%;background:var(--accent);border-radius:4px;transition:width .3s;}
 .bulk-label{font-size:11px;color:var(--muted2);}
-/* Stats */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;}
 .stat-block{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;}
 .stat-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;}
@@ -198,8 +217,6 @@ select option{background:#141720;}
 .stat-team-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;}
 .stat-bar-wrap{height:4px;background:var(--s3);border-radius:2px;overflow:hidden;margin-top:3px;}
 .stat-bar-home{height:100%;background:var(--accent2);border-radius:2px;transition:width .5s;}
-
-/* ── NEW: Link Existing Post panel ── */
 .link-post-panel{background:var(--s2);border:1px solid rgba(168,85,247,.3);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:7px;margin-top:4px;}
 .link-post-title{font-size:10px;font-weight:700;color:var(--purple);letter-spacing:0.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
 .link-post-row{display:flex;gap:6px;align-items:flex-end;}
@@ -208,9 +225,14 @@ select option{background:#141720;}
 .link-post-input::placeholder{color:var(--muted);}
 .link-post-note{font-size:9px;color:var(--muted);line-height:1.5;}
 
+/* Scheduled post kickoff time badge */
+.kickoff-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.05em;padding:2px 8px;border-radius:3px;background:rgba(0,212,255,.1);color:var(--accent2);border:1px solid rgba(0,212,255,.25);}
+
 @media(max-width:900px){
   .layout{grid-template-columns:1fr;}
   .sidebar{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border);}
+  .date-bar{flex-wrap:wrap;}
+  .date-indicator{margin-left:0;}
 }
 </style>
 </head>
@@ -370,8 +392,8 @@ select option{background:#141720;}
 <main class="main">
   <div class="main-header">
     <div>
-      <div class="main-title">Today's <span>Games</span></div>
-      <div class="main-subtitle" id="main-subtitle">Scan leagues to detect today's matches</div>
+      <div class="main-title" id="main-title">Today's <span>Games</span></div>
+      <div class="main-subtitle" id="main-subtitle">Select a date and scan leagues to detect matches</div>
     </div>
     <div class="scan-actions">
       <button class="btn btn-secondary" onclick="refreshScores()">
@@ -386,6 +408,34 @@ select option{background:#141720;}
     </div>
   </div>
 
+  <!-- ── DATE PICKER BAR ── -->
+  <div class="date-bar" id="date-bar">
+    <span class="date-bar-label">📅 Date</span>
+    <div class="date-quick-btns">
+      <button class="date-quick-btn active" id="dq-yesterday" onclick="setQuickDate('yesterday',this)">← Yesterday</button>
+      <button class="date-quick-btn active" id="dq-today" onclick="setQuickDate('today',this)">Today</button>
+      <button class="date-quick-btn" id="dq-tomorrow" onclick="setQuickDate('tomorrow',this)">Tomorrow →</button>
+      <button class="date-quick-btn" id="dq-d2" onclick="setQuickDate('d+2',this)">+2 Days</button>
+      <button class="date-quick-btn" id="dq-d3" onclick="setQuickDate('d+3',this)">+3 Days</button>
+      <button class="date-quick-btn" id="dq-d7" onclick="setQuickDate('d+7',this)">+7 Days</button>
+    </div>
+    <div class="date-separator"></div>
+    <div class="date-custom-wrap">
+      <label style="font-size:10px;color:var(--muted2);font-weight:600;white-space:nowrap;flex-shrink:0;">Custom:</label>
+      <input type="date" id="custom-date-input" onchange="setCustomDate(this.value)" />
+    </div>
+    <div class="date-indicator today" id="date-indicator">
+      <span class="di-dot"></span>
+      <span id="date-indicator-text">Today</span>
+    </div>
+  </div>
+
+  <!-- Schedule Notice (shown for future dates) -->
+  <div class="schedule-notice" id="schedule-notice">
+    <span>📅</span>
+    <span>You are viewing a <strong>future date</strong>. Posts created now will go out as <strong>drafts</strong> — you can publish them closer to match time, or enable the Auto-Scheduler to publish automatically.</span>
+  </div>
+
   <div class="bulk-banner" id="bulk-banner">
     <div class="bulk-label" id="bulk-label">Posting 0 / 0 games...</div>
     <div class="bulk-bar-wrap"><div class="bulk-bar" id="bulk-bar" style="width:0%;"></div></div>
@@ -395,7 +445,7 @@ select option{background:#141720;}
     <div class="empty-state">
       <div class="icon">📡</div>
       <h3>No games loaded yet</h3>
-      <p>Configure your API keys, select leagues and click <strong>Scan Leagues</strong> to detect today's matches.</p>
+      <p>Choose a date above, select your leagues, then click <strong>Scan Leagues</strong> to detect matches.</p>
     </div>
   </div>
 </main>
@@ -442,24 +492,137 @@ let config            = {};
 let globalSchedulerOn = false;
 let globalLabels      = ['sports 803','live stream'];
 
-function espnUrl(id){ return 'https://site.api.espn.com/apis/site/v2/sports/'+id+'/scoreboard'; }
+// ─── DATE STATE ────────────────────────────────────────────────────────────
+// selectedDate is always a local YYYY-MM-DD string
+var selectedDate = getTodayStr();
+
+function getTodayStr() {
+  var d = new Date();
+  return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+}
+function pad2(n){ return n < 10 ? '0'+n : ''+n; }
+
+function dateOffsetStr(days) {
+  var d = new Date();
+  d.setDate(d.getDate() + days);
+  return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+}
+
+// Convert YYYY-MM-DD → YYYYMMDD for ESPN API
+function toESPNDate(ymd) { return ymd.replace(/-/g,''); }
+
+function espnUrl(id) {
+  var base = 'https://site.api.espn.com/apis/site/v2/sports/'+id+'/scoreboard';
+  var today = getTodayStr();
+  if (selectedDate && selectedDate !== today) {
+    base += '?dates=' + toESPNDate(selectedDate) + '&limit=50&_=' + Date.now();
+  } else {
+    base += '?limit=50&_=' + Date.now();
+  }
+  return base;
+}
+
+function setQuickDate(key, el) {
+  var map = {
+    'yesterday': dateOffsetStr(-1),
+    'today':     getTodayStr(),
+    'tomorrow':  dateOffsetStr(1),
+    'd+2':       dateOffsetStr(2),
+    'd+3':       dateOffsetStr(3),
+    'd+7':       dateOffsetStr(7),
+  };
+  selectedDate = map[key] || getTodayStr();
+  // Sync custom input
+  var inp = document.getElementById('custom-date-input');
+  if (inp) inp.value = selectedDate;
+  updateAllQuickBtns(el);
+  updateDateIndicator();
+  log('info', '📅 Date set to ' + selectedDate);
+}
+
+function setCustomDate(val) {
+  if (!val) return;
+  selectedDate = val;
+  // Deactivate quick buttons
+  updateAllQuickBtns(null);
+  updateDateIndicator();
+  log('info', '📅 Custom date: ' + selectedDate);
+}
+
+function updateAllQuickBtns(activeEl) {
+  var today = getTodayStr();
+  var btns = {
+    'yesterday': document.getElementById('dq-yesterday'),
+    'today':     document.getElementById('dq-today'),
+    'tomorrow':  document.getElementById('dq-tomorrow'),
+    'd+2':       document.getElementById('dq-d2'),
+    'd+3':       document.getElementById('dq-d3'),
+    'd+7':       document.getElementById('dq-d7'),
+  };
+  Object.values(btns).forEach(function(b){ if(b) b.classList.remove('active'); });
+  if (activeEl) activeEl.classList.add('active');
+}
+
+function updateDateIndicator() {
+  var ind = document.getElementById('date-indicator');
+  var txt = document.getElementById('date-indicator-text');
+  var titleEl = document.getElementById('main-title');
+  var notice = document.getElementById('schedule-notice');
+  if (!ind||!txt) return;
+  var today = getTodayStr();
+  var diff = daysDiff(today, selectedDate);
+  var label = formatDateLabel(selectedDate);
+  ind.className = 'date-indicator';
+  if (diff === 0) {
+    ind.classList.add('today');
+    txt.textContent = 'Today · ' + label;
+    if (titleEl) titleEl.innerHTML = 'Today\'s <span>Games</span>';
+    if (notice) notice.classList.remove('visible');
+  } else if (diff > 0) {
+    ind.classList.add('future');
+    txt.textContent = (diff===1?'Tomorrow':'+'+diff+' days') + ' · ' + label;
+    if (titleEl) titleEl.innerHTML = '<span>'+label+'</span> Games';
+    if (notice) notice.classList.add('visible');
+  } else {
+    ind.classList.add('past');
+    txt.textContent = (diff===-1?'Yesterday':diff+' days') + ' · ' + label;
+    if (titleEl) titleEl.innerHTML = '<span>'+label+'</span> Results';
+    if (notice) notice.classList.remove('visible');
+  }
+}
+
+function daysDiff(fromStr, toStr) {
+  var f = new Date(fromStr), t = new Date(toStr);
+  return Math.round((t - f) / 86400000);
+}
+
+function formatDateLabel(ymd) {
+  var d = new Date(ymd + 'T12:00:00');
+  return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+}
 
 // ─── INIT ──────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded',function(){
   loadConfig();
   buildLeaguesGrid();
   renderGlobalLabels();
+  // Set today's date in custom input
+  var inp = document.getElementById('custom-date-input');
+  if (inp) inp.value = selectedDate;
+  // Activate "Today" button
+  var todayBtn = document.getElementById('dq-today');
+  if (todayBtn) { updateAllQuickBtns(todayBtn); }
+  updateDateIndicator();
   setInterval(autoRefreshScores, 3*60*1000);
   setInterval(checkScheduledPosts, 60*1000);
 });
 
 // ─── PERSISTENT POST STORAGE ───────────────────────────────────────────────
-// Each game has a unique key: league + home + away + date (day only)
 function getGameKey(gd) {
   var c = getCompetitors(gd);
   var home = (c.home.team && c.home.team.displayName)||'?';
   var away = (c.away.team && c.away.team.displayName)||'?';
-  var day  = gd.espnEvent.date ? gd.espnEvent.date.substring(0,10) : 'unknown';
+  var day  = gd.espnEvent.date ? gd.espnEvent.date.substring(0,10) : (gd.gameDate||'unknown');
   return 's803_post_' + [gd.league.id, home, away, day].join('|').replace(/\s+/g,'_').toLowerCase();
 }
 
@@ -481,7 +644,6 @@ function loadPostFromStorage(gd) {
     var raw = localStorage.getItem(key);
     if (!raw) return null;
     var data = JSON.parse(raw);
-    // Expire after 7 days
     if (Date.now() - (data.savedAt||0) > 7*24*60*60*1000) {
       localStorage.removeItem(key);
       return null;
@@ -492,7 +654,7 @@ function loadPostFromStorage(gd) {
 
 function restorePostStateForAllGames() {
   detectedGames.forEach(function(gd) {
-    if (gd.blogPostId) return; // already has state
+    if (gd.blogPostId) return;
     var saved = loadPostFromStorage(gd);
     if (saved && saved.blogPostId) {
       gd.blogPostId  = saved.blogPostId;
@@ -509,20 +671,14 @@ function linkExistingPost(idx) {
   if (!inputEl) return;
   var val = inputEl.value.trim();
   if (!val) { toast('Paste a post ID or URL', 'err'); return; }
-
-  // Accept either full URL or just the post ID (numeric)
-  var postId = val;
-  var postUrl = null;
-
+  var postId = val, postUrl = null;
   if (val.startsWith('http')) {
-    // Try to extract post ID from URL like ?postID=1234567890
     var m = val.match(/[?&]postID=(\d+)/i) || val.match(/\/(\d{10,})/);
     if (m) { postId = m[1]; postUrl = val; }
     else { toast('Could not extract post ID from URL', 'err'); return; }
   } else if (!/^\d+$/.test(val)) {
     toast('Enter a numeric post ID or full post URL', 'err'); return;
   }
-
   gd.blogPostId  = postId;
   gd.blogPostUrl = postUrl || gd.blogPostUrl || null;
   gd.status      = 'linked';
@@ -759,7 +915,7 @@ async function fetchESPN(leagueId) {
   var ctrl=new AbortController();
   var timer=setTimeout(function(){ ctrl.abort(); },10000);
   try {
-    var r=await fetch(espnUrl(leagueId)+'?limit=50&_='+Date.now(),{signal:ctrl.signal,cache:'no-store'});
+    var r=await fetch(espnUrl(leagueId),{signal:ctrl.signal,cache:'no-store'});
     clearTimeout(timer);
     if (!r.ok) throw new Error('ESPN HTTP '+r.status);
     var d=await r.json();
@@ -770,7 +926,13 @@ async function fetchESPN(leagueId) {
   }
 }
 async function fetchESPNViaProxy(leagueId) {
-  var target='https://site.api.espn.com/apis/site/v2/sports/'+leagueId+'/scoreboard?limit=50';
+  var target = 'https://site.api.espn.com/apis/site/v2/sports/'+leagueId+'/scoreboard';
+  var today = getTodayStr();
+  if (selectedDate && selectedDate !== today) {
+    target += '?dates=' + toESPNDate(selectedDate) + '&limit=50';
+  } else {
+    target += '?limit=50';
+  }
   var ctrl=new AbortController();
   var timer=setTimeout(function(){ ctrl.abort(); },12000);
   try {
@@ -817,7 +979,8 @@ async function scanAllLeagues() {
   btn.classList.add('loading'); btn.disabled=true;
   detectedGames=[];
   var selected=LEAGUES.filter(function(l){ return activeLeagues.has(l.id); });
-  log('info','Scanning '+selected.length+' leagues...');
+  var scanLabel = formatDateLabel(selectedDate);
+  log('info','Scanning '+selected.length+' leagues for '+scanLabel+'...');
   var totalFound=0;
 
   for (var i=0;i<selected.length;i++) {
@@ -826,14 +989,15 @@ async function scanAllLeagues() {
       if (!league.espn) {
         detectedGames.push({
           espnEvent:{id:'manual-'+league.id+'-'+Date.now(),name:league.name+' Event',
-            date:new Date().toISOString(),status:{type:{state:'pre',shortDetail:'Today'}},
+            date:selectedDate+'T12:00:00Z',status:{type:{state:'pre',shortDetail:scanLabel}},
             competitions:[{competitors:[
               {homeAway:'home',team:{displayName:league.name,logo:null},score:'0'},
               {homeAway:'away',team:{displayName:'Live Event',logo:null},score:'0'}
             ],venue:{},headlines:[]}]
           },
           league,preContent:null,highlightContent:null,blogPostId:null,blogPostUrl:null,
-          status:'idle',thumbUrl:null,isManual:true,customLabels:[],customTitle:null,scheduledPosted:false
+          status:'idle',thumbUrl:null,isManual:true,customLabels:[],customTitle:null,
+          scheduledPosted:false,gameDate:selectedDate
         });
         totalFound++; continue;
       }
@@ -845,7 +1009,7 @@ async function scanAllLeagues() {
           espnEvent:ev,league,preContent:null,highlightContent:null,
           blogPostId:null,blogPostUrl:null,status:'idle',thumbUrl:null,
           customLabels:[],customTitle:null,scheduledPosted:false,
-          stats:extractStats(ev)
+          stats:extractStats(ev),gameDate:selectedDate
         });
         totalFound++;
       });
@@ -853,11 +1017,13 @@ async function scanAllLeagues() {
     } catch(e){ log('err','✗ '+league.name+': '+e.message); }
   }
 
-  // Restore saved post IDs from localStorage
   restorePostStateForAllGames();
 
+  var today = getTodayStr();
+  var diff = daysDiff(today, selectedDate);
+  var contextStr = diff===0 ? 'today' : diff>0 ? 'on '+scanLabel : 'on '+scanLabel+' (past)';
   document.getElementById('main-subtitle').textContent=totalFound+' game'+(totalFound!==1?'s':'')+
-    ' found across '+selected.length+' leagues · '+new Date().toLocaleTimeString();
+    ' found '+contextStr+' · '+new Date().toLocaleTimeString();
 
   renderGames();
   btn.classList.remove('loading'); btn.disabled=false;
@@ -874,7 +1040,7 @@ async function scanAllLeagues() {
 // ─── REFRESH SCORES ────────────────────────────────────────────────────────
 async function refreshScores() {
   if (!detectedGames.length){ toast('Scan leagues first','err'); return; }
-  log('info','Refreshing scores...');
+  log('info','Refreshing scores for '+formatDateLabel(selectedDate)+'...');
   var seen=new Set();
   for (var i=0;i<detectedGames.length;i++) {
     var gd=detectedGames[i];
@@ -916,6 +1082,16 @@ function getMatchTitle(gd) {
 function getGameState(gd){ return (gd.espnEvent.status&&gd.espnEvent.status.type&&gd.espnEvent.status.type.state)||'pre'; }
 function getScore(gd){ var c=getCompetitors(gd); return {home:c.home.score||'0',away:c.away.score||'0'}; }
 
+// Format kickoff time from event date
+function getKickoffTime(gd) {
+  var raw = gd.espnEvent.date;
+  if (!raw) return null;
+  try {
+    var d = new Date(raw);
+    return d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true,timeZoneName:'short'});
+  } catch(e){ return null; }
+}
+
 // ─── SEO TITLE ─────────────────────────────────────────────────────────────
 var SEO_KEYWORDS = {
   'premier league':   ['EPL','Free Live Stream','Watch Online','HD'],
@@ -952,7 +1128,7 @@ function buildSEOTitle(homeName,awayName,leagueName,type,score) {
 function renderGames() {
   var container=document.getElementById('games-container');
   if (!detectedGames.length) {
-    container.innerHTML='<div class="empty-state"><div class="icon">📡</div><h3>No games found</h3><p>No matches scheduled. Try more leagues or check back later.</p></div>';
+    container.innerHTML='<div class="empty-state"><div class="icon">📡</div><h3>No games found</h3><p>No matches scheduled for '+formatDateLabel(selectedDate)+'. Try a different date or more leagues.</p></div>';
     return;
   }
   var html='';
@@ -967,6 +1143,7 @@ function renderGames() {
     var awayName=(c.away.team&&c.away.team.displayName)||'?';
     var homeLogo=(c.home.team&&c.home.team.logo)||'';
     var awayLogo=(c.away.team&&c.away.team.logo)||'';
+    var kickoffTime=getKickoffTime(gd);
 
     var hlHtml=function(logo,name){
       return logo
@@ -984,26 +1161,27 @@ function renderGames() {
                    :gd.status==='linked' ?'<span class="post-status linked">🔗 Linked</span>'
                    :                      '<span class="post-status idle">○ Not Posted</span>';
 
-    // Scheduler countdown
-    var kickoff=gd.espnEvent.date?new Date(gd.espnEvent.date).getTime():null;
+    // Kickoff time badge for future/past dates
+    var kickoffBadge = kickoffTime ? '<span class="kickoff-badge">⏰ '+kickoffTime+'</span>' : '';
+
     var schedCountdown='';
-    if (globalSchedulerOn&&kickoff&&state==='pre') {
-      var mins=document.getElementById('sched-minutes').value;
-      var minsUntil=Math.round((kickoff-Date.now())/60000);
-      if (minsUntil>0) schedCountdown='<span class="scheduler-countdown">⏰ ~'+(minsUntil-parseInt(mins))+'m</span>';
+    if (globalSchedulerOn) {
+      var kickoff=gd.espnEvent.date?new Date(gd.espnEvent.date).getTime():null;
+      if (kickoff&&state==='pre') {
+        var mins=document.getElementById('sched-minutes').value;
+        var minsUntil=Math.round((kickoff-Date.now())/60000);
+        if (minsUntil>0) schedCountdown='<span class="scheduler-countdown">⏰ ~'+(minsUntil-parseInt(mins))+'m</span>';
+      }
     }
 
-    // SEO title
     var seoTitle=gd.customTitle||buildSEOTitle(homeName,awayName,gd.league.name,'preview',score);
     var seoLen=seoTitle.length;
     var seoCls=seoLen>=50&&seoLen<=60?'good':seoLen<40||seoLen>70?'bad':'warn';
 
-    // Content areas
     var previewHtml=gd.preContent?'<div class="content-text">'+escHtml(gd.preContent)+'</div>':'<div class="content-empty">⏳ Generating content...</div>';
     var hlText=gd.highlightContent?'<div class="content-text">'+escHtml(gd.highlightContent)+'</div>':'<div class="content-empty">'+(state==='post'?'⏳ Generating highlights...':'⏱ Available after match ends')+'</div>';
     var statsHtml=buildStatsHtml(gd);
 
-    // Thumbnail panel
     var thumbPanelHtml=gd.thumbUrl
       ?'<div class="thumb-preview-wrap"><img class="thumb-preview-img" src="'+gd.thumbUrl+'" alt="Match thumbnail" onclick="openLightbox(this.src)"/></div>'
         +'<div class="thumb-actions">'
@@ -1012,7 +1190,6 @@ function renderGames() {
         +'<span class="thumb-size-badge">800 × 420</span></div>'
       :'<div class="thumb-generating"><div class="gen-spinner"></div><span>Generating thumbnail…</span></div>';
 
-    // Post link
     var postLinkHtml='';
     if (gd.blogPostUrl&&(gd.status==='posted'||gd.status==='updated'||gd.status==='draft'||gd.status==='linked')) {
       postLinkHtml='<div class="post-link-row">'
@@ -1021,9 +1198,6 @@ function renderGames() {
         +'</div>';
     }
 
-    // ── NEW: Link Existing Post Panel ──
-    // Always shown if not yet posted, or if linked/posted but no URL
-    var showLinkPanel = (gd.status==='idle'||gd.status==='linked'||(gd.blogPostId&&!gd.blogPostUrl));
     var linkPanelHtml = '<div class="link-post-panel">'
       +'<div class="link-post-title">🔗 Link Existing Blogger Post <span class="badge-purple">RESTORE</span></div>'
       +'<div class="link-post-row">'
@@ -1035,14 +1209,12 @@ function renderGames() {
       +'<div class="link-post-note">Already posted but came back to the dashboard? Paste your existing post\'s ID or URL to link it — then you can post highlights to it without creating a duplicate.</div>'
       +'</div>';
 
-    // Labels
     var allLabels=globalLabels.concat(gd.customLabels||[]);
     var labelsHtml='<div class="labels-tags" id="card-labels-'+idx+'">'
       +allLabels.map(function(l){ return '<span class="label-tag">'+escHtml(l)+'</span>'; }).join('')
       +'</div>'
       +'<input type="text" class="labels-input" id="label-input-'+idx+'" placeholder="Add label + Enter" onkeydown="addCardLabel(event,'+idx+')" style="margin-top:5px;"/>';
 
-    // Action buttons
     var hlBtns=state==='post'?(
       '<button class="btn btn-secondary" onclick="regenHighlights('+idx+')"><span class="btn-text">🔄 Regen HL</span><div class="spin"></div></button>'
       +(gd.highlightContent&&gd.blogPostId?'<button class="btn btn-primary" onclick="postToBlogger('+idx+',\'highlights\')"><span class="btn-text">📤 Post Highlights</span><div class="spin"></div></button>':'')
@@ -1059,7 +1231,12 @@ function renderGames() {
           +'<div class="vs-block">'+scoreDisplay+'<div class="vs-label '+stateCls+'">'+stateLbl+'</div>'+(status?'<div class="game-time">'+status+'</div>':'')+'</div>'
           +'<div class="team-block" style="flex-direction:row-reverse;text-align:right;">'+hlHtml(awayLogo,awayName)+'<div class="team-name">'+awayName+'</div></div>'
         +'</div>'
-        +'<div class="game-meta-right"><span class="league-tag">'+gd.league.emoji+' '+gd.league.name+'</span>'+statusBadge+schedCountdown+'</div>'
+        +'<div class="game-meta-right">'
+          +'<span class="league-tag">'+gd.league.emoji+' '+gd.league.name+'</span>'
+          +statusBadge
+          +kickoffBadge
+          +schedCountdown
+        +'</div>'
       +'</div>'
       +'<div class="game-content-panel">'
         +'<div class="content-tabs">'
@@ -1251,7 +1428,6 @@ async function deletePost(idx) {
       var err=await r.json().catch(function(){ return {}; });
       throw new Error((err.error&&err.error.message)||'Delete failed: '+r.status);
     }
-    // Remove from localStorage too
     localStorage.removeItem(getGameKey(gd));
     gd.blogPostId=null; gd.blogPostUrl=null; gd.status='deleted';
     renderGames();
@@ -1467,7 +1643,7 @@ var LEAGUE_COLORS = {
   'cricket/icc':['#00205b','#1a1a2e'],
 };
 
-var S803_LOGO_URL='data:image/jpeg;base64,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';
+var S803_LOGO_URL='data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4QAqRXhpZgAASUkqAAgAAAABADEBAgAHAAAAGgAAAAAAAABHb29nbGUAAP/bAIQAAwICCAgICAgICQgICAgICAgICAgICAoICAgICAgICAgICAgNCAgICAgICAgICggICAgKCQkICA4NCggNCAgJCAEDBAQGBQYKBgYKEA4KDQ0PDQ4QDQ0PDQ0NDQ8NDw0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0N/8AAEQgAXgBeAwERAAIRAQMRAf/EAB0AAAEEAwEBAAAAAAAAAAAAAAgAAQYHAgMEBQn/xABLEAABAwMBBAQHCgsHBQAAAAABAgMEAAUREgcIITEGE0FhFCJRVIGRkwkXMkNxc6GxwdIVQkRTcpKUo8LR4SQlNVJ0tvAWGCMzYv/EAB0BAAEEAwEBAAAAAAAAAAAAAAABBAUHAwYIAgn/xAA3EQABAwIDBQUGBQUBAAAAAAABAAIDBBEFIUEGEhMxUQdTYYGhFBZCUnGRFRckNcEiMjRD0SP/2gAMAwEAAhEDEQA/APlYaUAJdEwpEibNCE+aWyEqS6WyVLcIsmpEWSxRdInoQmoQnJoslSzR9ECyJbZDu3suMNyp+pRdAU2wDp8Q4KVLPA+MOOnkAeIp3FSukF1dmymwra+MT1GTeisr3ibT5qn5MmiSkLVaZ7OsMPwZdbrB3YBaT+TY+RR+yo9zHBL+XWF/KnRu62jzc+0VTVznBY3dnmFj4VtTu32j8wr2hpo6aQarCez3DR8K6Gt2qzn4hXtDTR1XINVgPZ/hvyroTux2Y/EL9oaZurpRqsZ2BoOi2o3WLN+ZX7SmjsTnGqbO2CoOi6EbqFlPxLntD/KmjsYqOqwO2EoflW9vdIsn5p32v9KaOxuoGqwnYehHwroTufWM/Eu+h7+lNX7RVIOSbO2Ios8lUe17ctW0UOWtSnEKVpUy4RrRwJ1BRwFJ4YPAYyKnqPadm7/7c1p2I7FuY4cDkrrZYwhCRwAbQB3YTjFXvTxfpwulcBayOiZu6XVZbQdu0e2yVR3WXFqCUq1I0YOr5SPJ5K16qnLXbq0HHdvBhlSacsvbxUcTvZxOQjSDnvb9AAzUU55Oi13802916rNW9pESSDGkAjgQer4dhyNXAjyU2cCdEn5pM7n1Wwb30PzeR+7+9Td0F9F4PafH3Xqug978NJIMWSCOYPVjHZjBVwpuaO68HtNi7r1WxG+VC82k/uvvU3OHX1Xg9pkfdeq3o304Q/JpP7r71NnYTfVYXdpMZ/1eq6U76sJJwqJLB8n/AIvqKhTV2Bm2RXj8xmZN4XqpZZt5tEhHWNW+cpA/GCWsH9Hx+PoqKqMNhYd1z1s9DjdXWxmSOnO59VJtlm3tm5yXYyGH2Fso1r67R5cY8VSj6+yoyvwptPEHsN0YbjjquodTuYWub1VrpdrUxCHZ2zW2bgvcqqEJOlvHYhP1Cu1qaMcCyncBt7A0O8UH+9CP70V8039taDiTbTELlrb2xxNwCJ73JyxW16ZdA6iM9dUxs29mWAppR45ISrgTn4WOIGOXCoxVsjA2K3e23PpPNZdsXgN0g2YouDcmLG6iQ717XUOxEtqdBaJD+FkIUpK08M5wXSLujbDbUu7wrzJt8Nu5R+iz8yZbw0kMty8sdStTJ1BJSPDGQFA8PKU0WS2XkdBej1vvn/R1/et8FiVIlXCNIaZjthhxKGZyBlsgg4UwFjVlQJxnhRdGSz3lIUC2wPwxLtNrjzYN26m2tqjJDcxl0mOnrGE41hSXPhYwkgKwBwoSKRbQZdmT0jsdnlW+0tMTYjs5tZjMtqcmM9T1bGRgFCkuLXowc9XzxQvWSDX3S/pLBCY0CTZV269R5K1omR48dqBKh5Iw0ptZW4dBQTqaGlacZAry69is9NbitLuV1XdocBYjqY/9XVo0hOcZwc508PVVTVokdOQ4HmvoJsxLRyYcwR7trZ8l72yh5s3p/Rp1iCjrdP8Am6w8Ff8A0E459mmpGRrhRgOVWVT6Z2NSCn55Xty1RAJdrU3McD/Stj4arg/BR+ij7K7ao4r07fNPsC/wmeaD3ehP96K+ab/iqtMWFqgrl3b39zf5K0fc/j0eM+Qm8SvwdLDeu1z3JPg7LEgZGVOnASRwxqWkKBxggGoZVuvpDbd6Lo03eWi7ebSqYzYHWJs9EqOiO++X4xZbbkEpbccSpuSstoVqQFglKQoUIQG+51byTLF4ujV+uKkJvFrchpuNxkOLDbzZy0h994kIbLbjxCnHEJCkpTzcTR9OSTICA2iLPobtu6PWQ9ErGm9WuX4DJnyZc5mWyYbKXGZiqZVIdZKiyBoXhRUgpUB8oEcxYKJe6Q7UbNIsFtt6LnBvFzjzFKZfhPtvqaiBKwkSXmyrBLZQgpKgpbmlQThJwfVHLJfO619MZTCShp5xtJ5pSogfXgHvFNX08TzchT1NjtbTM4cMhAV8bl0oqnS1KJUSwCSSSSSvyn66hMZjHBACsPYKV01Y8uNzlmUZLbtV+6NdDbqgLnJH6CPqFdy0EQNMPNJgJ/RM80IO9J/iq/mm/tqoMbFqorl/br9zf5KoK15VyscUIUnsmzSfJZXIYivOsozqcQglPDmB2qwOenOKaPqoY3bjnZpm+rhjduOdmlbNmc95hUpqM8thOdTiUEpGn4WO0hODkgYBB5YNDqyJjt0nNeX10DHcMuzK2Qdl9wdjmU3FeVHAJ6xKDjA5kciQPKkEUOrIg7hk5pXV0Idwyc1Fqd6WKeAp0ihLreyc0t7I1uiH3Kz/bZXzA/3VA4sLxBW/wBnVvan+SMdpytHdGujS0qFK5o4/ForuzDY2+xty6plgbiKBth1Qhb0X+KK+ab+2qQ2iaBVuXMm3JviL7+CqCtYsq6TGiyEbOxWQE26ypcWWnleG+DspJ0SAQ6ol7HDxc6kjuGOPCq1xQO40hbyFr+GYVU4xvCeXdzta/hmP5yXtdGnVoXaWhlCFxJBcbTkIKsJKvFGARkq495ppNnvkcxZRszjd72nP+m30XgbLuksh7rWnwtpUeO83Cjlt1tiSwnA65SlAocI8UAjAweAOeEjUwhgY5md7XN1M1MDWGMtNwQLm+v3Qc3knrndQCT1i8pT8EHUcpHcDwHdW/RWLG26Ky4gAwW5WXHWVZckqEZIhNzU/wBsk/6f+KonEW3Yrh7N/wDLfbw/lF+27WoOYulS3qopp4N5OPFR9td54ZH+jaB4qBwGS1C0DPmha3jeicp+5KWyw+4nq2xqQ0sjt7QMcOHCqM2lo5TWOIafsueds6GomxFxawkZchdVb73U/wA0lewd/lWo+xzfIfsVof4VU9277FMNnU/zST7B37teTSTfIfsUv4TU9277FXB0J2i3aHFaj/gxTy42vwV92K8XGC6CFaCMD8YgcOR9FQE+BOlkLrEA88jmtcqdkKmeQvDHWPMbpz1XT0d2rXpmN1JtzjrqEuIZkrjPFxtLpyoJPIY4Y4HkB2CsEmA7zjkQD4dFjfsTM55tG6xtoVnZ9rV6aipYNtWp1tpTLUkxX+tS2rmnhgcgOzsHCvD8Fbv71jbpYr2/YuoL94MNuliqZkdAbiolSokokkqJ6h3mef4vbU7bcyAy+i2VuCVjG7ojdYeB/wCLWNnU/wAzl/s7v3a8769fg9Z3TvsUve5n+Zy/2d37tJvhH4PWd077FXhuq9GZMeXIU+w8ylTGEl1paASFDkVAD0CmNUd5qtvs8w+ohqnmRpHLmLIpg5WvPYuiLKudnvTdq4xGnWyC4EIQ83nBQ4keN4v+XPI9qcV2hsxi0FRThoNnKstkMbgqaZrN6zhopCXVp5VtMlNDId5wB8lYbYoJHXeAfJdcaQogcye3nURNTQsJuABpkFmMMDHG7QBpkE7qFZJwfpqAngjOWXovAZAciG5/RJOvv9RqGkp4hoE6bFTjRvon0K7/AFGoeSJnQLJuU/yt9E2pXf6jUTLBH4LJwqcaN9EsK7/pqCmiZfkl3afo30WGlXbn6ah5YW2ySFkAFmhvosetUPKPXURJH0WQQQuGQB+gC3tPZ5+io94PJeDEyP8AtAFl5HS3p/FgJQqU6EayQhIyVHgSToHEJGAM8uIFNuAStSxLH6WhdaR4BKB3Zh4UuYyzFcW048sJyg/i81EjtCUgqwfJW64W+fjtZCbXK49wqSf2hrYXEEnRHQxF0oQ3qUspCUnUfGVjhqUfKa6uoWGKECTnbMrsfDWOhhHF6c1Se8LtmehutxYa+rWkBbyk4zk8kejmfRVM7W489kvChdyVLbZbUzRzcGB/JU3/ANwd387c+iq7ONVZ+JVr71Yj3iwO3+7+du+sVhOJ1B+JHvViXelN7/t387d9YrEcQnOqPerEu9Kx9/u7eePeusJqpTqj3qxLvSsPf1u3nj/AOtWIz7HVeXtTiXelYHbddT+WP8A64rEXuOqPefEdJSrh3etsjz76ok0qq9JwWVuHJChzRnhzHIeX5KRvPNWdsPtVK6o4FU+9+qv+bE1oW3qUjUhSAtHBaSRgFJHJSeYNeJY+i6DxCF09M5sbrEhAftDjSWpbzMpa3HWllJUpRJKeaVDOcJUkhQHkIry0Cy4jxs1MNW+OocS4FPsv6XCDOYlKGpLSjqA5kLSUHHeArPoqZwyrFJUNlOhTPDKwUdSyXQFFFd94y2tNF5panHFA6Ggg51Y4a+WOPyVeFXtpTezEMOZFvRX9Wbd0vshDTdxLastM3ChQO0yXWm1LQexScEd9cnXNYrW2+G7Y5gvSbVPl2OevBkpCXGpbay6hQIUNwP8AbT8orDVGppqWnqrGUbsEuHedCbZWuQFEqSBzSNJ58fhD8FaN/wAqKnqY3uqaZ0cbCXFpd3a4VbuQXglJa5RGrSMjxsg4ByACeVXIlsLXuMv9V1kLJLHFri1jHEH9rmM9VvtqjKT2BJ+etHHSZHm9ztmI/B7sO1Tc4HpnKBTMlgOJACg4opWeIUCcKUhfEY5HOPTqt9XT01UYmysdKxj9xLcNcbkFpY4F4cLjDmua8OaQRkEEZAFNujqIqZkjmNaXOjI3gGuAuCLjRBfaZrdJK0qBxrWpW7gqz8HGeSiDzzgk89OOFSFbh9nGqrIjPAIjMuHOzn9O0+l8B7bGpx4DQeVN1E7J4AJAXHOYz7ptd3aQNf8JOL52pXXxmjqblTLtqDLmqZlLaA0lGGSU9Z2ngEJSB8Y8OeM1VjfDFJNJIHMDJI93GbpBDHAHX8LoWluT2g5xg1HqYKSSCRxe/a7iOmjmAAdWkW+RUne73RuY2PMQjRpGQcqJznqRnT3KSMeYkVlPuqVAqyuO8t7pNtSmGxc9lLjp0DccZcAIcbbJCkgYGcg6xnBqPra9zH+K3jc4gNe0tcQ+MEjJb3m33HXIaWEakDcadEBU+KsS3LGrKuZWlT2eoUvWHQr5WFDB0K5YO8rngFOkDhgZq5Fc5rTHCGNaMw5oOhHA+vJKXNwBc47iSSe9k5JUCuqpZpB4j2MBBbiLtw3kBd1xkAHkFGpxnNWorhFMWBsTGuJc4gBrc6EAf5N3NdaThpICMjBBqbdXSua6dkA/cSw4a49fJV0TmgtAe4DIAJyB5M5HoF0rkFrpXiCamjpJp1ymJKgptqvWPEStaEPJGtSFBac6c4PZisX7RqXB84B3iD4c+EgBp3c3fS2vmFiEbWlkUjiQSBkdDv0u9kEEi44WbTsdiYvjj0HiBuCcJQkqOEk4BxkjJxk4J5gcagbJ3tKKqBjnGF0cjsjLmuabZ0JGSDzGOR3VKVGiRsOCCMq+TkqUseWoJ5jA4Djzqhex0bJ4nVDXhlPUNc5wcB8MjtRa/dIA0BI56a7c1hHhyFvba17Y3NZJh5LmEhxyFgS19D3iCCCNo5ZqPFE11RLVMjDXSRuY9rWgDUOGgQSAM+1I6Wk5tqEioaHU8MjCWtLhh7d4CWtedw9g60eVgS0Yycc47KvqKaN0EsTnMa+Md5rmPIDmu2cAdgBBJIyDsM5qAqq2GSmZSxsdiJz2NF2gFpBB5jS2N/fvbcCrBFTpqiRrmljGYc4AgB36i7LuWNlhpIY4GhyZADnFOwfMXk6FHHDgLpwN7cOpSRy2oNPZiqBr2Fz5Ht3nhznAEt+1yBIJJwc+H5qKjqhJLkOiY3DpHFxGXdwPUgnQaZ5c+JBIqtqaY2qHzwlzG/M4NLTtJ9OW1u8c2/LYXwpWFKxKoabO2rWlc1DJbQEoUkHBbTjG0g8CBz5c+arNbJGXxEyuEckmHO33WjN/cJBwNyTjU89tTSqaYKqtknY6V0cgaWHMDWtj3WN1IAJdoR5Jyb5GtODnVRViJkroMEiNxdhu8Y5HJxjGrYDt0Nx5A1dHPG5rS4tMbi4gSsc3LQdARnBGcjqkdBkJVOhgZG+B8sT94tJ+YtAc0D77TkHkD5K7VFDxFPS08sBqXSiSOMloLg5pZu3bGh1dtBBB4VOVwpOE0Q2q0dPPbsJrjJjoQhJfuQWwCCUoSSQAc/GJ9FcrUjSFxb+EjFxeH9Zax7Kfv5d1oGl/cA5+Ht4Ur2k7W1NPFbQV0tN5A0JCh0AKqFkhtIGg5klKfLTqPnj59iqMiJvK7VzDGWvbqwOBYAb9rSQSbcgkngMC7i9VBqHBzWlzXNa3mfSznI7DzOVhtROyF5t3QDAQB4HHGe2rsdWBjQC0EHLdbXJ5kE69TqFMvDuS4cC4DcXHUaluQfJn2NLxzxjnVEGpzKlpD/CZJNBc8cHRud+g1BPfWu8klVoqitjijlpnxyykBrXEjUkjAycAH6T7jnWx7bKfXvJGcuJGep1d+pVs7o7kxIIJzjIAJBtpnTv8AqgT3d+C0lVxOvJFpStSFFJylJJxzxwIpjCpHLSxRK+YB0koIJxqb5WRSAG97jPpqfnZlFYuSuqGkSMiMYIAa4HJIBJOfPnyB9ZAqK2d2dpnYLhBLHBriXOdhxJGgBz3e7mJUKVIp5ppCGulLPx7G4gkDaDlukYBIBBBB4A1fhqpJBnLiMvjJdv8Abja5bgbOvPqNR5bJFBSxyiUBwLi0aEEABrSXbWPsknXQ+1SqaS0+OouQA7Tz5EgD0kfFLyuOCDnXp4VdqKiCOnL3QuDSSXE5b3gfOzj8bJGjQ5wCMjgSFB0xVbNKLuDI3Fwa7ByC09+p8+7PVqCOI01KWvEiJJIJDQWAAtGDnb9RzB5DqnI0JOmtAdJbr0hOvn6VKvxkKOCBke4c6gWVMcbGF7Q7eFry4HjqrxhDsd7c93cBkZBz+rBIFXeN8cDpJC13dJaxuDq0B4OefM8OqeVPF++3t/wDjLSSSSSSSSSSSSSb/AP/Z';
 
 function loadImageCORS(url) {
   return new Promise(function(resolve) {
@@ -1506,8 +1682,6 @@ function drawTeamBadge(ctx,img,initials,cx,cy,size){
   ctx.restore();
 }
 
-// ─── LOGO SOURCES WITH UFC/MMA/CRICKET/BOXING FALLBACKS ──────────────────
-// TheSportsDB (free tier, key=3)
 async function fetchTheSportsDB(teamName) {
   if (!teamName) return null;
   var queries=[teamName, teamName.split(' ')[0]];
@@ -1525,7 +1699,6 @@ async function fetchTheSportsDB(teamName) {
   return null;
 }
 
-// TheSportsDB fighter/player search (for UFC/Boxing/MMA)
 async function fetchTheSportsDBPlayer(playerName) {
   if (!playerName) return null;
   try {
@@ -1540,10 +1713,8 @@ async function fetchTheSportsDBPlayer(playerName) {
   return null;
 }
 
-// ESPN cricket scoreboard uses different endpoint — fetch team logos via ESPN cricinfo
 async function fetchCricketLogo(teamName) {
   if (!teamName) return null;
-  // Try ESPN cricinfo search API
   try {
     var ctrl=new AbortController(); setTimeout(function(){ ctrl.abort(); },5000);
     var res=await fetch('https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t='+encodeURIComponent(teamName),{signal:ctrl.signal});
@@ -1554,7 +1725,6 @@ async function fetchCricketLogo(teamName) {
       if (logo) return logo;
     }
   } catch(e){}
-  // Fallback: ICC country flag pattern
   var countryMap={
     'india':'https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/200px-Flag_of_India.svg.png',
     'australia':'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_Australia_%28converted%29.svg/200px-Flag_of_Australia_%28converted%29.svg.png',
@@ -1565,50 +1735,34 @@ async function fetchCricketLogo(teamName) {
     'new zealand':'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Flag_of_New_Zealand.svg/200px-Flag_of_New_Zealand.svg.png',
     'sri lanka':'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/200px-Flag_of_Sri_Lanka.svg.png',
     'bangladesh':'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Flag_of_Bangladesh.svg/200px-Flag_of_Bangladesh.svg.png',
-    'zimbabwe':'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Flag_of_Zimbabwe.svg/200px-Flag_of_Zimbabwe.svg.png',
-    'afghanistan':'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_the_Taliban.svg/200px-Flag_of_the_Taliban.svg.png',
   };
   var lc=teamName.toLowerCase();
-  for (var k in countryMap) {
-    if (lc.includes(k)) return countryMap[k];
-  }
+  for (var k in countryMap) { if (lc.includes(k)) return countryMap[k]; }
   return null;
 }
 
-// UFC/MMA/Boxing specific fighter image fetch
 async function fetchFighterImage(fighterName, leagueId) {
   if (!fighterName) return null;
-  // 1. Try TheSportsDB player search
   var tsdbUrl=await fetchTheSportsDBPlayer(fighterName);
   if (tsdbUrl) return tsdbUrl;
-
-  // 2. For UFC specifically — try ESPN MMA athlete endpoint
   if (leagueId==='mma/ufc') {
     try {
       var ctrl=new AbortController(); setTimeout(function(){ ctrl.abort(); },5000);
       var q=encodeURIComponent(fighterName);
       var res=await fetch('https://site.api.espn.com/apis/site/v2/sports/mma/ufc/athletes?search='+q+'&limit=1',{signal:ctrl.signal});
       var data=await res.json();
-      if (data.items&&data.items[0]&&data.items[0].headshot) {
-        return data.items[0].headshot.href||null;
-      }
+      if (data.items&&data.items[0]&&data.items[0].headshot) return data.items[0].headshot.href||null;
     } catch(e){}
   }
-
-  // 3. For Boxing — try TheSportsDB team (org) then player
   if (leagueId==='boxing/wbc') {
     var bUrl=await fetchTheSportsDB(fighterName);
     if (bUrl) return bUrl;
   }
-
   return null;
 }
 
 async function loadLogoWithFallback(espnUrl, teamName, leagueId) {
-  // Direct ESPN logo
   if (espnUrl){ var img1=await loadImageCORS(espnUrl); if(img1)return img1; }
-
-  // Sport-specific lookups
   var altUrl = null;
   var lid = leagueId||'';
   if (lid==='mma/ufc'||lid==='boxing/wbc') {
@@ -1619,11 +1773,8 @@ async function loadLogoWithFallback(espnUrl, teamName, leagueId) {
     altUrl=await fetchTheSportsDB(teamName);
   }
   if (altUrl){ var img2=await loadImageCORS(altUrl); if(img2)return img2; }
-
-  // wsrv.nl CORS proxy fallback
   var proxyTarget=espnUrl||altUrl;
   if (proxyTarget){ var img3=await loadImageCORS('https://wsrv.nl/?url='+encodeURIComponent(proxyTarget)+'&w=200&h=200&fit=contain&output=png'); if(img3)return img3; }
-
   return null;
 }
 
@@ -1755,7 +1906,6 @@ async function postToBloggerCore(idx,type,pubModeOverride) {
       gd.blogPostUrl = data.url||gd.blogPostUrl;
       gd.status      = 'updated';
     }
-    // ── SAVE TO LOCALSTORAGE so it survives page reload ──
     savePostToStorage(gd);
     log('ok','✓ '+(type==='preview'?'Posted':'Highlights updated')+': '+title);
     toast('✓ '+(type==='preview'?'Preview':'Highlights')+' '+(pubMode==='DRAFT'?'saved as draft':'published')+'!','ok');
