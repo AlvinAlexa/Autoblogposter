@@ -827,28 +827,26 @@ function updateSchedPreview() {
   el.textContent = 'Posts ' + amount + ' ' + label + ' before kickoff';
 }
 
-// FIX 3: corrected timing logic — only fires when clock actually reaches post time
+// FIX 3: checkScheduledPosts — auto-schedule newly generated content when scheduler is ON
+// This runs every 60s and catches any game that has preview content but hasn't been
+// scheduled yet. It uses Blogger native scheduling (published = kickoff time).
 async function checkScheduledPosts() {
   if (!globalSchedulerOn || !detectedGames.length) return;
-  var leadMs = getSchedLeadMs();
-  var now    = Date.now();
+  var now = Date.now();
   for (var i = 0; i < detectedGames.length; i++) {
     var gd = detectedGames[i];
-    // Guard: skip already-handled, no-content, or already-fired games
+    // Skip: already scheduled/posted/handled, no content yet, or already fired
     if (gd.status !== 'idle' || !gd.preContent || gd.scheduledPosted) continue;
     var kickoff = gd.espnEvent.date ? new Date(gd.espnEvent.date).getTime() : null;
     if (!kickoff) continue;
-    var msUntil  = kickoff - now;
-    var postAtMs = kickoff - leadMs;  // exact moment to post
-    // OLD BUG: msUntil <= leadMs — fired immediately when toggled inside window
-    // FIX: postAtMs <= now — only fires when clock actually reaches the post time
-    if (msUntil > 0 && postAtMs <= now) {
-      var minsUntil = Math.round(msUntil / 60000);
-      log('ok', '⏰ Scheduler firing: ' + getMatchTitle(gd) + ' (' + minsUntil + 'm to kickoff)');
-      gd.scheduledPosted = true;
-      savePostToStorage(gd);  // persist flag so page reload won't re-fire
-      await postToBloggerCore(i, 'preview', 'SCHEDULED', kickoff);
-    }
+    // Only schedule posts for games that haven't kicked off yet
+    if (kickoff <= now) continue;
+    var minsUntil = Math.round((kickoff - now) / 60000);
+    log('ok', '⏰ Auto-scheduling: ' + getMatchTitle(gd) + ' (kicks off in ' + minsUntil + 'm)');
+    gd.scheduledPosted = true;
+    savePostToStorage(gd);
+    await postToBloggerCore(i, 'preview', 'SCHEDULED', kickoff);
+    await sleep(500); // small delay between posts
   }
   renderGames();
 }
@@ -1544,6 +1542,17 @@ async function generatePreviewContent(idx) {
   var btn=document.querySelector('#card-'+idx+' [onclick*="postToBlogger"][onclick*="preview"]');
   if (btn) btn.removeAttribute('disabled');
   log('ok','✓ Content ready: '+homeName+' vs '+awayName);
+  // FIX: if scheduler is ON and game is in the future, schedule immediately
+  if (globalSchedulerOn && gd.status === 'idle' && !gd.scheduledPosted) {
+    var kickoffTs = gd.espnEvent.date ? new Date(gd.espnEvent.date).getTime() : null;
+    if (kickoffTs && kickoffTs > Date.now()) {
+      gd.scheduledPosted = true;
+      savePostToStorage(gd);
+      log('ok', '⏰ Scheduler: queuing Blogger schedule for ' + homeName + ' vs ' + awayName);
+      await postToBloggerCore(idx, 'preview', 'SCHEDULED', kickoffTs);
+      renderGames();
+    }
+  }
 }
 async function generateHighlightContent(idx) {
   var gd=detectedGames[idx];
@@ -1840,14 +1849,24 @@ async function uploadToImgbb(dataUrl) {
 async function postToBlogger(idx,type) {
   var gd=detectedGames[idx],btn=event.currentTarget;
   var blogId=document.getElementById('blog-id').value.trim();
-  var pubMode=document.getElementById('publish-mode').value;
   if (!oauthToken||Date.now()>=tokenExpiresAt){ toast('Sign in first','err'); return; }
   if (!blogId){ toast('Enter Blog ID first','err'); return; }
   if (type==='highlights'&&!gd.highlightContent){ toast('No highlights content yet','err'); return; }
   if (type==='highlights'&&!gd.blogPostId){ toast('Post Preview first (or link an existing post)','err'); return; }
   if (type==='preview'&&!gd.preContent){ toast('No preview content yet','err'); return; }
   btn.classList.add('loading'); btn.disabled=true;
-  var success=await postToBloggerCore(idx,type,pubMode);
+  // FIX: when auto-scheduler is ON, always schedule at kickoff time regardless of dropdown
+  var pubMode = document.getElementById('publish-mode').value;
+  var kickoffTs = null;
+  if (globalSchedulerOn && type === 'preview') {
+    var kickoffRaw = gd.espnEvent.date ? new Date(gd.espnEvent.date).getTime() : null;
+    if (kickoffRaw && kickoffRaw > Date.now()) {
+      // Game is in the future — use Blogger native scheduling at kickoff time
+      pubMode = 'SCHEDULED';
+      kickoffTs = kickoffRaw;
+    }
+  }
+  var success=await postToBloggerCore(idx,type,pubMode,kickoffTs);
   btn.classList.remove('loading'); btn.disabled=false;
   if (success) renderGames();
 }
