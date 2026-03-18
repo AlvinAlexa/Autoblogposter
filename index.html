@@ -350,11 +350,19 @@ select option{background:#141720;}
         </div>
       </div>
       <div class="input-group">
-        <label class="input-label">Minutes before kickoff</label>
-        <input id="sched-minutes" max="180" min="1" type="number" value="30"/>
+        <label class="input-label">Post this long before kickoff</label>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <input id="sched-amount" min="1" type="number" value="30" style="flex:1;min-width:0;" oninput="updateSchedPreview()"/>
+          <select id="sched-unit" style="flex:1;min-width:0;padding:9px 8px;" onchange="updateSchedUnitLimits();updateSchedPreview()">
+            <option value="minutes">Minutes</option>
+            <option value="hours">Hours</option>
+            <option value="days">Days</option>
+          </select>
+        </div>
+        <div id="sched-preview" style="font-size:9px;color:var(--orange);font-family:'JetBrains Mono',monospace;margin-top:3px;">Posts 30 minutes before kickoff</div>
       </div>
       <div class="settings-note" style="margin-top:2px;">
-        Auto-posts preview X minutes before each game's kickoff.
+        Auto-publishes a preview post at the scheduled time before each game. Works across any date you scan.
       </div>
     </div>
   </div>
@@ -704,7 +712,9 @@ function loadConfig() {
     if (saved.publishMode) document.getElementById('publish-mode').value = saved.publishMode;
     if (saved.activeLeagues) activeLeagues = new Set(saved.activeLeagues);
     if (saved.clientId)    GOOGLE_CLIENT_ID = saved.clientId;
-    if (saved.schedMinutes) document.getElementById('sched-minutes').value = saved.schedMinutes;
+    if (saved.schedAmount) document.getElementById('sched-amount').value = saved.schedAmount;
+    if (saved.schedUnit)   { document.getElementById('sched-unit').value = saved.schedUnit; updateSchedUnitLimits(); }
+    updateSchedPreview();
     if (saved.globalLabels) globalLabels = saved.globalLabels;
     if (saved.globalSchedulerOn) { globalSchedulerOn = saved.globalSchedulerOn; updateSchedulerUI(); }
     if (saved.oauthToken && saved.tokenExpiresAt && Date.now() < saved.tokenExpiresAt) {
@@ -728,7 +738,8 @@ function saveConfig() {
     activeLeagues: Array.from(activeLeagues),
     clientId: GOOGLE_CLIENT_ID,
     oauthToken, oauthUser, tokenExpiresAt,
-    schedMinutes: document.getElementById('sched-minutes').value,
+    schedAmount: document.getElementById('sched-amount').value,
+    schedUnit:   document.getElementById('sched-unit').value,
     globalLabels, globalSchedulerOn,
   };
   localStorage.setItem('s803_config_v2', JSON.stringify(config));
@@ -819,20 +830,47 @@ function updateSchedulerUI() {
   if (globalSchedulerOn){ tog.classList.add('on'); lbl.textContent='On'; lbl.style.color='var(--accent)'; }
   else{ tog.classList.remove('on'); lbl.textContent='Off'; lbl.style.color='var(--muted2)'; }
 }
+// Returns the lead time in milliseconds from sched-amount + sched-unit inputs
+function getSchedLeadMs() {
+  var amount = parseFloat(document.getElementById('sched-amount').value) || 30;
+  var unit   = document.getElementById('sched-unit').value || 'minutes';
+  if (unit === 'days')    return amount * 24 * 60 * 60 * 1000;
+  if (unit === 'hours')   return amount * 60 * 60 * 1000;
+  return amount * 60 * 1000; // minutes default
+}
+
+function updateSchedUnitLimits() {
+  var unit = document.getElementById('sched-unit').value;
+  var inp  = document.getElementById('sched-amount');
+  if (unit === 'minutes') { inp.min = '1'; inp.max = '1440'; if (parseFloat(inp.value) > 1440) inp.value = '30'; }
+  if (unit === 'hours')   { inp.min = '1'; inp.max = '72';   if (parseFloat(inp.value) > 72)   inp.value = '2';  }
+  if (unit === 'days')    { inp.min = '1'; inp.max = '30';   if (parseFloat(inp.value) > 30)   inp.value = '1';  }
+}
+
+function updateSchedPreview() {
+  var el = document.getElementById('sched-preview');
+  if (!el) return;
+  var amount = parseFloat(document.getElementById('sched-amount').value) || 30;
+  var unit   = document.getElementById('sched-unit').value || 'minutes';
+  var label  = amount === 1 ? unit.replace(/s$/,'') : unit;
+  el.textContent = 'Posts ' + amount + ' ' + label + ' before kickoff';
+}
+
 async function checkScheduledPosts() {
-  if (!globalSchedulerOn||!detectedGames.length) return;
-  var mins = parseInt(document.getElementById('sched-minutes').value,10)||30;
-  var now = Date.now();
-  for (var i=0;i<detectedGames.length;i++) {
+  if (!globalSchedulerOn || !detectedGames.length) return;
+  var leadMs = getSchedLeadMs();
+  var now    = Date.now();
+  for (var i = 0; i < detectedGames.length; i++) {
     var gd = detectedGames[i];
-    if (gd.status!=='idle'||!gd.preContent) continue;
+    if (gd.status !== 'idle' || !gd.preContent) continue;
     var kickoff = gd.espnEvent.date ? new Date(gd.espnEvent.date).getTime() : null;
     if (!kickoff) continue;
-    var minsUntil = (kickoff - now) / 60000;
-    if (minsUntil>0 && minsUntil<=mins && !gd.scheduledPosted) {
-      log('ok','⏰ Auto-posting: '+getMatchTitle(gd)+' ('+Math.round(minsUntil)+'m to kickoff)');
+    var msUntil = kickoff - now;
+    if (msUntil > 0 && msUntil <= leadMs && !gd.scheduledPosted) {
+      var minsUntil = Math.round(msUntil / 60000);
+      log('ok', '⏰ Auto-posting: ' + getMatchTitle(gd) + ' (' + minsUntil + 'm to kickoff)');
       gd.scheduledPosted = true;
-      await postToBloggerCore(i,'preview');
+      await postToBloggerCore(i, 'preview');
     }
   }
   renderGames();
@@ -1168,9 +1206,20 @@ function renderGames() {
     if (globalSchedulerOn) {
       var kickoff=gd.espnEvent.date?new Date(gd.espnEvent.date).getTime():null;
       if (kickoff&&state==='pre') {
-        var mins=document.getElementById('sched-minutes').value;
-        var minsUntil=Math.round((kickoff-Date.now())/60000);
-        if (minsUntil>0) schedCountdown='<span class="scheduler-countdown">⏰ ~'+(minsUntil-parseInt(mins))+'m</span>';
+        var leadMs=getSchedLeadMs();
+        var msUntil=kickoff-Date.now();
+        var postAtMs=kickoff-leadMs;
+        if (msUntil>0 && postAtMs>Date.now()) {
+          var minsToPost=Math.round((postAtMs-Date.now())/60000);
+          var countdownStr = minsToPost > 1440
+            ? Math.round(minsToPost/1440)+'d'
+            : minsToPost > 60
+              ? Math.round(minsToPost/60)+'h'
+              : minsToPost+'m';
+          schedCountdown='<span class="scheduler-countdown">⏰ posts in ~'+countdownStr+'</span>';
+        } else if (msUntil>0) {
+          schedCountdown='<span class="scheduler-countdown" style="color:var(--green)">⏰ posting soon…</span>';
+        }
       }
     }
 
