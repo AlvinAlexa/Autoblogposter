@@ -49,6 +49,8 @@ select option{background:#141720;}
 .btn-orange:hover{background:rgba(255,165,2,.2);}
 .btn-cyan{background:rgba(0,212,255,.1);color:var(--accent2);border:1px solid rgba(0,212,255,.35);}
 .btn-cyan:hover{background:rgba(0,212,255,.2);}
+.btn-green{background:rgba(46,213,115,.12);color:var(--green);border:1px solid rgba(46,213,115,.35);}
+.btn-green:hover{background:rgba(46,213,115,.22);}
 .btn-full{width:100%;}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
 .btn .spin{width:12px;height:12px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;display:none;}
@@ -222,6 +224,55 @@ select option{background:#141720;}
 .link-post-input::placeholder{color:var(--muted);}
 .link-post-note{font-size:9px;color:var(--muted);line-height:1.5;}
 .kickoff-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.05em;padding:2px 8px;border-radius:3px;background:rgba(0,212,255,.1);color:var(--accent2);border:1px solid rgba(0,212,255,.25);}
+
+/* ── CHANNEL LIBRARY ── */
+.channel-library{display:flex;flex-direction:column;gap:8px;}
+.channel-add-form{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:7px;}
+.channel-add-form-title{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent2);margin-bottom:2px;}
+.channel-list{display:flex;flex-direction:column;gap:5px;max-height:280px;overflow-y:auto;}
+.channel-item{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:8px 10px;transition:border-color .15s;}
+.channel-item:hover{border-color:var(--border2);}
+.channel-item-emoji{font-size:15px;flex-shrink:0;width:20px;text-align:center;}
+.channel-item-info{flex:1;min-width:0;}
+.channel-item-name{font-size:11px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.channel-item-url{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.channel-item-leagues{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;}
+.channel-league-tag{font-size:8px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 5px;border-radius:3px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(--accent2);}
+.channel-item-actions{display:flex;gap:5px;flex-shrink:0;}
+.channel-del-btn{background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.25);color:var(--red);border-radius:5px;padding:3px 8px;font-size:9px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;transition:background .13s;}
+.channel-del-btn:hover{background:rgba(255,71,87,.22);}
+.channel-edit-btn{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.25);color:var(--purple);border-radius:5px;padding:3px 8px;font-size:9px;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;transition:background .13s;}
+.channel-edit-btn:hover{background:rgba(168,85,247,.22);}
+.channel-empty{font-size:11px;color:var(--muted);font-style:italic;text-align:center;padding:16px 0;}
+.channel-mapping-note{font-size:9px;color:var(--muted);line-height:1.5;}
+
+/* channel form league picker — distinct from main leagues-grid */
+.ch-leagues-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;max-height:220px;overflow-y:auto;padding:2px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
+
+/* ── PER-CARD CHANNEL PICKER ── */
+.channel-picker-panel{display:flex;flex-direction:column;gap:10px;padding:4px 0;}
+.channel-picker-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.channel-picker-title{font-size:10px;font-weight:700;color:var(--accent2);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.channel-picker-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.channel-pick-btn{display:flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:8px 10px;cursor:pointer;transition:all .15s;font-size:10px;font-weight:600;color:var(--muted2);user-select:none;}
+.channel-pick-btn.selected{border-color:var(--accent2);background:rgba(0,212,255,.09);color:var(--text);}
+.channel-pick-btn .cpcheck{width:13px;height:13px;border:1.5px solid var(--border2);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;transition:all .15s;}
+.channel-pick-btn.selected .cpcheck{background:var(--accent2);border-color:var(--accent2);color:#070809;}
+.channel-pick-btn-emoji{font-size:13px;flex-shrink:0;}
+.channel-pick-btn-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.channel-preview-box{background:var(--s3);border:1px solid var(--border);border-radius:var(--r);padding:8px 10px;}
+.channel-preview-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.channel-preview-url{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent2);word-break:break-all;line-height:1.5;}
+.channel-preview-url.empty{color:var(--muted);font-style:italic;}
+.channel-auto-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:10px;background:rgba(46,213,115,.1);border:1px solid rgba(46,213,115,.3);color:var(--green);}
+.channel-no-channels{font-size:11px;color:var(--muted);font-style:italic;text-align:center;padding:20px 0;}
+.league-mapping-section{background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
+.league-mapping-title{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:2px;}
+.league-mapping-row{display:flex;align-items:center;gap:6px;}
+.league-mapping-name{font-size:10px;color:var(--muted2);font-weight:600;min-width:90px;flex-shrink:0;}
+.league-mapping-select{background:var(--s3);border:1px solid var(--border2);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:10px;padding:5px 7px;border-radius:5px;flex:1;outline:none;transition:border-color .15s;}
+.league-mapping-select:focus{border-color:var(--purple);}
+
 @media(max-width:900px){
   .layout{grid-template-columns:1fr;}
   .sidebar{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border);}
@@ -283,6 +334,76 @@ select option{background:#141720;}
         Blog ID is in your Blogger dashboard URL.<br/>
         imgbb key: free at <a href="https://api.imgbb.com" target="_blank">api.imgbb.com</a>
       </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       📺 CHANNEL LIBRARY — New Section
+  ════════════════════════════════════════════════════════════════════ -->
+  <div class="sidebar-section">
+    <div class="section-label">📺 Channel Library <span class="badge-new">NEW</span></div>
+    <div class="channel-library">
+
+      <!-- Add / Edit form -->
+      <div class="channel-add-form" id="channel-add-form">
+        <div class="channel-add-form-title" id="channel-form-title">➕ Add New Channel</div>
+        <input type="hidden" id="channel-edit-id" value=""/>
+        <div class="input-group">
+          <label class="input-label">Channel Name</label>
+          <input type="text" id="ch-name" placeholder="e.g. LaLiga TV" maxlength="40"/>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Stream URL (the part after mora=)</label>
+          <input type="text" id="ch-url" placeholder="https://tv.sportsnews.id/p/laliga.html"/>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Emoji Icon <span class="badge-tip">OPTIONAL</span></label>
+          <input type="text" id="ch-emoji" placeholder="📺" maxlength="4" style="width:72px;"/>
+        </div>
+        <div class="settings-note channel-mapping-note">
+          <strong style="color:var(--accent2);">Auto-detect leagues</strong> <span style="color:var(--muted);font-weight:400;">(optional)</span> — expand to tick which leagues/sports this channel covers. When a game from those leagues is loaded, this channel is automatically pre-selected on the card.
+          <br/><span style="color:var(--muted);margin-top:4px;display:block;">You can skip this and just use the 📺 Channels tab on each card to pick manually.</span>
+        </div>
+        <div style="margin-top:2px;">
+          <button type="button" class="btn btn-secondary btn-full" style="font-size:10px;padding:7px 10px;justify-content:space-between;" onclick="toggleChLeaguePanel()">
+            <span>⚡ Set Auto-Detect Leagues</span>
+            <span id="ch-league-panel-arrow" style="font-size:12px;transition:transform .2s;">▼</span>
+          </button>
+          <div id="ch-leagues-panel" style="display:none;margin-top:6px;">
+            <div class="ch-leagues-grid" id="ch-leagues-grid">
+              <!-- built by JS -->
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px;">
+          <button class="btn btn-cyan btn-full" onclick="saveChannel()">
+            <span class="btn-text" id="ch-save-btn-text">💾 Save Channel</span>
+          </button>
+          <button class="btn btn-secondary" id="ch-cancel-btn" onclick="cancelChannelEdit()" style="display:none;padding:10px 12px;">
+            <span class="btn-text">✕</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- League → Default channels mapping shortcut -->
+      <div class="league-mapping-section">
+        <div class="league-mapping-title">⚡ Quick League → Channel Defaults</div>
+        <div id="league-defaults-list" style="display:flex;flex-direction:column;gap:6px;">
+          <!-- built by JS -->
+        </div>
+        <div class="settings-note channel-mapping-note">
+          Pick the default channel(s) for each active league. These auto-fill stream URLs when you scan.
+        </div>
+      </div>
+
+      <!-- Saved channels list -->
+      <div id="channel-list-wrap">
+        <div class="channel-empty" id="channel-empty-msg">No channels saved yet. Add one above.</div>
+        <div class="channel-list" id="channel-list"></div>
+      </div>
+
     </div>
   </div>
 
@@ -352,7 +473,7 @@ select option{background:#141720;}
         <div id="sched-preview" style="font-size:9px;color:var(--orange);font-family:'JetBrains Mono',monospace;margin-top:3px;">Posts 30 minutes before kickoff</div>
       </div>
       <div class="settings-note" style="margin-top:2px;">
-        Auto-schedules posts in Blogger at the set time before kickoff. Posts appear as "Scheduled" in your Blogger dashboard and publish automatically.
+        Auto-schedules posts in Blogger at the set time before kickoff.
       </div>
     </div>
   </div>
@@ -486,6 +607,27 @@ let config            = {};
 let globalSchedulerOn = false;
 let globalLabels      = ['sports 803','live stream'];
 
+// ─── CHANNEL LIBRARY STATE ─────────────────────────────────────────────────
+// Each channel: { id, name, emoji, url, leagues: [leagueId, ...] }
+let channelLibrary = [];
+// League → [channelId, ...] default mapping (persisted)
+let leagueDefaults = {};   // { 'soccer/esp.1': ['ch-uuid-1'], ... }
+// Selected channels per game card: { gameIdx → Set<channelId> }
+let cardChannels = {};
+
+// ─── BASE URL for player ─────────────────────────────────────────────────
+const PLAYER_BASE = 'https://soulmap1.blogspot.com/p/media-player.html';
+
+function buildIframeUrl(channelIds) {
+  if (!channelIds || channelIds.length === 0) return '';
+  var params = channelIds.map(function(cid) {
+    var ch = channelLibrary.find(function(c){ return c.id === cid; });
+    return ch ? 'mora=' + encodeURIComponent(ch.url) : null;
+  }).filter(Boolean);
+  if (!params.length) return '';
+  return PLAYER_BASE + '?' + params.join('&');
+}
+
 // ─── DATE STATE ────────────────────────────────────────────────────────────
 var selectedDate = getTodayStr();
 
@@ -556,18 +698,15 @@ function updateDateIndicator() {
   var label = formatDateLabel(selectedDate);
   ind.className = 'date-indicator';
   if (diff === 0) {
-    ind.classList.add('today');
-    txt.textContent = 'Today · ' + label;
+    ind.classList.add('today'); txt.textContent = 'Today · ' + label;
     if (titleEl) titleEl.innerHTML = 'Today\'s <span>Games</span>';
     if (notice) notice.classList.remove('visible');
   } else if (diff > 0) {
-    ind.classList.add('future');
-    txt.textContent = (diff===1?'Tomorrow':'+'+diff+' days') + ' · ' + label;
+    ind.classList.add('future'); txt.textContent = (diff===1?'Tomorrow':'+'+diff+' days') + ' · ' + label;
     if (titleEl) titleEl.innerHTML = '<span>'+label+'</span> Games';
     if (notice) notice.classList.add('visible');
   } else {
-    ind.classList.add('past');
-    txt.textContent = (diff===-1?'Yesterday':diff+' days') + ' · ' + label;
+    ind.classList.add('past'); txt.textContent = (diff===-1?'Yesterday':diff+' days') + ' · ' + label;
     if (titleEl) titleEl.innerHTML = '<span>'+label+'</span> Results';
     if (notice) notice.classList.remove('visible');
   }
@@ -585,7 +724,10 @@ function formatDateLabel(ymd) {
 window.addEventListener('DOMContentLoaded',function(){
   loadConfig();
   buildLeaguesGrid();
+  buildChannelLeaguesGrid();
   renderGlobalLabels();
+  renderChannelList();
+  renderLeagueDefaults();
   var inp = document.getElementById('custom-date-input');
   if (inp) inp.value = selectedDate;
   var todayBtn = document.getElementById('dq-today');
@@ -595,6 +737,267 @@ window.addEventListener('DOMContentLoaded',function(){
   setInterval(checkScheduledPosts, 60*1000);
 });
 
+// ─── CHANNEL LIBRARY: CRUD ────────────────────────────────────────────────
+
+function genChannelId() {
+  return 'ch-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,6);
+}
+
+function saveChannelLibraryToStorage() {
+  localStorage.setItem('s803_channels_v1', JSON.stringify(channelLibrary));
+  localStorage.setItem('s803_league_defaults_v1', JSON.stringify(leagueDefaults));
+}
+
+function loadChannelLibraryFromStorage() {
+  try {
+    var raw = localStorage.getItem('s803_channels_v1');
+    if (raw) channelLibrary = JSON.parse(raw);
+  } catch(e) { channelLibrary = []; }
+  try {
+    var raw2 = localStorage.getItem('s803_league_defaults_v1');
+    if (raw2) leagueDefaults = JSON.parse(raw2);
+  } catch(e) { leagueDefaults = {}; }
+}
+
+// Build the league checkboxes inside the add/edit channel form
+function buildChannelLeaguesGrid() {
+  var grid = document.getElementById('ch-leagues-grid');
+  if (!grid) return;
+  var html = '';
+  LEAGUES.forEach(function(l) {
+    html += '<div class="league-toggle" data-ch-league-id="'+l.id+'" onclick="toggleChLeague(this)">'
+      + '<div class="lcheck"></div>'
+      + '<span style="font-size:10px;">'+l.emoji+' '+l.name+'</span></div>';
+  });
+  grid.innerHTML = html;
+}
+
+function toggleChLeaguePanel() {
+  var panel = document.getElementById('ch-leagues-panel');
+  var arrow = document.getElementById('ch-league-panel-arrow');
+  var isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+  if (arrow) arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+function toggleChLeague(el) {
+  el.classList.toggle('active');
+  var check = el.querySelector('.lcheck');
+  check.textContent = el.classList.contains('active') ? '✓' : '';
+}
+
+function getSelectedChLeagues() {
+  var selected = [];
+  document.querySelectorAll('#ch-leagues-grid .league-toggle.active').forEach(function(el) {
+    selected.push(el.getAttribute('data-ch-league-id'));
+  });
+  return selected;
+}
+
+function saveChannel() {
+  var name   = document.getElementById('ch-name').value.trim();
+  var url    = document.getElementById('ch-url').value.trim();
+  var emoji  = document.getElementById('ch-emoji').value.trim() || '📺';
+  var editId = document.getElementById('channel-edit-id').value.trim();
+  var leagues = getSelectedChLeagues();
+
+  if (!name) { toast('Enter a channel name', 'err'); return; }
+  if (!url)  { toast('Enter a stream URL', 'err'); return; }
+  // Strip player prefix if user accidentally pasted the full URL
+  var stripped = url;
+  if (stripped.startsWith(PLAYER_BASE)) {
+    var moraPart = stripped.split('mora=')[1];
+    if (moraPart) stripped = decodeURIComponent(moraPart.split('&mora=')[0]);
+  }
+
+  if (editId) {
+    var idx = channelLibrary.findIndex(function(c){ return c.id === editId; });
+    if (idx !== -1) {
+      channelLibrary[idx] = { id: editId, name, emoji, url: stripped, leagues };
+      toast('✓ Channel updated: ' + name, 'ok');
+      log('ok', '✓ Channel updated: ' + name);
+    }
+  } else {
+    var newCh = { id: genChannelId(), name, emoji, url: stripped, leagues };
+    channelLibrary.push(newCh);
+    toast('✓ Channel saved: ' + name, 'ok');
+    log('ok', '✓ Channel saved: ' + name);
+  }
+
+  saveChannelLibraryToStorage();
+  resetChannelForm();
+  renderChannelList();
+  renderLeagueDefaults();
+}
+
+function resetChannelForm() {
+  document.getElementById('ch-name').value = '';
+  document.getElementById('ch-url').value = '';
+  document.getElementById('ch-emoji').value = '';
+  document.getElementById('channel-edit-id').value = '';
+  document.getElementById('channel-form-title').textContent = '➕ Add New Channel';
+  document.getElementById('ch-save-btn-text').textContent = '💾 Save Channel';
+  document.getElementById('ch-cancel-btn').style.display = 'none';
+  document.querySelectorAll('#ch-leagues-grid .league-toggle.active').forEach(function(el) {
+    el.classList.remove('active');
+    el.querySelector('.lcheck').textContent = '';
+  });
+  // Close the league panel
+  var panel = document.getElementById('ch-leagues-panel');
+  var arrow = document.getElementById('ch-league-panel-arrow');
+  if (panel) panel.style.display = 'none';
+  if (arrow) arrow.style.transform = '';
+}
+
+function cancelChannelEdit() {
+  resetChannelForm();
+}
+
+function editChannel(id) {
+  var ch = channelLibrary.find(function(c){ return c.id === id; });
+  if (!ch) return;
+  document.getElementById('ch-name').value = ch.name;
+  document.getElementById('ch-url').value = ch.url;
+  document.getElementById('ch-emoji').value = ch.emoji || '📺';
+  document.getElementById('channel-edit-id').value = ch.id;
+  document.getElementById('channel-form-title').textContent = '✏️ Editing: ' + ch.name;
+  document.getElementById('ch-save-btn-text').textContent = '✅ Update Channel';
+  document.getElementById('ch-cancel-btn').style.display = 'flex';
+  // Set league checkboxes
+  document.querySelectorAll('#ch-leagues-grid .league-toggle').forEach(function(el) {
+    var lid = el.getAttribute('data-ch-league-id');
+    var isOn = ch.leagues && ch.leagues.includes(lid);
+    el.classList.toggle('active', isOn);
+    el.querySelector('.lcheck').textContent = isOn ? '✓' : '';
+  });
+  // Open the league panel if channel has leagues set
+  if (ch.leagues && ch.leagues.length > 0) {
+    var panel = document.getElementById('ch-leagues-panel');
+    var arrow = document.getElementById('ch-league-panel-arrow');
+    if (panel) panel.style.display = 'block';
+    if (arrow) arrow.style.transform = 'rotate(180deg)';
+  }
+  // Scroll to form
+  document.getElementById('channel-add-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function deleteChannel(id) {
+  var ch = channelLibrary.find(function(c){ return c.id === id; });
+  if (!ch) return;
+  if (!confirm('Delete channel "' + ch.name + '"?')) return;
+  channelLibrary = channelLibrary.filter(function(c){ return c.id !== id; });
+  // Clean from league defaults
+  Object.keys(leagueDefaults).forEach(function(lid) {
+    leagueDefaults[lid] = (leagueDefaults[lid] || []).filter(function(cid){ return cid !== id; });
+  });
+  saveChannelLibraryToStorage();
+  renderChannelList();
+  renderLeagueDefaults();
+  toast('Channel deleted', 'ok');
+  log('ok', '🗑 Channel deleted: ' + ch.name);
+}
+
+function renderChannelList() {
+  var list = document.getElementById('channel-list');
+  var emptyMsg = document.getElementById('channel-empty-msg');
+  if (!list) return;
+  if (!channelLibrary.length) {
+    list.innerHTML = '';
+    if (emptyMsg) emptyMsg.style.display = 'block';
+    return;
+  }
+  if (emptyMsg) emptyMsg.style.display = 'none';
+  list.innerHTML = channelLibrary.map(function(ch) {
+    var leagueTags = (ch.leagues || []).map(function(lid) {
+      var l = LEAGUES.find(function(x){ return x.id === lid; });
+      return l ? '<span class="channel-league-tag">'+escHtml(l.name)+'</span>' : '';
+    }).join('');
+    return '<div class="channel-item">'
+      + '<div class="channel-item-emoji">'+escHtml(ch.emoji||'📺')+'</div>'
+      + '<div class="channel-item-info">'
+        + '<div class="channel-item-name">'+escHtml(ch.name)+'</div>'
+        + '<div class="channel-item-url">'+escHtml(ch.url)+'</div>'
+        + (leagueTags ? '<div class="channel-item-leagues">'+leagueTags+'</div>' : '')
+      + '</div>'
+      + '<div class="channel-item-actions">'
+        + '<button class="channel-edit-btn" onclick="editChannel(\''+ch.id+'\')">✏️</button>'
+        + '<button class="channel-del-btn" onclick="deleteChannel(\''+ch.id+'\')">🗑</button>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+// ─── LEAGUE → DEFAULT CHANNEL MAPPING ────────────────────────────────────
+
+function renderLeagueDefaults() {
+  var container = document.getElementById('league-defaults-list');
+  if (!container) return;
+  var active = LEAGUES.filter(function(l){ return activeLeagues.has(l.id); });
+  if (!active.length || !channelLibrary.length) {
+    container.innerHTML = '<div style="font-size:10px;color:var(--muted);font-style:italic;">Scan leagues and add channels first.</div>';
+    return;
+  }
+  container.innerHTML = active.map(function(league) {
+    var options = '<option value="">-- none --</option>'
+      + channelLibrary.map(function(ch) {
+          var defaults = leagueDefaults[league.id] || [];
+          var sel = defaults.includes(ch.id) ? ' selected' : '';
+          return '<option value="'+ch.id+'"'+sel+'>'+escHtml(ch.emoji+' '+ch.name)+'</option>';
+        }).join('');
+    return '<div class="league-mapping-row">'
+      + '<span class="league-mapping-name">'+league.emoji+' '+escHtml(league.name)+'</span>'
+      + '<select class="league-mapping-select" onchange="setLeagueDefault(\''+league.id+'\',this.value)">'
+      + options + '</select>'
+      + '</div>';
+  }).join('');
+}
+
+function setLeagueDefault(leagueId, channelId) {
+  if (!channelId) {
+    delete leagueDefaults[leagueId];
+  } else {
+    leagueDefaults[leagueId] = [channelId];
+  }
+  saveChannelLibraryToStorage();
+  log('ok', '⚡ Default set: ' + leagueId + ' → ' + channelId);
+  // Re-apply to any already-loaded games of this league
+  detectedGames.forEach(function(gd, idx) {
+    if (gd.league.id === leagueId && !gd.iframeSrc) {
+      applyDefaultChannels(idx);
+    }
+  });
+  renderGames();
+}
+
+// ─── AUTO-DETECT: apply default channels for a game ──────────────────────
+function applyDefaultChannels(idx) {
+  var gd = detectedGames[idx];
+  if (!gd) return;
+
+  // 1) Check league-level defaults
+  var defaultIds = leagueDefaults[gd.league.id] || [];
+
+  // 2) Also check per-channel league associations
+  channelLibrary.forEach(function(ch) {
+    if (ch.leagues && ch.leagues.includes(gd.league.id)) {
+      if (!defaultIds.includes(ch.id)) defaultIds = defaultIds.concat([ch.id]);
+    }
+  });
+
+  if (!defaultIds.length) return;
+
+  // Initialize card channels set for this game
+  if (!cardChannels[idx]) cardChannels[idx] = new Set();
+  defaultIds.forEach(function(cid) { cardChannels[idx].add(cid); });
+
+  // Build and store iframe URL
+  var url = buildIframeUrl(Array.from(cardChannels[idx]));
+  if (url) {
+    gd.iframeSrc = url;
+    log('ai', '📺 Auto-channels for ' + getMatchTitle(gd) + ': ' + defaultIds.length + ' channel(s)');
+  }
+}
+
 // ─── PERSISTENT POST STORAGE ───────────────────────────────────────────────
 function getGameKey(gd) {
   var c = getCompetitors(gd);
@@ -603,7 +1006,6 @@ function getGameKey(gd) {
   var day  = gd.espnEvent.date ? gd.espnEvent.date.substring(0,10) : (gd.gameDate||'unknown');
   return 's803_post_' + [gd.league.id, home, away, day].join('|').replace(/\s+/g,'_').toLowerCase();
 }
-
 function savePostToStorage(gd) {
   var key = getGameKey(gd);
   var data = {
@@ -615,7 +1017,6 @@ function savePostToStorage(gd) {
   };
   localStorage.setItem(key, JSON.stringify(data));
 }
-
 function loadPostFromStorage(gd) {
   var key = getGameKey(gd);
   try {
@@ -629,7 +1030,6 @@ function loadPostFromStorage(gd) {
     return data;
   } catch(e) { return null; }
 }
-
 function restorePostStateForAllGames() {
   detectedGames.forEach(function(gd) {
     var saved = loadPostFromStorage(gd);
@@ -664,7 +1064,7 @@ function linkExistingPost(idx) {
   savePostToStorage(gd);
   inputEl.value = '';
   renderGames();
-  toast('✓ Post linked! You can now post highlights to it.', 'ok');
+  toast('✓ Post linked!', 'ok');
   log('ok', '🔗 Linked existing post ' + postId + ' → ' + getMatchTitle(gd));
 }
 
@@ -674,6 +1074,7 @@ var GOOGLE_CLIENT_ID = '';
 var IMGBB_API_KEY    = 'c8cd5657bfdfc6c298c9366deebfa7a7';
 
 function loadConfig() {
+  loadChannelLibraryFromStorage();
   try {
     var saved = JSON.parse(localStorage.getItem('s803_config_v2')||'{}');
     if (saved.blogId)      document.getElementById('blog-id').value = saved.blogId;
@@ -916,6 +1317,8 @@ function toggleLeague(el) {
   var id=el.getAttribute('data-league-id');
   if (activeLeagues.has(id)){ activeLeagues.delete(id); el.classList.remove('active'); el.querySelector('.lcheck').textContent=''; }
   else{ activeLeagues.add(id); el.classList.add('active'); el.querySelector('.lcheck').textContent='✓'; }
+  // Refresh league defaults panel
+  renderLeagueDefaults();
 }
 
 // ─── ESPN FETCH ────────────────────────────────────────────────────────────
@@ -986,6 +1389,7 @@ async function scanAllLeagues() {
   var btn=document.getElementById('scan-btn');
   btn.classList.add('loading'); btn.disabled=true;
   detectedGames=[];
+  cardChannels={};  // reset per-card channel selections
   var selected=LEAGUES.filter(function(l){ return activeLeagues.has(l.id); });
   var scanLabel = formatDateLabel(selectedDate);
   log('info','Scanning '+selected.length+' leagues for '+scanLabel+'...');
@@ -1005,9 +1409,11 @@ async function scanAllLeagues() {
           league,preContent:null,highlightContent:null,blogPostId:null,blogPostUrl:null,
           status:'idle',thumbUrl:null,isManual:true,customLabels:[],customTitle:null,
           scheduledPosted:false,gameDate:selectedDate,
-          iframeSrc:''   // ← stores the stream URL persistently
+          iframeSrc:''
         });
-        totalFound++; continue;
+        totalFound++;
+        applyDefaultChannels(detectedGames.length - 1);
+        continue;
       }
       var events=await fetchESPN(league.id);
       events.forEach(function(ev){
@@ -1018,8 +1424,9 @@ async function scanAllLeagues() {
           blogPostId:null,blogPostUrl:null,status:'idle',thumbUrl:null,
           customLabels:[],customTitle:null,scheduledPosted:false,
           stats:extractStats(ev),gameDate:selectedDate,
-          iframeSrc:''   // ← stores the stream URL persistently
+          iframeSrc:''
         });
+        applyDefaultChannels(detectedGames.length - 1);
         totalFound++;
       });
       log('ok','✓ '+league.name+': '+events.length+' game(s)');
@@ -1127,9 +1534,121 @@ function buildSEOTitle(homeName,awayName,leagueName,type,score) {
   }
 }
 
-// ─── FIX: sync iframeSrc into game object on every keystroke/paste ──────────
+// ─── FIX: sync iframeSrc into game object ──────────────────────────────────
 function updateIframeSrc(idx, value) {
   if (detectedGames[idx] !== undefined) detectedGames[idx].iframeSrc = value;
+}
+
+// ─── PER-CARD CHANNEL TOGGLE ─────────────────────────────────────────────
+function toggleCardChannel(idx, channelId) {
+  if (!cardChannels[idx]) cardChannels[idx] = new Set();
+  if (cardChannels[idx].has(channelId)) {
+    cardChannels[idx].delete(channelId);
+  } else {
+    cardChannels[idx].add(channelId);
+  }
+  // Rebuild iframe URL
+  var url = buildIframeUrl(Array.from(cardChannels[idx]));
+  detectedGames[idx].iframeSrc = url;
+
+  // Update the preview box in the picker panel
+  var previewEl = document.getElementById('ch-picker-preview-' + idx);
+  if (previewEl) {
+    if (url) {
+      previewEl.className = 'channel-preview-url';
+      previewEl.textContent = url;
+    } else {
+      previewEl.className = 'channel-preview-url empty';
+      previewEl.textContent = 'No channels selected — stream URL will be empty';
+    }
+  }
+
+  // Also sync the raw iframe textarea
+  var iframeDomEl = document.getElementById('iframe-src-' + idx);
+  if (iframeDomEl) iframeDomEl.value = url;
+
+  // Refresh button states
+  var buttons = document.querySelectorAll('#ch-picker-grid-' + idx + ' .channel-pick-btn');
+  buttons.forEach(function(btn) {
+    var cid = btn.getAttribute('data-ch-id');
+    btn.classList.toggle('selected', cardChannels[idx].has(cid));
+    btn.querySelector('.cpcheck').textContent = cardChannels[idx].has(cid) ? '✓' : '';
+  });
+}
+
+function buildChannelPickerHtml(idx) {
+  var gd = detectedGames[idx];
+  if (!channelLibrary.length) {
+    return '<div class="channel-no-channels">No channels in library yet.<br/>Add channels in the sidebar first.</div>';
+  }
+
+  var set = cardChannels[idx] || new Set();
+  var autoDetected = [];
+  // Figure out which were auto-detected
+  var defaultIds = leagueDefaults[gd.league.id] || [];
+  channelLibrary.forEach(function(ch) {
+    if ((ch.leagues && ch.leagues.includes(gd.league.id)) || defaultIds.includes(ch.id)) {
+      autoDetected.push(ch.id);
+    }
+  });
+
+  var buttonsHtml = channelLibrary.map(function(ch) {
+    var isSelected = set.has(ch.id);
+    var isAuto = autoDetected.includes(ch.id);
+    return '<div class="channel-pick-btn' + (isSelected ? ' selected' : '') + '"'
+      + ' data-ch-id="' + ch.id + '"'
+      + ' onclick="toggleCardChannel(' + idx + ',\'' + ch.id + '\')">'
+      + '<div class="cpcheck">' + (isSelected ? '✓' : '') + '</div>'
+      + '<span class="channel-pick-btn-emoji">' + escHtml(ch.emoji || '📺') + '</span>'
+      + '<span class="channel-pick-btn-name">' + escHtml(ch.name) + '</span>'
+      + (isAuto ? '<span title="Auto-detected for this league" style="font-size:8px;color:var(--green);">⚡</span>' : '')
+      + '</div>';
+  }).join('');
+
+  var currentUrl = buildIframeUrl(Array.from(set));
+
+  return '<div class="channel-picker-panel">'
+    + '<div class="channel-picker-head">'
+      + '<div class="channel-picker-title">📺 Select Channels'
+        + (autoDetected.length ? ' <span class="channel-auto-badge">⚡ ' + autoDetected.length + ' Auto-detected</span>' : '')
+      + '</div>'
+      + '<button class="btn btn-secondary" style="padding:5px 10px;font-size:9px;" onclick="clearCardChannels(' + idx + ')">✕ Clear</button>'
+    + '</div>'
+    + '<div class="channel-picker-grid" id="ch-picker-grid-' + idx + '">' + buttonsHtml + '</div>'
+    + '<div class="channel-preview-box">'
+      + '<div class="channel-preview-label">📡 Generated Stream URL</div>'
+      + '<div class="channel-preview-url' + (currentUrl ? '' : ' empty') + '" id="ch-picker-preview-' + idx + '">'
+        + (currentUrl ? escHtml(currentUrl) : 'No channels selected — stream URL will be empty')
+      + '</div>'
+    + '</div>'
+    + '<div style="display:flex;gap:6px;margin-top:4px;">'
+      + '<button class="btn btn-green btn-full" onclick="applyChannelsToIframe(' + idx + ')"><span class="btn-text">✅ Apply to Post</span></button>'
+    + '</div>'
+    + '</div>';
+}
+
+function clearCardChannels(idx) {
+  cardChannels[idx] = new Set();
+  detectedGames[idx].iframeSrc = '';
+  var iframeDomEl = document.getElementById('iframe-src-' + idx);
+  if (iframeDomEl) iframeDomEl.value = '';
+  // Re-render the picker panel
+  var panel = document.getElementById('text-channels-' + idx);
+  if (panel) panel.innerHTML = buildChannelPickerHtml(idx);
+  toast('Channels cleared', 'ok');
+}
+
+function applyChannelsToIframe(idx) {
+  var url = buildIframeUrl(Array.from(cardChannels[idx] || new Set()));
+  detectedGames[idx].iframeSrc = url;
+  var iframeDomEl = document.getElementById('iframe-src-' + idx);
+  if (iframeDomEl) iframeDomEl.value = url;
+  if (url) {
+    toast('✅ Stream URL applied!', 'ok');
+    log('ok', '📺 Stream URL applied for ' + getMatchTitle(detectedGames[idx]));
+  } else {
+    toast('No channels selected', 'err');
+  }
 }
 
 // ─── RENDER GAMES ──────────────────────────────────────────────────────────
@@ -1170,6 +1689,13 @@ function renderGames() {
                    :                         '<span class="post-status idle">○ Not Posted</span>';
 
     var kickoffBadge = kickoffTime ? '<span class="kickoff-badge">⏰ '+kickoffTime+'</span>' : '';
+
+    // Channel count badge
+    var chCount = (cardChannels[idx] && cardChannels[idx].size) || 0;
+    var chBadge = chCount > 0
+      ? '<span style="font-size:9px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:3px;background:rgba(0,212,255,.12);color:var(--accent2);border:1px solid rgba(0,212,255,.3);">📺 '+chCount+' ch</span>'
+      : '';
+
     var schedCountdown='';
     if (globalSchedulerOn) {
       var kickoff=gd.espnEvent.date?new Date(gd.espnEvent.date).getTime():null;
@@ -1196,6 +1722,10 @@ function renderGames() {
     var previewHtml=gd.preContent?'<div class="content-text">'+escHtml(gd.preContent)+'</div>':'<div class="content-empty">⏳ Generating content...</div>';
     var hlText=gd.highlightContent?'<div class="content-text">'+escHtml(gd.highlightContent)+'</div>':'<div class="content-empty">'+(state==='post'?'⏳ Generating highlights...':'⏱ Available after match ends')+'</div>';
     var statsHtml=buildStatsHtml(gd);
+
+    // Channel picker HTML
+    var chPickerHtml = buildChannelPickerHtml(idx);
+
     var thumbPanelHtml=gd.thumbUrl
       ?'<div class="thumb-preview-wrap"><img class="thumb-preview-img" src="'+gd.thumbUrl+'" alt="Match thumbnail" onclick="openLightbox(this.src)"/></div>'
         +'<div class="thumb-actions">'
@@ -1233,8 +1763,6 @@ function renderGames() {
       ?'<button class="btn btn-danger" onclick="deletePost('+idx+')"><span class="btn-text">🗑 Delete</span><div class="spin"></div></button>'
       :'';
 
-    // ── FIX: textarea repopulates from gd.iframeSrc on every render,
-    //         and oninput + onchange + onpaste all sync back to gd.iframeSrc ──
     var iframeVal = escHtml(gd.iframeSrc || '');
     var iframeInput = '<textarea class="iframe-input" id="iframe-src-'+idx+'" rows="2"'
       +' placeholder="Paste iframe src= URL here e.g. https://soulmap1.blogspot.com/p/media-player.html?mora=..."'
@@ -1254,6 +1782,7 @@ function renderGames() {
           +'<span class="league-tag">'+gd.league.emoji+' '+gd.league.name+'</span>'
           +statusBadge
           +kickoffBadge
+          +chBadge
           +schedCountdown
         +'</div>'
       +'</div>'
@@ -1263,6 +1792,7 @@ function renderGames() {
           +'<button class="ctab" id="tab-hl-'+idx+'" onclick="switchTab('+idx+',\'highlights\',this)">🏆 Highlights</button>'
           +'<button class="ctab" id="tab-st-'+idx+'" onclick="switchTab('+idx+',\'stats\',this)">📊 Stats</button>'
           +'<button class="ctab" id="tab-th-'+idx+'" onclick="switchTab('+idx+',\'thumbnail\',this)">🖼 Thumb</button>'
+          +'<button class="ctab" id="tab-ch-'+idx+'" onclick="switchTab('+idx+',\'channels\',this)" style="'+(chCount>0?'color:var(--accent2);':'')+'">📺 Channels'+(chCount>0?' ('+chCount+')':'')+'</button>'
           +'<button class="ctab" id="tab-lb-'+idx+'" onclick="switchTab('+idx+',\'labels\',this)">🏷 SEO</button>'
           +'<button class="ctab" id="tab-lk-'+idx+'" onclick="switchTab('+idx+',\'link\',this)" style="'+(gd.status==='idle'?'color:var(--purple)':'')+'">🔗 Link</button>'
         +'</div>'
@@ -1271,6 +1801,7 @@ function renderGames() {
           +'<div id="text-highlights-'+idx+'" style="display:none">'+hlText+'</div>'
           +'<div id="text-stats-'+idx+'" style="display:none">'+statsHtml+'</div>'
           +'<div id="text-thumbnail-'+idx+'" style="display:none"><div class="thumb-panel">'+thumbPanelHtml+'</div></div>'
+          +'<div id="text-channels-'+idx+'" style="display:none">'+chPickerHtml+'</div>'
           +'<div id="text-labels-'+idx+'" style="display:none">'
             +'<div style="display:flex;flex-direction:column;gap:10px;padding:4px 0;">'
               +'<div class="input-group"><label class="input-label">SEO Title <span class="badge-new">OPTIMIZER</span></label>'
@@ -1283,7 +1814,7 @@ function renderGames() {
           +'</div>'
           +'<div id="text-link-'+idx+'" style="display:none">'+linkPanelHtml+'</div>'
         +'</div>'
-        +'<div class="iframe-row"><div class="iframe-label">📺 Stream URL (iframe src) <span class="badge-tip">OPTIONAL</span></div>'
+        +'<div class="iframe-row"><div class="iframe-label">📺 Stream URL (iframe src) <span class="badge-tip">OPTIONAL</span> — <span style="color:var(--green);font-size:9px;">use 📺 Channels tab to pick</span></div>'
           + iframeInput
         +'</div>'
         +postLinkHtml
@@ -1300,17 +1831,17 @@ function renderGames() {
 }
 
 function switchTab(idx,tab,el) {
-  ['pre','hl','st','th','lb','lk'].forEach(function(t){
+  ['pre','hl','st','th','ch','lb','lk'].forEach(function(t){
     var tabEl=document.getElementById('tab-'+t+'-'+idx);
     if (tabEl) tabEl.classList.remove('active');
   });
   if (el) el.classList.add('active');
-  var allPanels=['text-preview-','text-highlights-','text-stats-','text-thumbnail-','text-labels-','text-link-'];
+  var allPanels=['text-preview-','text-highlights-','text-stats-','text-thumbnail-','text-channels-','text-labels-','text-link-'];
   allPanels.forEach(function(p){ var el2=document.getElementById(p+idx); if(el2) el2.style.display='none'; });
-  var panelMap={preview:'text-preview-',highlights:'text-highlights-',stats:'text-stats-',thumbnail:'text-thumbnail-',labels:'text-labels-',link:'text-link-'};
+  var panelMap={preview:'text-preview-',highlights:'text-highlights-',stats:'text-stats-',thumbnail:'text-thumbnail-',channels:'text-channels-',labels:'text-labels-',link:'text-link-'};
   var panel=document.getElementById((panelMap[tab]||'text-preview-')+idx);
   if (panel) panel.style.display='block';
-  var tabId={preview:'tab-pre-',highlights:'tab-hl-',stats:'tab-st-',thumbnail:'tab-th-',labels:'tab-lb-',link:'tab-lk-'};
+  var tabId={preview:'tab-pre-',highlights:'tab-hl-',stats:'tab-st-',thumbnail:'tab-th-',channels:'tab-ch-',labels:'tab-lb-',link:'tab-lk-'};
   var activeTab=document.getElementById((tabId[tab]||'tab-pre-')+idx);
   if (activeTab) activeTab.classList.add('active');
 }
@@ -1857,8 +2388,7 @@ async function postToBlogger(idx, type) {
   if (type === 'highlights' && !gd.blogPostId) { toast('Post Preview first (or link an existing post)', 'err'); return; }
   if (type === 'preview' && !gd.preContent) { toast('No preview content yet', 'err'); return; }
 
-  // ── FIX: sync iframe from DOM into gd object right before posting ──────────
-  // This catches right-click pastes and any input method that bypasses oninput.
+  // Sync iframe from DOM
   var iframeDomEl = document.getElementById('iframe-src-' + idx);
   if (iframeDomEl && iframeDomEl.value.trim()) {
     gd.iframeSrc = iframeDomEl.value.trim();
@@ -1899,14 +2429,9 @@ async function postToBloggerCore(idx, type, pubModeOverride, kickoffTimestamp) {
   var title = (titleEl && titleEl.value.trim()) || gd.customTitle || buildSEOTitle(homeName, awayName, gd.league.name, type, score);
   if (type === 'highlights') title = homeName + ' ' + score.home + '-' + score.away + ' ' + awayName + ' | ' + gd.league.name + ' Highlights | Sports 803';
 
-  // ── FIX: always read live DOM value first, fall back to stored gd.iframeSrc.
-  // This is the critical fix — when postToBloggerCore is called from the
-  // auto-scheduler (checkScheduledPosts), the DOM element still exists and has
-  // the user's typed/pasted value. Reading it here ensures it is never missed
-  // regardless of how the value was entered (keyboard, right-click paste, etc).
   var iframeDomEl = document.getElementById('iframe-src-' + idx);
   var iframeSrc = (iframeDomEl && iframeDomEl.value.trim()) || gd.iframeSrc || '';
-  if (iframeSrc) gd.iframeSrc = iframeSrc; // keep in sync for future calls
+  if (iframeSrc) gd.iframeSrc = iframeSrc;
 
   var iframeHtml = iframeSrc
     ? '<div style="margin:18px 0;"><iframe loading="lazy" class="video-iframe"'
@@ -1945,8 +2470,6 @@ async function postToBloggerCore(idx, type, pubModeOverride, kickoffTimestamp) {
       url = 'https://www.googleapis.com/blogger/v3/blogs/' + blogId + '/posts/' + gd.blogPostId + '?publish=' + (pubMode === 'LIVE' ? 'true' : 'false');
       body = { id: gd.blogPostId, title, content: htmlContent, labels: allLabels };
     } else if (pubMode === 'SCHEDULED' && kickoffTimestamp) {
-      // Blogger native scheduling: set published = future ISO date + isDraft=false
-      // Blogger auto-publishes at that time. Shows as "Scheduled" in dashboard.
       var scheduledDate = new Date(kickoffTimestamp).toISOString();
       method = 'POST';
       url = 'https://www.googleapis.com/blogger/v3/blogs/' + blogId + '/posts/?isDraft=false';
