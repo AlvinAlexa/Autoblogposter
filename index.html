@@ -1925,10 +1925,37 @@ function buildChannelPickerHtml(idx) {
         + (autoDetected.length ? '<span class="channel-auto-badge">⚡ ' + autoDetected.length + ' auto</span>' : '')
         + aiStatus
       + '</div>'
-      + '<button class="btn btn-secondary" style="padding:5px 10px;font-size:9px;" onclick="clearCardChannels(' + idx + ')">✕ Clear</button>'
+      + '<button class="btn btn-secondary" style="padding:5px 10px;font-size:9px;" onclick="clearCardChannels(' + idx + ')">✕ Clear All</button>'
     + '</div>'
     + '<div class="channel-picker-grid" id="ch-picker-grid-' + idx + '">' + buttonsHtml + '</div>'
     + hintsHtml
+    // ── Manual channel selector — pick any saved channel by name ──
+    + '<div style="margin-top:8px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:7px;">'
+      + '<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);">➕ Add Channel Manually</div>'
+      + '<div style="display:flex;gap:6px;align-items:center;">'
+        + '<select id="manual-ch-select-' + idx + '" style="flex:1;font-size:10px;padding:7px 9px;border-radius:var(--r);">'
+          + '<option value="">— Pick a saved channel —</option>'
+          + channelLibrary.map(function(ch){
+              var alreadyOn = set.has(ch.id);
+              return '<option value="' + ch.id + '"' + (alreadyOn ? ' disabled' : '') + '>'
+                + escHtml(ch.emoji || '📺') + ' ' + escHtml(ch.name)
+                + (alreadyOn ? ' ✓' : '')
+                + '</option>';
+            }).join('')
+        + '</select>'
+        + '<button class="btn btn-cyan" style="padding:8px 14px;font-size:10px;flex-shrink:0;" onclick="addSavedChannelFromDropdown(' + idx + ')">'
+          + '<span class="btn-text">➕ Add</span>'
+        + '</button>'
+      + '</div>'
+      + '<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);margin-top:4px;">Or paste a one-off URL</div>'
+      + '<div style="display:flex;gap:6px;">'
+        + '<input type="text" id="manual-ch-url-' + idx + '" placeholder="https://tv.sportsnews.id/p/channel.html" style="flex:1;font-size:10px;padding:7px 9px;"/>'
+        + '<button class="btn btn-cyan" style="padding:8px 14px;font-size:10px;flex-shrink:0;" onclick="addManualChannelUrl(' + idx + ')">'
+          + '<span class="btn-text">➕ Add</span>'
+        + '</button>'
+      + '</div>'
+      + '<div style="font-size:9px;color:var(--muted);">Paste a URL to add it directly to this event only — without saving to library.</div>'
+    + '</div>'
     + '<div class="channel-preview-box" style="margin-top:8px;">'
       + '<div class="channel-preview-label">📡 Generated Stream URL</div>'
       + '<div class="channel-preview-url' + (currentUrl ? '' : ' empty') + '" id="ch-picker-preview-' + idx + '">'
@@ -1956,6 +1983,73 @@ function prefillChannelForm(broadcasterName) {
     setTimeout(function(){ form.style.outline = ''; }, 1800);
   }
   toast('📋 Pre-filled: ' + titled + ' — add the URL and save!', 'ok');
+}
+
+// ─── Add a saved channel from the dropdown selector ────────────────────────
+function addSavedChannelFromDropdown(idx) {
+  var sel = document.getElementById('manual-ch-select-' + idx);
+  if (!sel || !sel.value) { toast('Pick a channel from the list first', 'err'); return; }
+  var chId = sel.value;
+  var ch   = channelLibrary.find(function(c){ return c.id === chId; });
+  if (!ch) { toast('Channel not found', 'err'); return; }
+
+  if (!cardChannels[idx]) cardChannels[idx] = new Set();
+  if (cardChannels[idx].has(chId)) { toast(ch.name + ' is already added', 'err'); return; }
+
+  cardChannels[idx].add(chId);
+  var url = buildIframeUrl(Array.from(cardChannels[idx]));
+  detectedGames[idx].iframeSrc = url;
+
+  // Sync raw textarea
+  var ta = document.getElementById('iframe-src-' + idx);
+  if (ta) ta.value = url;
+
+  // Reset dropdown
+  sel.value = '';
+
+  // Refresh picker
+  var panel = document.getElementById('text-channels-' + idx);
+  if (panel) panel.innerHTML = buildChannelPickerHtml(idx);
+
+  toast('✓ ' + ch.emoji + ' ' + ch.name + ' added!', 'ok');
+  log('ok', '➕ Manually added: ' + ch.name + ' to ' + getMatchTitle(detectedGames[idx]));
+}
+
+// ─── Add a one-off URL directly to an event (no library save needed) ────────
+function addManualChannelUrl(idx) {
+  var input = document.getElementById('manual-ch-url-' + idx);
+  if (!input || !input.value.trim()) { toast('Paste a URL first', 'err'); return; }
+  var rawUrl = input.value.trim();
+
+  // Strip player prefix if pasted in full
+  if (rawUrl.startsWith(PLAYER_BASE)) {
+    var m = rawUrl.split('mora=')[1];
+    if (m) rawUrl = decodeURIComponent(m.split('&mora=')[0]);
+  }
+
+  // Build a temporary one-off entry — not saved to library
+  var tempId = 'temp-' + Date.now();
+  var tempCh = { id: tempId, name: 'Custom URL', emoji: '🔗', url: rawUrl };
+
+  // Add to channelLibrary temporarily (in-memory only, not persisted)
+  channelLibrary.push(tempCh);
+
+  if (!cardChannels[idx]) cardChannels[idx] = new Set();
+  cardChannels[idx].add(tempId);
+
+  var url = buildIframeUrl(Array.from(cardChannels[idx]));
+  detectedGames[idx].iframeSrc = url;
+
+  var ta = document.getElementById('iframe-src-' + idx);
+  if (ta) ta.value = url;
+
+  input.value = '';
+
+  var panel = document.getElementById('text-channels-' + idx);
+  if (panel) panel.innerHTML = buildChannelPickerHtml(idx);
+
+  toast('✓ URL added to this event', 'ok');
+  log('ok', '➕ One-off URL added to ' + getMatchTitle(detectedGames[idx]));
 }
 
 function clearCardChannels(idx) {
@@ -2343,26 +2437,148 @@ cardBtns.forEach(function(b){ b.disabled=false; });
 // ─── LANGUAGE PHRASES ─────────────────────────────────────────────────────
 var LANG_PHRASES = {
 English:{
-preview_opener:[“This is set to be a thrilling encounter as”,“Football fans are in for a treat as”,“All eyes are on this fixture as”],
-form:[“Both teams arrive in good form, having picked up positive results recently.”,“Recent form suggests this could be evenly contested.”],
-tactical:[“Expect a fascinating tactical battle between two well-organised sides.”,“The midfield battle will shape the flow of this game from the first whistle.”],
-player:[“All eyes will be on the attacking players in devastating form this season.”,“Set pieces could play a major role, with both teams possessing aerial threats.”],
-cta:[“Watch the full live stream free on Sports 803 — no subscription required.”,“Stream every kick free on Sports 803, your go-to for live sports online.”],
-closing:[“This is a fixture that rarely disappoints. Make sure you are tuned in from kickoff.”,“All the ingredients are in place for a memorable match.”],
-hl_opener:[“A dramatic contest delivered plenty of talking points —”,“An enthralling battle that lived up to its billing, ending with”],
-hl_analysis:[“The first half set the tone, with both sides creating opportunities.”,“An absorbing opening gave way to a more intense second half.”],
-hl_cta:[“Relive all the goals and highlights free on Sports 803.”,“Watch the extended highlights free on Sports 803 anytime.”],
+preview_opener:[
+“This is set to be a thrilling encounter as”,
+“Football fans are in for a real treat as”,
+“All eyes are firmly on this fixture as”,
+“The stage is set for an exciting clash as”,
+“Anticipation is building ahead of this standout match as”
+],
+form:[
+“Both teams arrive in strong form, having picked up positive results recently and looking sharp heading into this contest.”,
+“Recent form suggests this could be a tightly contested affair, with neither side willing to give an inch.”,
+“Form coming into this fixture has been impressive on both sides, making it incredibly difficult to call a winner.”,
+“Both managers will be confident heading into this one after solid performances in their most recent outings.”
+],
+tactical:[
+“Expect a fascinating tactical battle between two well-organised sides who will look to exploit space on the counter. The midfield battle will be absolutely crucial, with both teams possessing the quality to control possession and dictate tempo.”,
+“The midfield battle will shape the flow of this game from the first whistle. Both sides have shown a willingness to press high and win the ball back quickly, which should make for an intense and physical encounter.”,
+“Tactically, this is a mouth-watering contest. Both coaches have shown flexibility in recent weeks and will no doubt have specific game plans designed to nullify the opponent’s key threats while maximising their own strengths.”,
+“Set up and shape will be fascinating to analyse in this one. The pressing intensity, defensive organisation, and the ability to transition quickly from defence to attack could well be the deciding factors.”
+],
+player:[
+“All eyes will be on the attacking players who have been in devastating form this season, consistently delivering match-winning performances when their teams need it most. The wide areas should be particularly lively, with pace and creativity likely to cause problems throughout the ninety minutes.”,
+“Set pieces could play a major role in deciding this contest, with both teams possessing genuine aerial threats from dead ball situations. The quality from corners and free kicks on both sides makes this a real danger zone for the defences.”,
+“The creative midfielders will be the ones to watch in this fixture. Their ability to pick a pass, beat a man, and get into goal-scoring positions has been a constant feature of both sides’ recent performances, and they will look to impose themselves from the first whistle.”,
+“Individual quality could prove the difference at the highest level. Both squads contain players capable of producing moments of absolute brilliance, and with the stakes this high, expect somebody to step up and deliver something truly special.”
+],
+build_up:[
+“In the build-up to this match, both camps have spoken positively about their preparations, with injury concerns appearing minimal heading into the game. The atmosphere is expected to be electric, with a full house anticipated and supporters ready to play their part.”,
+“Preparation has gone smoothly for both sides leading into this fixture. Training reports suggest both squads are in good health, with key players available and ready to perform. The coaching staff have left no stone unturned in their planning for what promises to be a momentous occasion.”,
+“The pre-match build-up has been dominated by talk of individual battles across the pitch, and it is easy to see why. Across every department, these two teams are evenly matched, and whoever edges the key individual duels is likely to come out on top.”
+],
+cta:[
+“Watch the full live stream completely free on Sports 803 — no subscription, no registration required. Just click and enjoy the action from the very first whistle.”,
+“Stream every single kick free on Sports 803, your number one destination for live sports coverage online. Catch every goal, every save, and every moment of drama.”,
+“Do not miss a second of the action — Sports 803 has you covered with a free live stream that kicks off right on time. No ads, no paywall, just pure live football.”,
+“Tune in to Sports 803 for complete live coverage at no cost whatsoever. We bring you the best live sports streams online so you never have to miss a moment.”
+],
+closing:[
+“This is a fixture that rarely disappoints, and with both teams motivated and fully prepared, all the ingredients are in place for a memorable contest. Make sure you are tuned in from the very first minute.”,
+“All the ingredients are in place for a truly memorable match. With quality, intensity, and motivation in abundance on both sides, this has the makings of an all-time classic. Do not miss it.”,
+“With so much riding on this result, expect both teams to leave absolutely everything on the pitch. This is the kind of match that gets talked about for years — be there to witness it live on Sports 803.”,
+“Whatever happens, this promises to be a match to remember. The quality on display, the tactical battle, and the sheer intensity of the occasion will make for ninety minutes of unmissable football.”
+],
+hl_opener:[
+“A dramatic and pulsating contest delivered plenty of talking points —”,
+“An enthralling battle that fully lived up to its billing, ending with”,
+“What a match — a breathless encounter from start to finish, concluding with”,
+“The drama never let up for a single second in this one, which ended with”,
+“This was everything the previews promised and more — an absorbing contest concluding with”
+],
+hl_first_half:[
+“The opening forty-five minutes were tightly contested, with both teams cancelling each other out and refusing to give the opposition a clear sight of goal. Defensive solidity was on show from the first whistle, but moments of quality still shone through.”,
+“The first half saw both sides trade blows in an intense opening period. Neither team was able to establish dominance, though there were clear signs of the quality that would eventually tell in the second period.”,
+“It was a cagey start to proceedings, with both teams clearly determined not to concede the first goal. The managers had clearly done their homework and instructed their players to remain compact and disciplined in the early stages.”
+],
+hl_second_half:[
+“The second half burst into life almost immediately, with both teams throwing caution to the wind and committing bodies forward in search of the decisive goal. The intensity lifted to another level entirely.”,
+“After the break, the game opened up dramatically as both sides chased the match. The increased tempo and commitment to attacking play made for a thrilling conclusion that kept supporters on the edge of their seats.”,
+“The momentum shifted dramatically in the second period. What had been a tight and tactical contest suddenly became an end-to-end affair as both teams began to take more risks and play with greater urgency.”
+],
+hl_analysis:[
+“The first half set the tone beautifully, with both sides creating opportunities and testing the resolve of the opposition defence. As the game wore on, the pattern became clearer and the tactical plans of both managers began to come to life.”,
+“An absorbing opening forty-five minutes gave way to a far more intense and open second half, as both teams recognised that the time for caution was over and began to commit to attacking the game with real purpose.”,
+“Over the course of ninety minutes, the quality of both teams shone through in equal measure. It was a match that ebbed and flowed, with momentum shifting multiple times and keeping every neutral supporter thoroughly entertained throughout.”
+],
+hl_cta:[
+“Relive all the goals, key moments, and highlights completely free on Sports 803. Watch back every piece of the action at your convenience.”,
+“Watch the extended highlights and all the goals free on Sports 803, available on demand anytime you want to relive the drama.”,
+“Missed the match? Catch every goal and talking point in the full highlights package, available free right now on Sports 803.”,
+“All the action from this incredible match is available to watch back for free on Sports 803. Relive every moment of the drama.”
+],
 },
 Spanish:{
-preview_opener:[“Este partido promete ser un encuentro emocionante entre”,“Los aficionados están de enhorabuena ya que”,“Toda la atención se centra en este partido mientras”],
-form:[“Ambos equipos llegan en buen estado de forma con resultados positivos recientes.”,“La forma reciente sugiere que este partido puede ser muy igualado.”],
-tactical:[“Esperamos un fascinante duelo táctico entre dos equipos bien organizados.”,“La batalla en el centro del campo definirá el ritmo del juego.”],
-player:[“Toda la atención estará en los delanteros en una forma devastadora.”,“Las jugadas a balón parado podrían jugar un papel importante.”],
-cta:[“Ve la transmisión en vivo gratis en Sports 803 — sin suscripción.”,“Sigue cada minuto gratis en Sports 803, tu destino para deportes en vivo.”],
-closing:[“Este es un partido que raramente decepciona. Asegúrate de estar sintonizado.”,“Todos los ingredientes están listos para un partido memorable.”],
-hl_opener:[“Un partido dramático con muchos momentos destacables —”,“Un encuentro emocionante que terminó con”],
-hl_analysis:[“El primer tiempo marcó el tono con ambos equipos creando oportunidades.”,“Una apertura absorbente dio paso a una segunda parte más intensa.”],
-hl_cta:[“Revive todos los goles y destacados gratis en Sports 803.”,“Mira el resumen extendido gratis en Sports 803.”],
+preview_opener:[
+“Este partido promete ser un encuentro verdaderamente emocionante entre”,
+“Los aficionados están de enhorabuena ya que”,
+“Toda la atención se centra en este extraordinario partido mientras”,
+“El ambiente es inmejorable de cara a este esperado enfrentamiento entre”,
+“La expectación es máxima antes de este partido de alto voltaje entre”
+],
+form:[
+“Ambos equipos llegan en un excelente estado de forma, con resultados positivos recientes que les dan confianza de cara a este encuentro.”,
+“La forma reciente sugiere que este partido puede ser muy igualado, con ambos equipos en un nivel óptimo de rendimiento.”,
+“Los dos conjuntos llegan en un gran momento, lo que hace que sea muy difícil decantarse por un favorito claro.”,
+“Ambos entrenadores llegarán al partido con la moral muy alta después de actuaciones sólidas en sus compromisos más recientes.”
+],
+tactical:[
+“Esperamos un fascinante duelo táctico entre dos equipos bien organizados que buscarán explotar los espacios en la contra. La batalla en el centro del campo será absolutamente crucial.”,
+“La batalla en el centro del campo definirá el ritmo del juego desde el primer silbato. Ambos equipos han demostrado una gran capacidad para presionar alto y recuperar el balón con rapidez.”,
+“Tácticamente, este es un enfrentamiento apasionante. Ambos entrenadores han demostrado flexibilidad en las últimas semanas y sin duda tendrán planes de juego específicos.”,
+“El esquema táctico será fascinante de analizar. La intensidad del pressing, la organización defensiva y la capacidad de transición rápida podrían ser los factores decisivos.”
+],
+player:[
+“Toda la atención estará en los delanteros que están en una forma devastadora esta temporada, entregando actuaciones decisivas cuando sus equipos más lo necesitan.”,
+“Las jugadas a balón parado podrían jugar un papel importantísimo en la decisión de este partido, con ambos equipos poseyendo auténticas amenazas aéreas.”,
+“Los mediocampistas creativos serán los jugadores a seguir en este encuentro. Su capacidad para dar el pase decisivo y crear ocasiones de gol ha sido una constante.”,
+“La calidad individual podría marcar la diferencia. Ambos equipos cuentan con jugadores capaces de producir momentos de brillantez absoluta.”
+],
+build_up:[
+“En la previa de este partido, ambos bandos han mostrado confianza en sus preparativos, con problemas de lesiones aparentemente mínimos de cara al encuentro.”,
+“La preparación ha ido bien para ambos equipos. Los informes de entrenamiento indican que ambas plantillas están en buen estado de salud con los jugadores clave disponibles.”,
+“La previa del partido ha estado dominada por conversaciones sobre los duelos individuales a lo largo del campo, y es fácil entender por qué.”
+],
+cta:[
+“Ve la transmisión en vivo completamente gratis en Sports 803, sin suscripción ni registro requerido. Solo haz clic y disfruta de la acción.”,
+“Sigue cada minuto gratis en Sports 803, tu destino número uno para el fútbol en vivo online.”,
+“No te pierdas ni un segundo de la acción — Sports 803 te ofrece una transmisión gratuita que comienza puntualmente.”,
+“Sintoniza Sports 803 para una cobertura en vivo completa sin ningún coste.”
+],
+closing:[
+“Este es un partido que raramente decepciona, y con ambos equipos motivados y bien preparados, todos los ingredientes están en su lugar para un duelo memorable.”,
+“Todos los ingredientes están en su lugar para un partido verdaderamente memorable. Con calidad, intensidad y motivación en ambos lados, esto tiene los ingredientes de un clásico.”,
+“Con tanto en juego, espera que ambos equipos lo den todo sobre el campo. Este es el tipo de partido del que se habla durante años.”,
+“Pase lo que pase, esto promete ser un partido para recordar.”
+],
+hl_opener:[
+“Un partido dramático y palpitante que dejó muchos momentos para el recuerdo —”,
+“Un encuentro apasionante que estuvo a la altura de las expectativas, terminando con”,
+“¡Qué partido! Una contienda sin aliento de principio a fin que concluyó con”,
+“El drama no cesó ni un solo segundo en este encuentro, que terminó con”,
+“Esto fue todo lo que prometían las previas y más — un partido absorbente que concluyó con”
+],
+hl_first_half:[
+“Los primeros cuarenta y cinco minutos estuvieron muy disputados, con ambos equipos anulándose mutuamente y negándose a dar al rival una ocasión clara de gol.”,
+“La primera parte vio a ambos lados intercambiar golpes en un período inicial de gran intensidad.”,
+“Fue un comienzo cauteloso, con ambos equipos claramente decididos a no encajar el primer gol.”
+],
+hl_second_half:[
+“La segunda mitad cobró vida casi de inmediato, con ambos equipos lanzándose al ataque en busca del gol decisivo.”,
+“Después del descanso, el partido se abrió dramáticamente mientras ambos lados perseguían el partido.”,
+“El ímpetu cambió drásticamente en el segundo período, convirtiéndose en un partido de ida y vuelta.”
+],
+hl_analysis:[
+“La primera parte marcó el tono a la perfección, con ambos lados creando ocasiones y poniendo a prueba la solidez defensiva del rival.”,
+“Una absorbente primera mitad dio paso a una segunda mucho más intensa y abierta.”,
+“A lo largo de los noventa minutos, la calidad de ambos equipos brilló en igual medida.”
+],
+hl_cta:[
+“Revive todos los goles y los mejores momentos completamente gratis en Sports 803.”,
+“Mira el resumen extendido y todos los goles gratis en Sports 803, disponible en cualquier momento.”,
+“¿Te perdiste el partido? Disfruta de todos los goles en el resumen completo, disponible gratis ahora en Sports 803.”,
+“Toda la acción de este increíble partido está disponible para ver gratis en Sports 803.”
+],
 },
 };
 function getLang(){ return document.getElementById(‘post-lang’).value||‘English’; }
@@ -2371,40 +2587,100 @@ var lang=getLang();
 var bank=(LANG_PHRASES[lang]&&LANG_PHRASES[lang][key])||LANG_PHRASES[‘English’][key]||[’’];
 return bank[Math.floor(Math.random()*bank.length)];
 }
+
 function buildPreviewText(homeName,awayName,leagueName,venue,dateStr,stats) {
-var sep=Math.random()>0.5?’ vs ‘:’ x ‘;
-var venueTxt=venue?’ at ‘+venue:’’;
-var dateTxt=dateStr?’ on ‘+dateStr:’ today’;
-var p1=pickLang(‘preview_opener’)+’ ‘+homeName+sep+awayName+venueTxt+dateTxt+’ — ‘+pickLang(‘cta’);
-var p2=pickLang(‘form’)+’ ‘+pickLang(‘tactical’);
-var p3=pickLang(‘player’)+’ ‘+pickLang(‘closing’);
-var p4=’’;
+var sep = Math.random()>0.5?’ vs ‘:’ vs ’;
+var venueTxt = venue ? ’ at ’+venue : ‘’;
+var dateTxt  = dateStr ? ’ on ‘+dateStr : ’ today’;
+
+// P1 — intro + stream CTA
+var p1 = pickLang(‘preview_opener’)+’ ‘+homeName+sep+awayName+venueTxt+dateTxt
++’. ’+pickLang(‘cta’);
+
+// P2 — form + tactical breakdown
+var p2 = pickLang(‘form’)+’\n\n’+pickLang(‘tactical’);
+
+// P3 — build-up / atmosphere
+var p3 = pickLang(‘build_up’);
+
+// P4 — player focus
+var p4 = pickLang(‘player’);
+
+// P5 — head to head / context
+var p5 = homeName+’ and ‘+awayName+’ have produced some memorable encounters over the years, ’
++’and this latest meeting in the ‘+leagueName+’ looks set to add another chapter to their ’
++’rivalry. Both sides know exactly what is at stake, and the preparation and hunger on show ’
++’in training this week suggests there will be no shortage of effort or commitment when the ’
++‘referee's whistle kicks proceedings off.’;
+
+// P6 — closing
+var p6 = pickLang(‘closing’)+’ ‘+homeName+sep+awayName+’ — live and free on Sports 803.’;
+
+// Optional stats paragraph
+var p7 = ‘’;
 if (stats&&stats.possession) {
-p4=’\n\n’+homeName+’ vs ‘+awayName+’ – ‘+leagueName+’. ’
-+‘Key stats to watch: possession, pressing intensity, and clinical finishing will be the deciding factors.’;
+p7 = ’Key areas to watch: possession and territory will be fiercely contested, ’
++’with pressing intensity, clinical finishing, and set-piece delivery all likely ’
++‘to prove decisive across the ninety minutes.’;
 }
-return p1+’\n\n’+p2+’\n\n’+p3+p4;
+
+var parts = [p1, p2, p3, p4, p5, p6];
+if (p7) parts.push(p7);
+return parts.join(’\n\n’);
 }
+
 function buildHighlightText(homeName,awayName,homeScore,awayScore,leagueName,headlines,stats) {
-var scoreLine=homeName+’ ‘+homeScore+’-’+awayScore+’ ‘+awayName;
-var hScore=parseInt(homeScore,10), aScore=parseInt(awayScore,10);
-var winner=hScore>aScore?homeName:aScore>hScore?awayName:null;
-var margin=Math.abs(hScore-aScore);
-var resultStr=winner
-?winner+’ claimed a ‘+(margin===1?‘hard-fought’:margin>=3?‘dominant’:‘well-deserved’)+’ victory.’
-:‘the two sides shared the spoils in an entertaining draw.’;
-var p1=scoreLine+’ — ‘+pickLang(‘hl_opener’)+’ a ‘+leagueName+’ fixture. ‘+(headlines?headlines+’ ‘:’’)+resultStr;
-var p2=pickLang(‘hl_analysis’);
-var p3=’’;
+var scoreLine = homeName+’ ‘+homeScore+’-’+awayScore+’ ‘+awayName;
+var hScore    = parseInt(homeScore,10), aScore=parseInt(awayScore,10);
+var winner    = hScore>aScore?homeName:aScore>hScore?awayName:null;
+var margin    = Math.abs(hScore-aScore);
+var resultStr = winner
+? winner+’ claimed a ‘+(margin===1?‘hard-fought’:margin>=3?‘commanding’:‘well-deserved’)+’ victory over ‘+(winner===homeName?awayName:homeName)+’.’
+: ‘the two sides served up an absorbing contest that ended all square, with both teams perhaps feeling they could have nicked all three points.’;
+
+// P1 — result headline
+var p1 = scoreLine+’ — ‘+pickLang(‘hl_opener’)+’ a ‘+leagueName+’ fixture. ’
++(headlines?headlines+’ ‘:’’)+resultStr;
+
+// P2 — first half narrative
+var p2 = pickLang(‘hl_first_half’);
+
+// P3 — second half narrative
+var p3 = pickLang(‘hl_second_half’);
+
+// P4 — overall analysis
+var p4 = pickLang(‘hl_analysis’);
+
+// P5 — reaction paragraph
+var p5 = winner
+? winner+’'s fans were in rapturous mood at the full-time whistle, and ’
++’rightly so. It was a performance that underlined exactly why they are a ’
++’force to be reckoned with in the ‘+leagueName+’ this season. The manager ’
++’will be delighted with the character, quality, and clinical edge shown ’
++‘throughout this performance.’
+: ’Both sets of supporters will feel hard done by in some respects — ’
++’there were periods when each team looked like they had done enough to take all three points. ’
++’Ultimately, a share of the spoils was perhaps a fair outcome given the balance of play across ’
++‘the full ninety minutes.’;
+
+// P6 — stats block if available
+var p6 = ‘’;
 if (stats&&stats.possession) {
-p3=’\n\nPossession: ‘+homeName+’ ‘+stats.possession.home+’% – ‘+awayName+’ ‘+stats.possession.away+’%.’;
-if (stats.shots) p3+=’ Shots: ‘+stats.shots.home+’–’+stats.shots.away+’.’;
-if (stats.corners) p3+=’ Corners: ‘+stats.corners.home+’–’+stats.corners.away+’.’;
+p6 = ‘Match stats: Possession — ‘+homeName+’ ‘+stats.possession.home+’%, ‘+awayName+’ ‘+stats.possession.away+’%.’;
+if (stats.shots)   p6 += ’ Shots: ‘+stats.shots.home+’–’+stats.shots.away+’.’;
+if (stats.corners) p6 += ’ Corners: ‘+stats.corners.home+’–’+stats.corners.away+’.’;
+if (stats.fouls)   p6 += ’ Fouls: ‘+stats.fouls.home+’–’+stats.fouls.away+’.’;
 } else {
-p3=(winner?winner+’ will be delighted with the three points.’:‘Both sides will take something from the game.’)
-+’ The performance levels today underline just how competitive this competition continues to be.’;
+p6 = (winner?winner+’ will be delighted with the three points.’:‘Both sides will take positives from this result.’)
++’ The performance levels on show today underline just how competitive and compelling the ’
++leagueName+’ continues to be at every level, and supporters of both clubs will have plenty to ’
++‘discuss and look forward to in the matches ahead.’;
 }
-return p1+’\n\n’+p2+’\n\n’+p3+’\n\n’+pickLang(‘hl_cta’);
+
+// P7 — CTA
+var p7 = pickLang(‘hl_cta’);
+
+return [p1, p2, p3, p4, p5, p6, p7].join(’\n\n’);
 }
 
 async function generatePreviewContent(idx) {
