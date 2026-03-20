@@ -5,7 +5,6 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Sports 803 · AI Auto-Post Dashboard v2</title>
-<script src="https://accounts.google.com/gsi/client" onload="onGISLoaded()" onerror="console.warn('GIS failed to load')"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -582,6 +581,8 @@ select option{background:#141720;}
 </div>
 
 <div class="toast" id="toast"></div>
+
+<script src="https://accounts.google.com/gsi/client" onload="onGISLoaded()" onerror="console.warn('GIS failed to load')"></script>
 
 <script>
 // ─── CONFIG ────────────────────────────────────────────────────────────────
@@ -2246,6 +2247,9 @@ html+='<div class="game-card" id="card-'+idx+'">'
     +postLinkHtml
     +'<div class="content-actions">'
       +'<button class="btn btn-secondary" onclick="regenPreview('+idx+')"><span class="btn-text">🔄 Regen</span><div class="spin"></div></button>'
+      +'<button class="btn btn-cyan" onclick="switchTab('+idx+',\'channels\',document.getElementById(\'tab-ch-'+idx+'\'))" title="Pick which channels stream this match">'
+        +'<span class="btn-text">📺 Channels'+(chCount>0?' ('+chCount+')':'')+'</span>'
+      +'</button>'
       +hlBtns
       +deleteBtn
       +'<button class="btn btn-primary" onclick="postToBlogger('+idx+',\'preview\')" '+(gd.preContent?'':'disabled')+'><span class="btn-text">📤 Post Preview</span><div class="spin"></div></button>'
@@ -2589,7 +2593,7 @@ return bank[Math.floor(Math.random()*bank.length)];
 }
 
 function buildPreviewText(homeName,awayName,leagueName,venue,dateStr,stats) {
-var sep = Math.random()>0.5?’ vs ‘:’ vs ’;
+var sep = ’ vs ’;
 var venueTxt = venue ? ’ at ’+venue : ‘’;
 var dateTxt  = dateStr ? ’ on ‘+dateStr : ’ today’;
 
@@ -2597,35 +2601,45 @@ var dateTxt  = dateStr ? ’ on ‘+dateStr : ’ today’;
 var p1 = pickLang(‘preview_opener’)+’ ‘+homeName+sep+awayName+venueTxt+dateTxt
 +’. ’+pickLang(‘cta’);
 
-// P2 — form + tactical breakdown
-var p2 = pickLang(‘form’)+’\n\n’+pickLang(‘tactical’);
+// P2 — form
+var p2 = pickLang(‘form’);
 
-// P3 — build-up / atmosphere
-var p3 = pickLang(‘build_up’);
+// P3 — tactical breakdown
+var p3 = pickLang(‘tactical’);
 
-// P4 — player focus
-var p4 = pickLang(‘player’);
+// P4 — build-up / atmosphere
+var p4 = pickLang(‘build_up’);
 
-// P5 — head to head / context
-var p5 = homeName+’ and ‘+awayName+’ have produced some memorable encounters over the years, ’
+// P5 — player focus
+var p5 = pickLang(‘player’);
+
+// P6 — head to head / context
+var p6 = homeName+’ and ‘+awayName+’ have produced some memorable encounters over the years, ’
 +’and this latest meeting in the ‘+leagueName+’ looks set to add another chapter to their ’
 +’rivalry. Both sides know exactly what is at stake, and the preparation and hunger on show ’
 +’in training this week suggests there will be no shortage of effort or commitment when the ’
 +‘referee's whistle kicks proceedings off.’;
 
-// P6 — closing
-var p6 = pickLang(‘closing’)+’ ‘+homeName+sep+awayName+’ — live and free on Sports 803.’;
+// P7 — match importance / league context
+var p7 = ’In the context of the ‘+leagueName+’ season, this fixture carries significant weight. ’
++’Every point matters at this stage of the campaign, and both managers will have drilled into ’
++’their players the importance of not just turning up, but delivering a performance worthy of ’
++’the occasion. Dropped points here could prove costly, which makes this one of the most ’
++‘eagerly anticipated matches of the midweek or weekend schedule.’;
+
+// P8 — closing
+var p8 = pickLang(‘closing’)+’ ‘+homeName+sep+awayName+’ — live and free on Sports 803.’;
 
 // Optional stats paragraph
-var p7 = ‘’;
+var p9 = ‘’;
 if (stats&&stats.possession) {
-p7 = ’Key areas to watch: possession and territory will be fiercely contested, ’
+p9 = ’Key areas to watch: possession and territory will be fiercely contested, ’
 +’with pressing intensity, clinical finishing, and set-piece delivery all likely ’
 +‘to prove decisive across the ninety minutes.’;
 }
 
-var parts = [p1, p2, p3, p4, p5, p6];
-if (p7) parts.push(p7);
+var parts = [p1, p2, p3, p4, p5, p6, p7, p8];
+if (p9) parts.push(p9);
 return parts.join(’\n\n’);
 }
 
@@ -2633,6 +2647,7 @@ function buildHighlightText(homeName,awayName,homeScore,awayScore,leagueName,hea
 var scoreLine = homeName+’ ‘+homeScore+’-’+awayScore+’ ‘+awayName;
 var hScore    = parseInt(homeScore,10), aScore=parseInt(awayScore,10);
 var winner    = hScore>aScore?homeName:aScore>hScore?awayName:null;
+var loser     = winner===(homeName)?awayName:homeName;
 var margin    = Math.abs(hScore-aScore);
 var resultStr = winner
 ? winner+’ claimed a ‘+(margin===1?‘hard-fought’:margin>=3?‘commanding’:‘well-deserved’)+’ victory over ‘+(winner===homeName?awayName:homeName)+’.’
@@ -2663,24 +2678,39 @@ var p5 = winner
 +’Ultimately, a share of the spoils was perhaps a fair outcome given the balance of play across ’
 +‘the full ninety minutes.’;
 
-// P6 — stats block if available
-var p6 = ‘’;
+// P6 — looking ahead
+var p6 = winner
+? ’This result will do wonders for ‘+winner+’'s confidence heading into the next fixture. ’
++’The momentum generated by a performance of this quality is invaluable, and the squad ’
++’will be eager to build on it in the coming weeks. For ‘+loser+’, the task now is to ’
++’dust themselves off quickly and refocus — there are still plenty of points to play for ’
++‘in the ‘+leagueName+’ this season.’
+: ’Both teams will need to regroup and refocus after this result. ’
++’The ‘+leagueName+’ remains wide open, and with so many twists and turns still to come, ’
++’neither side can afford to dwell too long on what might have been. The next fixture ’
++’will arrive quickly, and performances like this show that both teams are more than capable ’
++‘of competing at the very highest level.’;
+
+// P7 — stats block
+var p7 = ‘’;
 if (stats&&stats.possession) {
-p6 = ‘Match stats: Possession — ‘+homeName+’ ‘+stats.possession.home+’%, ‘+awayName+’ ‘+stats.possession.away+’%.’;
-if (stats.shots)   p6 += ’ Shots: ‘+stats.shots.home+’–’+stats.shots.away+’.’;
-if (stats.corners) p6 += ’ Corners: ‘+stats.corners.home+’–’+stats.corners.away+’.’;
-if (stats.fouls)   p6 += ’ Fouls: ‘+stats.fouls.home+’–’+stats.fouls.away+’.’;
+p7 = ‘Match stats: Possession — ‘+homeName+’ ‘+stats.possession.home+’%, ‘+awayName+’ ‘+stats.possession.away+’%.’;
+if (stats.shots)   p7 += ’ Shots: ‘+stats.shots.home+’–’+stats.shots.away+’.’;
+if (stats.corners) p7 += ’ Corners: ‘+stats.corners.home+’–’+stats.corners.away+’.’;
+if (stats.fouls)   p7 += ’ Fouls: ‘+stats.fouls.home+’–’+stats.fouls.away+’.’;
+p7 += ’ The numbers reflect the competitive nature of this encounter and the effort both sides ’
++‘put into every single minute of the ninety.’;
 } else {
-p6 = (winner?winner+’ will be delighted with the three points.’:‘Both sides will take positives from this result.’)
+p7 = (winner?winner+’ will be delighted with the three points.’:‘Both sides will take positives from this result.’)
 +’ The performance levels on show today underline just how competitive and compelling the ’
 +leagueName+’ continues to be at every level, and supporters of both clubs will have plenty to ’
 +‘discuss and look forward to in the matches ahead.’;
 }
 
-// P7 — CTA
-var p7 = pickLang(‘hl_cta’);
+// P8 — CTA
+var p8 = pickLang(‘hl_cta’);
 
-return [p1, p2, p3, p4, p5, p6, p7].join(’\n\n’);
+return [p1, p2, p3, p4, p5, p6, p7, p8].join(’\n\n’);
 }
 
 async function generatePreviewContent(idx) {
