@@ -278,19 +278,20 @@ select option{background:#141720;}
 <aside class="sidebar"><div class="sidebar-section">
     <div class="section-label">🔗 Blogger Connection</div>
     <div id="signin-block">
-      <!-- PRIMARY: Manual token (works everywhere, no origin restrictions) -->
       <div id="manual-token-wrap">
-        <div class="settings-note" style="margin-bottom:8px;border-color:rgba(0,212,255,.4);color:var(--accent2);line-height:1.7;">
-          <strong style="color:var(--accent2);">Step 1</strong> &mdash; Open OAuth Playground:<br/>
+        <div class="settings-note" style="margin-bottom:8px;border-color:rgba(0,212,255,.5);color:var(--accent2);line-height:1.75;">
+          <strong style="color:var(--accent);">Step 1</strong> &mdash; Open OAuth Playground in a new tab:<br/>
           <a href="https://developers.google.com/oauthplayground/" target="_blank"
-             style="color:var(--accent);font-weight:700;">
-            developers.google.com/oauthplayground &#8599;
+             style="color:var(--accent);font-weight:800;">
+            developers.google.com/oauthplayground &nearr;
           </a><br/>
-          <strong style="color:var(--accent2);">Step 2</strong> &mdash; Find <em>Blogger API v3</em>,
-          tick <code style="color:var(--accent);font-size:9px;">https://www.googleapis.com/auth/blogger</code>,
-          click <strong>Authorise APIs</strong> then <strong>Exchange tokens</strong>
-          then copy the <strong>Access token</strong> (starts <code>ya29.</code>).<br/>
-          <strong style="color:var(--accent2);">Step 3</strong> &mdash; Paste it below.
+          <strong style="color:var(--accent);">Step 2</strong> &mdash; In the left panel scroll to
+          <em>Blogger API v3</em>, tick
+          <code style="color:var(--text);font-size:9px;">https://www.googleapis.com/auth/blogger</code>,
+          click <strong>Authorise APIs</strong> &rarr; sign in &rarr;
+          <strong>Exchange authorization code for tokens</strong> &rarr;
+          copy the <strong>Access token</strong> (starts <code style="color:var(--accent);">ya29.</code>).<br/>
+          <strong style="color:var(--accent);">Step 3</strong> &mdash; Paste it below and click Connect.
         </div>
         <div class="input-group">
           <label class="input-label">Access Token <span class="badge-tip">ya29.xxx</span></label>
@@ -300,24 +301,25 @@ select option{background:#141720;}
           <label class="input-label">Your Name <span style="color:var(--muted);font-weight:400;">(display only)</span></label>
           <input type="text" id="manual-name-input" placeholder="e.g. Alvin"/>
         </div>
-        <button class="btn btn-primary btn-full" style="margin-top:8px;" onclick="signInManualToken()">
+        <button class="btn btn-primary btn-full" style="margin-top:10px;" onclick="signInManualToken()">
           <span class="btn-text">&#128273; Connect with Token</span>
           <div class="spin"></div>
         </button>
       </div>
-      <!-- SECONDARY: GIS popup (needs authorised JS origin in Cloud Console) -->
       <div id="gis-signin-wrap" style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
         <div class="settings-note" style="margin-bottom:6px;font-size:10px;color:var(--muted);">
-          Or use Google Sign-In popup (only works when served from an
-          <a href="https://console.cloud.google.com/apis/credentials"
-             target="_blank" style="color:var(--accent2);">authorised JS origin &#8599;</a> --
-          add your site URL there first):
+          Alternative: Google popup sign-in (requires this page to be served from an
+          <a href="https://console.cloud.google.com/apis/credentials" target="_blank"
+             style="color:var(--accent2);">authorised JS origin &nearr;</a>):
         </div>
         <button class="google-signin-btn" onclick="signInWithGoogle()">
           <img alt="Google" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"/>
           Sign in with Google popup
         </button>
-        <div id="gis-error-box" style="display:none;margin-top:6px;font-size:10px;color:var(--red);background:rgba(255,71,87,.07);border:1px solid rgba(255,71,87,.3);border-radius:var(--r);padding:8px 10px;line-height:1.5;"></div>
+        <div id="gis-error-box" style="display:none;margin-top:6px;font-size:10px;
+             color:var(--red);background:rgba(255,71,87,.07);
+             border:1px solid rgba(255,71,87,.3);border-radius:var(--r);
+             padding:8px 10px;line-height:1.5;"></div>
       </div>
     </div>
     <div class="signed-in-block" id="signedin-block">
@@ -1006,55 +1008,53 @@ if (saved.lang)        document.getElementById(‘post-lang’).value = saved.la
 if (saved.style)       document.getElementById(‘post-style’).value = saved.style;
 if (saved.publishMode) document.getElementById(‘publish-mode’).value = saved.publishMode;
 if (saved.activeLeagues) activeLeagues = new Set(saved.activeLeagues);
-// Always restore clientId so GIS sign-in works after page refresh
 if (saved.clientId)    GOOGLE_CLIENT_ID = saved.clientId;
 if (saved.schedAmount) document.getElementById(‘sched-amount’).value = saved.schedAmount;
 if (saved.schedUnit)   { document.getElementById(‘sched-unit’).value = saved.schedUnit; updateSchedUnitLimits(); }
 updateSchedPreview();
-if (saved.globalLabels) globalLabels = saved.globalLabels;
+if (saved.globalLabels)      globalLabels = saved.globalLabels;
 if (saved.globalSchedulerOn) { globalSchedulerOn = saved.globalSchedulerOn; updateSchedulerUI(); }
-// Restore OAuth session if token is still valid
 if (saved.oauthToken && saved.tokenExpiresAt && Date.now() < saved.tokenExpiresAt) {
-oauthToken = saved.oauthToken;
-oauthUser  = saved.oauthUser || null;
+oauthToken     = saved.oauthToken;
+oauthUser      = saved.oauthUser || null;
 tokenExpiresAt = saved.tokenExpiresAt;
 setSignedInUI(oauthUser);
-log(‘ok’, ’Session restored for ’ + (oauthUser && oauthUser.name ? oauthUser.name : ‘user’));
+log(‘ok’, ’Session restored for ’ + ((oauthUser && oauthUser.name) ? oauthUser.name : ‘user’));
 } else if (saved.oauthToken) {
-// Token expired - clear it and show sign-in
 oauthToken = null; oauthUser = null; tokenExpiresAt = 0;
 setSignedInUI(null);
-log(‘info’, ‘Previous session expired - please sign in again’);
+log(‘info’, ‘Previous session expired – reconnect using the token method above’);
 } else {
 setSignedInUI(null);
 }
-config = saved; updatePills();
+config = saved;
+updatePills();
 } catch(e){ log(‘err’,’loadConfig: ’+e.message); }
 }
-
 function saveConfig() {
 var imgbbVal = document.getElementById(‘imgbb-key’).value.trim();
 if (imgbbVal) IMGBB_API_KEY = imgbbVal;
 config = {
-blogId:       document.getElementById(‘blog-id’).value.trim(),
-imgbbKey:     imgbbVal || IMGBB_API_KEY,
-lang:         document.getElementById(‘post-lang’).value,
-style:        document.getElementById(‘post-style’).value,
-publishMode:  document.getElementById(‘publish-mode’).value,
-activeLeagues: Array.from(activeLeagues),
-clientId:     GOOGLE_CLIENT_ID,   // always persisted so page-refresh keeps it
-oauthToken:   oauthToken,
-oauthUser:    oauthUser,
-tokenExpiresAt: tokenExpiresAt,
-schedAmount:  document.getElementById(‘sched-amount’).value,
-schedUnit:    document.getElementById(‘sched-unit’).value,
-globalLabels: globalLabels,
+blogId:            document.getElementById(‘blog-id’).value.trim(),
+imgbbKey:          imgbbVal || IMGBB_API_KEY,
+lang:              document.getElementById(‘post-lang’).value,
+style:             document.getElementById(‘post-style’).value,
+publishMode:       document.getElementById(‘publish-mode’).value,
+activeLeagues:     Array.from(activeLeagues),
+clientId:          GOOGLE_CLIENT_ID,
+oauthToken:        oauthToken,
+oauthUser:         oauthUser,
+tokenExpiresAt:    tokenExpiresAt,
+schedAmount:       document.getElementById(‘sched-amount’).value,
+schedUnit:         document.getElementById(‘sched-unit’).value,
+globalLabels:      globalLabels,
 globalSchedulerOn: globalSchedulerOn,
 };
 localStorage.setItem(‘s803_config_v2’, JSON.stringify(config));
-updatePills(); toast(‘Saved!’,‘ok’); log(‘ok’,‘Configuration saved.’);
+updatePills();
+toast(‘Saved!’,‘ok’);
+log(‘ok’,‘Configuration saved.’);
 }
-
 function updatePills() {
 var apiPill  = document.getElementById(‘api-status-pill’);
 var blogPill = document.getElementById(‘blogger-status-pill’);
@@ -1068,62 +1068,52 @@ blogPill.className=‘pill dot err’; blogPill.textContent=‘✗ Not signed in
 }
 
 // ─── GOOGLE OAUTH ──────────────────────────────────────────────────────────
+// – GOOGLE OAUTH –
 var gisClient = null;
 var gisReady  = false;
 
 function onGISLoaded() {
 gisReady = true;
-log(‘info’, ‘Google Identity Services loaded’);
+log(‘info’, ‘Google Identity Services loaded OK’);
 }
 
-var manualMode = true; // manual token is always the primary sign-in method
-function toggleManualSignIn() {
-manualMode = true; // kept for compatibility
-}
+// manualMode kept for compat; manual UI is always visible
+var manualMode = true;
+function toggleManualSignIn() { manualMode = true; }
 
+// Primary: manual token (works everywhere)
 function signInManualToken() {
 var token = document.getElementById(‘manual-token-input’).value.trim();
 var name  = document.getElementById(‘manual-name-input’).value.trim() || ‘Sports 803 User’;
-if (!token) { toast(‘Paste your access token first’,‘err’); return; }
+if (!token) { toast(‘Paste your access token first’, ‘err’); return; }
 if (!token.startsWith(‘ya29.’)) {
-// warn but don’t block – some scopes return different prefixes
 log(‘info’, ‘Token does not start with ya29. – proceeding anyway’);
 }
-oauthToken=token; tokenExpiresAt=Date.now()+3600*1000;
-oauthUser={ name:name, email:’’, picture:’’ };
-setSignedInUI(oauthUser); saveConfig();
-toast(‘✓ Connected with manual token’,‘ok’);
-log(‘ok’,’✓ Manual token sign-in: ’+name);
+oauthToken     = token;
+tokenExpiresAt = Date.now() + 3600 * 1000;
+oauthUser      = { name: name, email: ‘’, picture: ‘’ };
+setSignedInUI(oauthUser);
+saveConfig();
+toast(‘Connected with manual token’, ‘ok’);
+log(‘ok’, ’Manual token sign-in: ’ + name);
 }
 
+// Secondary: GIS popup (needs authorised JS origin in Cloud Console)
 function signInWithGoogle() {
 var errBox = document.getElementById(‘gis-error-box’);
 if (errBox) { errBox.style.display = ‘none’; errBox.textContent = ‘’; }
-if (!gisReady) {
-var msg = ’Google Identity Services script failed to load. ’ +
-’This usually means an ad-blocker or strict browser privacy setting is blocking accounts.google.com. ’ +
-‘Please use the manual Access Token method above instead.’;
-if (errBox) { errBox.textContent = msg; errBox.style.display = ‘block’; errBox.style.color = ‘var(–red)’; }
+if (!gisReady || typeof google === ‘undefined’ || !google.accounts || !google.accounts.oauth2) {
+var msg = ‘Google Sign-In blocked (ad-blocker / firewall). Use the manual Access Token above instead.’;
+if (errBox) { errBox.textContent = msg; errBox.style.display = ‘block’; }
 toast(‘GIS blocked – use manual token above’, ‘err’);
-log(‘err’, ‘GIS script not loaded’);
+log(‘err’, ‘GIS library not available’);
 return;
 }
 requestGISToken();
 }
 
-// FIX: added !gisReady guard – catches race where GIS script hasn’t loaded yet
 function requestGISToken() {
-// Guard: GIS script must be loaded
-if (!gisReady || typeof google === ‘undefined’ || !google.accounts || !google.accounts.oauth2) {
-log(‘err’, ‘GIS library not loaded – switching to manual token mode’);
-if (!manualMode) toggleManualSignIn();
-toast(‘Google Sign-In blocked (ad-blocker / firewall). Use manual token instead.’, ‘err’);
-return;
-}
-if (!GOOGLE_CLIENT_ID) {
-toast(‘No Client ID set – please enter one first’, ‘err’);
-return;
-}
+if (!GOOGLE_CLIENT_ID) { toast(‘No Client ID configured’, ‘err’); return; }
 try {
 gisClient = google.accounts.oauth2.initTokenClient({
 client_id: GOOGLE_CLIENT_ID,
@@ -1131,34 +1121,30 @@ scope: ‘https://www.googleapis.com/auth/blogger https://www.googleapis.com/aut
 callback: function(r) {
 if (r.error || r.error_description) {
 var msg = r.error_description || r.error || ‘Unknown error’;
-toast(’Google sign-in failed: ’ + msg, ‘err’);
-log(‘err’, ’GIS error: ’ + msg);
+toast(’Sign-in failed: ’ + msg, ‘err’);
+log(‘err’, ’GIS callback error: ’ + msg);
 return;
 }
 if (!r.access_token) { toast(‘No access token received’, ‘err’); return; }
-oauthToken    = r.access_token;
+oauthToken     = r.access_token;
 tokenExpiresAt = Date.now() + parseInt(r.expires_in || ‘3600’, 10) * 1000;
 fetchGoogleProfile();
 },
 error_callback: function(err) {
-// Handles popup_closed, access_denied, etc.
-if (err.type === ‘popup_closed’) {
-toast(‘Sign-in popup was closed’, ‘err’);
-} else {
-toast(’Sign-in error: ’ + (err.message || err.type || ‘unknown’), ‘err’);
-log(‘err’, ’GIS error_callback: ’ + JSON.stringify(err));
-if (!manualMode) toggleManualSignIn();
-}
+var errBox = document.getElementById(‘gis-error-box’);
+var msg = err.type === ‘popup_closed’
+? ‘Sign-in popup was closed. Try again or use the manual token method above.’
+: ‘Sign-in error: ’ + (err.message || err.type || ‘unknown’);
+if (errBox) { errBox.textContent = msg; errBox.style.display = ‘block’; }
+toast(msg, ‘err’); log(‘err’, ‘GIS error_callback: ’ + JSON.stringify(err));
 }
 });
 gisClient.requestAccessToken({ prompt: ‘select_account’ });
 } catch(e) {
-log(‘err’, ’GIS init failed: ’ + e.message);
-toast(’Google Sign-In failed: ’ + e.message, ‘err’);
-if (!manualMode) toggleManualSignIn();
+log(‘err’, ‘GIS init failed: ’ + e.message);
+toast(‘GIS failed: ’ + e.message, ‘err’);
 }
 }
-
 async function fetchGoogleProfile() {
 try {
 var d = await (await fetch(‘https://www.googleapis.com/oauth2/v3/userinfo’,{headers:{‘Authorization’:‘Bearer ‘+oauthToken}})).json();
@@ -1184,10 +1170,10 @@ si.style.display=‘block’; sd.classList.remove(‘visible’);
 updatePills();
 }
 
+// FIX: reset manual mode UI on sign-out
 function signOut() {
 oauthToken=null; oauthUser=null; tokenExpiresAt=0;
 setSignedInUI(null); saveConfig();
-// clear token inputs for security
 var ti = document.getElementById(‘manual-token-input’);
 if (ti) ti.value = ‘’;
 toast(‘Signed out’,‘ok’); log(‘ok’,‘Signed out.’);
@@ -2526,7 +2512,7 @@ ctx.save();
 ctx.beginPath(); ctx.arc(x,y,size/2,0,Math.PI*2);
 ctx.fillStyle=bg||’#1e2740’; ctx.fill();
 ctx.strokeStyle=‘rgba(255,255,255,0.25)’; ctx.lineWidth=2; ctx.stroke();
-ctx.fillStyle=’#fff’; ctx.font=’bold ’+Math.round(size*0.36)+‘px Syne,Arial’;
+ctx.fillStyle=’#fff’; ctx.font=‘bold ‘+Math.round(size0.36)+‘px Syne,Arial’;
 ctx.textAlign=‘center’; ctx.textBaseline=‘middle’;
 ctx.fillText((text||’?’).slice(0,3).toUpperCase(),x,y);
 ctx.restore();
