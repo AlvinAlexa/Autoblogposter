@@ -1119,6 +1119,7 @@ function linkExistingPost(idx) {
   savePostToStorage(gd);
   inputEl.value = '';
   renderGames();
+  restoreActiveTabs();
   toast('✓ Post linked!', 'ok');
   log('ok', '🔗 Linked existing post ' + postId + ' → ' + getMatchTitle(gd));
 }
@@ -1300,6 +1301,7 @@ async function checkScheduledPosts() {
     }
   }
   renderGames();
+  restoreActiveTabs();
 }
 
 // ─── BULK POST ─────────────────────────────────────────────────────────────
@@ -1329,6 +1331,7 @@ async function bulkPostAll() {
   setTimeout(function(){ banner.classList.remove('visible'); },4000);
   btn.classList.remove('loading'); btn.disabled=false;
   renderGames();
+  restoreActiveTabs();
   toast('✓ Bulk posted '+done+' games!','ok');
   log('ok','✓ Bulk post finished: '+done+' posts');
 }
@@ -1444,6 +1447,7 @@ async function scanAllLeagues() {
   btn.classList.add('loading'); btn.disabled=true;
   detectedGames=[];
   cardChannels={};  // reset per-card channel selections
+  activeCardTabs={};  // reset tab memory
   var selected=LEAGUES.filter(function(l){ return activeLeagues.has(l.id); });
   var scanLabel = formatDateLabel(selectedDate);
   log('info','Scanning '+selected.length+' leagues for '+scanLabel+'...');
@@ -1493,6 +1497,7 @@ async function scanAllLeagues() {
   document.getElementById('main-subtitle').textContent=totalFound+' game'+(totalFound!==1?'s':'')+
     ' found '+contextStr+' · '+new Date().toLocaleTimeString();
   renderGames();
+  restoreActiveTabs();
   btn.classList.remove('loading'); btn.disabled=false;
   var bulkBtn=document.getElementById('bulk-btn');
   if (bulkBtn) bulkBtn.disabled=totalFound===0;
@@ -1532,6 +1537,7 @@ async function refreshScores() {
     } catch(e){ log('err','Refresh error: '+e.message); }
   }
   renderGames();
+  restoreActiveTabs();
   log('ok','Scores updated.');
 }
 async function autoRefreshScores(){ if (detectedGames.length) await refreshScores(); }
@@ -2090,7 +2096,11 @@ html+='<div class="game-card" id="card-'+idx+'">'
 container.innerHTML=html;
 }
 
+// ─── TAB STATE — remember which tab is open per card across re-renders ──────
+var activeCardTabs = {};  // { idx: ‘channels’ | ‘preview’ | ‘highlights’ | … }
+
 function switchTab(idx,tab,el) {
+activeCardTabs[idx] = tab;  // remember choice
 [‘pre’,‘hl’,‘st’,‘th’,‘ch’,‘lb’,‘lk’].forEach(function(t){
 var tabEl=document.getElementById(‘tab-’+t+’-’+idx);
 if (tabEl) tabEl.classList.remove(‘active’);
@@ -2104,6 +2114,17 @@ if (panel) panel.style.display=‘block’;
 var tabId={preview:‘tab-pre-’,highlights:‘tab-hl-’,stats:‘tab-st-’,thumbnail:‘tab-th-’,channels:‘tab-ch-’,labels:‘tab-lb-’,link:‘tab-lk-’};
 var activeTab=document.getElementById((tabId[tab]||‘tab-pre-’)+idx);
 if (activeTab) activeTab.classList.add(‘active’);
+}
+
+// Call after renderGames() to restore whichever tabs were open
+function restoreActiveTabs() {
+Object.keys(activeCardTabs).forEach(function(idx) {
+var tab = activeCardTabs[idx];
+if (!tab || tab === ‘preview’) return;  // preview is default, no need to restore
+var tabId = {highlights:‘tab-hl-’,stats:‘tab-st-’,thumbnail:‘tab-th-’,channels:‘tab-ch-’,labels:‘tab-lb-’,link:‘tab-lk-’};
+var tabEl = document.getElementById((tabId[tab]||‘tab-pre-’) + idx);
+if (tabEl) switchTab(Number(idx), tab, tabEl);
+});
 }
 
 // ─── STATS HTML ─────────────────────────────────────────────────────────────
@@ -2241,6 +2262,7 @@ throw new Error((err.error&&err.error.message)||’Delete failed: ’+r.status);
 localStorage.removeItem(getGameKey(gd));
 gd.blogPostId=null; gd.blogPostUrl=null; gd.status=‘deleted’;
 renderGames();
+restoreActiveTabs();
 toast(‘✓ Post deleted’,‘ok’);
 log(‘ok’,’✓ Deleted post: ’+getMatchTitle(gd));
 } catch(e){
@@ -2359,7 +2381,9 @@ gd.highlightContent=text;
 var el=document.getElementById(‘text-highlights-’+idx);
 if (el) el.innerHTML=’<div class="content-text">’+escHtml(text)+’</div>’;
 log(‘ok’,‘✓ Highlights ready: ‘+homeName+’ vs ‘+awayName);
-renderGames();
+// Update just the highlights button state without full re-render
+var hlBtn = document.querySelector(’#card-’+idx+’ [onclick*=“postToBlogger”][onclick*=“highlights”]’);
+if (hlBtn && gd.blogPostId) hlBtn.removeAttribute(‘disabled’);
 }
 async function regenPreview(idx) {
 detectedGames[idx].preContent=null;
@@ -2671,6 +2695,7 @@ success = await postToBloggerCore(idx, type, pubMode);
 
 btn.classList.remove(‘loading’); btn.disabled = false;
 if (success) renderGames();
+restoreActiveTabs();
 }
 
 async function postToBloggerCore(idx, type, pubModeOverride, kickoffTimestamp) {
