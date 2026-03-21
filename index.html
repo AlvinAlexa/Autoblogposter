@@ -4,7 +4,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sports 803 · AI Auto-Post Dashboard v2</title>
+<title>Sports 803 · AI Auto-Post Dashboard v3</title>
+<script async defer src="https://accounts.google.com/gsi/client"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -49,8 +50,6 @@ select option{background:#141720;}
 .btn-orange:hover{background:rgba(255,165,2,.2);}
 .btn-cyan{background:rgba(0,212,255,.1);color:var(--accent2);border:1px solid rgba(0,212,255,.35);}
 .btn-cyan:hover{background:rgba(0,212,255,.2);}
-.btn-green{background:rgba(46,213,115,.12);color:var(--green);border:1px solid rgba(46,213,115,.35);}
-.btn-green:hover{background:rgba(46,213,115,.22);}
 .btn-full{width:100%;}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
 .btn .spin{width:12px;height:12px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;display:none;}
@@ -224,63 +223,38 @@ select option{background:#141720;}
 .link-post-input::placeholder{color:var(--muted);}
 .link-post-note{font-size:9px;color:var(--muted);line-height:1.5;}
 .kickoff-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.05em;padding:2px 8px;border-radius:3px;background:rgba(0,212,255,.1);color:var(--accent2);border:1px solid rgba(0,212,255,.25);}
-
-/* ── CHANNEL LIBRARY ── */
-.channel-library{display:flex;flex-direction:column;gap:8px;}
-.channel-add-form{background:var(–s2);border:1px solid var(–border);border-radius:var(–r);padding:10px 12px;display:flex;flex-direction:column;gap:7px;}
-.channel-add-form-title{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(–accent2);margin-bottom:2px;}
-.channel-list{display:flex;flex-direction:column;gap:5px;max-height:280px;overflow-y:auto;}
-.channel-item{display:flex;align-items:center;gap:6px;background:var(–s2);border:1px solid var(–border);border-radius:var(–r);padding:8px 10px;transition:border-color .15s;}
-.channel-item:hover{border-color:var(–border2);}
-.channel-item-emoji{font-size:15px;flex-shrink:0;width:20px;text-align:center;}
-.channel-item-info{flex:1;min-width:0;}
-.channel-item-name{font-size:11px;font-weight:700;color:var(–text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.channel-item-url{font-family:‘JetBrains Mono’,monospace;font-size:9px;color:var(–muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.channel-item-leagues{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;}
-.channel-league-tag{font-size:8px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 5px;border-radius:3px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:var(–accent2);}
-.channel-item-actions{display:flex;gap:5px;flex-shrink:0;}
-.channel-del-btn{background:rgba(255,71,87,.1);border:1px solid rgba(255,71,87,.25);color:var(–red);border-radius:5px;padding:3px 8px;font-size:9px;font-family:‘Syne’,sans-serif;font-weight:700;cursor:pointer;transition:background .13s;}
-.channel-del-btn:hover{background:rgba(255,71,87,.22);}
-.channel-edit-btn{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.25);color:var(–purple);border-radius:5px;padding:3px 8px;font-size:9px;font-family:‘Syne’,sans-serif;font-weight:700;cursor:pointer;transition:background .13s;}
-.channel-edit-btn:hover{background:rgba(168,85,247,.22);}
-.channel-empty{font-size:11px;color:var(–muted);font-style:italic;text-align:center;padding:16px 0;}
-.channel-mapping-note{font-size:9px;color:var(–muted);line-height:1.5;}
-
-/* channel form league picker — distinct from main leagues-grid */
-.ch-leagues-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;max-height:220px;overflow-y:auto;padding:2px;scrollbar-width:thin;scrollbar-color:var(–border2) transparent;}
-
-/* ── PER-CARD CHANNEL PICKER ── */
-.channel-picker-panel{display:flex;flex-direction:column;gap:10px;padding:4px 0;}
-.channel-picker-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.channel-picker-title{font-size:10px;font-weight:700;color:var(–accent2);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
-.channel-picker-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.channel-pick-btn{display:flex;align-items:center;gap:7px;background:var(–s2);border:1px solid var(–border);border-radius:var(–r);padding:8px 10px;cursor:pointer;transition:all .15s;font-size:10px;font-weight:600;color:var(–muted2);user-select:none;}
-.channel-pick-btn.selected{border-color:var(–accent2);background:rgba(0,212,255,.09);color:var(–text);}
-.channel-pick-btn .cpcheck{width:13px;height:13px;border:1.5px solid var(–border2);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;transition:all .15s;}
-.channel-pick-btn.selected .cpcheck{background:var(–accent2);border-color:var(–accent2);color:#070809;}
-.channel-pick-btn-emoji{font-size:13px;flex-shrink:0;}
-.channel-pick-btn-name{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.channel-preview-box{background:var(–s3);border:1px solid var(–border);border-radius:var(–r);padding:8px 10px;}
-.channel-preview-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(–muted);margin-bottom:5px;}
-.channel-preview-url{font-family:‘JetBrains Mono’,monospace;font-size:9px;color:var(–accent2);word-break:break-all;line-height:1.5;}
-.channel-preview-url.empty{color:var(–muted);font-style:italic;}
-.channel-auto-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:10px;background:rgba(46,213,115,.1);border:1px solid rgba(46,213,115,.3);color:var(–green);}
-.channel-no-channels{font-size:11px;color:var(–muted);font-style:italic;text-align:center;padding:20px 0;}
-.league-mapping-section{background:var(–s2);border:1px solid var(–border);border-radius:var(–r);padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
-.league-mapping-title{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(–purple);margin-bottom:2px;}
-.league-mapping-row{display:flex;align-items:center;gap:6px;}
-.league-mapping-name{font-size:10px;color:var(–muted2);font-weight:600;min-width:90px;flex-shrink:0;}
-.league-mapping-select{background:var(–s3);border:1px solid var(–border2);color:var(–text);font-family:‘JetBrains Mono’,monospace;font-size:10px;padding:5px 7px;border-radius:5px;flex:1;outline:none;transition:border-color .15s;}
-.league-mapping-select:focus{border-color:var(–purple);}
-
 @media(max-width:900px){
-.layout{grid-template-columns:1fr;}
-.sidebar{position:static;max-height:none;border-right:none;border-bottom:1px solid var(–border);}
-.date-bar{flex-wrap:wrap;}
-.date-indicator{margin-left:0;}
+  .layout{grid-template-columns:1fr;}
+  .sidebar{position:static;max-height:none;border-right:none;border-bottom:1px solid var(--border);}
+  .date-bar{flex-wrap:wrap;}
+  .date-indicator{margin-left:0;}
 }
+/* ── NEW V3 STYLES ────────────────────────────────────── */
+.scan-all-toggle{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:8px 10px;margin-bottom:6px;}
+.scan-all-label{font-size:10px;font-weight:700;color:var(--muted2);flex:1;}
+.channel-list{display:flex;flex-direction:column;gap:5px;max-height:200px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
+.channel-item{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:10px;}
+.channel-name{flex:1;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.channel-aliases{font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.channel-del{background:none;border:none;color:var(--red);cursor:pointer;font-size:13px;padding:0;flex-shrink:0;opacity:.6;transition:opacity .12s;}
+.channel-del:hover{opacity:1;}
+.channel-add-form{display:flex;flex-direction:column;gap:5px;background:var(--s2);border:1px solid var(--border2);border-radius:var(--r);padding:8px 10px;}
+.channel-add-form input{font-size:10px;padding:6px 8px;}
+.broadcast-panel{background:var(--s2);border:1px solid rgba(0,212,255,.25);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:7px;margin-top:4px;}
+.broadcast-panel-title{font-size:10px;font-weight:700;color:var(--accent2);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+.broadcast-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.broadcast-tag{display:inline-flex;align-items:center;gap:4px;background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.3);color:var(--accent2);font-size:9px;font-weight:600;padding:2px 8px;border-radius:12px;}
+.broadcast-tag .rm-ch{cursor:pointer;font-size:11px;opacity:.7;}
+.broadcast-tag .rm-ch:hover{opacity:1;}
+.add-channel-row{display:flex;gap:5px;align-items:center;}
+.add-channel-row select{flex:1;font-size:10px;padding:5px 7px;}
+.tvguide-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:'Syne',sans-serif;font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:7px 12px;border-radius:var(--r);border:1px solid rgba(46,213,115,.4);background:rgba(46,213,115,.08);color:var(--green);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.tvguide-btn:hover{background:rgba(46,213,115,.18);}
+.tvguide-btn:disabled{opacity:.4;cursor:not-allowed;}
+.tvguide-btn .spin{width:11px;height:11px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;display:none;}
+.tvguide-btn.loading .spin{display:block;}
+.tvguide-btn.loading .btn-text{display:none;}
 </style>
-
 </head>
 <body>
 
@@ -288,7 +262,7 @@ select option{background:#141720;}
   <div class="topbar-logo">
     <span class="badge">S803</span>
     Sports 803
-    <span style="background:rgba(168,85,247,.2);border-radius:4px;border:1px solid rgba(168,85,247,.4);color:var(--purple);font-size:9px;font-weight:700;letter-spacing:.06em;padding:2px 7px;">V2</span>
+    <span style="background:rgba(168,85,247,.2);border-radius:4px;border:1px solid rgba(168,85,247,.4);color:var(--purple);font-size:9px;font-weight:700;letter-spacing:.06em;padding:2px 7px;">V3</span>
   </div>
   <span class="topbar-sub">AI Auto-Post Dashboard</span>
   <div class="topbar-right">
@@ -303,41 +277,13 @@ select option{background:#141720;}
   <div class="sidebar-section">
     <div class="section-label">🔗 Blogger Connection</div>
     <div id="signin-block">
-      <!-- Primary: Google Sign-In via GIS -->
-      <div id="gis-signin-wrap">
-        <button class="google-signin-btn" onclick="signInWithGoogle()">
-          <img alt="Google" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"/>
-          Sign in with Google
-        </button>
-        <div class="settings-note" style="margin-top:8px;">
-          Sign in with the Google account that <strong>owns</strong> your Sports 803 Blogger blog.
-        </div>
-      </div>
-      <!-- Fallback: manual access token (shown when GIS is blocked) -->
-      <div id="manual-token-wrap" style="display:none;">
-        <div class="settings-note" style="margin-bottom:8px;border-color:rgba(255,165,2,.3);color:var(--orange);">
-          ⚠ Google Sign-In is blocked (ad blocker or firewall).<br/>
-          Use a manual access token instead:
-          <a href="https://developers.google.com/oauthplayground/" target="_blank" style="color:var(--accent2);display:block;margin-top:4px;">
-            → Get token from OAuth Playground ↗
-          </a>
-        </div>
-        <div class="input-group">
-          <label class="input-label">Access Token</label>
-          <input type="password" id="manual-token-input" placeholder="Paste ya29.xxx token here"/>
-        </div>
-        <div class="input-group" style="margin-top:6px;">
-          <label class="input-label">Your Name <span style="color:var(--muted);font-weight:400;">(display only)</span></label>
-          <input type="text" id="manual-name-input" placeholder="e.g. Alvin"/>
-        </div>
-        <button class="btn btn-cyan btn-full" style="margin-top:6px;" onclick="signInManualToken()">
-          <span class="btn-text">🔑 Connect with Token</span>
-        </button>
-      </div>
-      <!-- Toggle between methods -->
-      <button id="toggle-manual-btn" onclick="toggleManualSignIn()" style="background:none;border:none;color:var(--muted);font-size:10px;cursor:pointer;margin-top:6px;text-decoration:underline;padding:0;font-family:'Syne',sans-serif;">
-        Having trouble? Use manual token instead
+      <button class="google-signin-btn" onclick="signInWithGoogle()">
+        <img alt="Google" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"/>
+        Sign in with Google
       </button>
+      <div class="settings-note" style="margin-top:8px;">
+        Sign in with the Google account that <strong>owns</strong> your Sports 803 Blogger blog. Uses secure Google OAuth.
+      </div>
     </div>
     <div class="signed-in-block" id="signedin-block">
       <div class="user-info-row">
@@ -368,63 +314,15 @@ select option{background:#141720;}
 
   <div class="divider"></div>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       📺 CHANNEL LIBRARY — New Section
-  ════════════════════════════════════════════════════════════════════ -->
-
-  <div class="sidebar-section">
-    <div class="section-label">📺 Channel Library <span class="badge-new">NEW</span></div>
-    <div class="channel-library">
-
-```
-  <!-- Add / Edit form -->
-  <div class="channel-add-form" id="channel-add-form">
-    <div class="channel-add-form-title" id="channel-form-title">➕ Add New Channel</div>
-    <input type="hidden" id="channel-edit-id" value=""/>
-    <div class="input-group">
-      <label class="input-label">Channel Name</label>
-      <input type="text" id="ch-name" placeholder="e.g. TNT Sport 1" maxlength="60"/>
-    </div>
-    <div class="input-group">
-      <label class="input-label">Stream URL <span class="badge-tip">mora= value</span></label>
-      <input type="text" id="ch-url" placeholder="https://tv.sportsnews.id/p/tnt1.html"/>
-    </div>
-    <div class="input-group">
-      <label class="input-label">Emoji <span style="color:var(--muted);font-weight:400;font-size:10px;">(optional)</span></label>
-      <input type="text" id="ch-emoji" placeholder="📺" maxlength="4" style="width:72px;"/>
-    </div>
-    <div class="settings-note channel-mapping-note" style="margin-top:4px;">
-      <strong style="color:var(--accent2);">⚡ Fully automatic.</strong>
-      Just enter the channel name exactly as it appears (e.g. <code style="color:var(--accent);">TNT Sport 1</code>, <code style="color:var(--accent);">beIN Sports 2</code>, <code style="color:var(--accent);">Sky Sports Main Event</code>).
-      The system recognises the broadcaster and matches it to the right sports automatically — no setup needed.
-    </div>
-    <div style="display:flex;gap:6px;margin-top:6px;">
-      <button class="btn btn-cyan btn-full" onclick="saveChannel()">
-        <span class="btn-text" id="ch-save-btn-text">💾 Save Channel</span>
-      </button>
-      <button class="btn btn-secondary" id="ch-cancel-btn" onclick="cancelChannelEdit()" style="display:none;padding:10px 12px;">
-        <span class="btn-text">✕</span>
-      </button>
-    </div>
-  </div>
-
-
-
-  <!-- Saved channels list -->
-  <div id="channel-list-wrap">
-    <div class="channel-empty" id="channel-empty-msg">No channels saved yet. Add one above.</div>
-    <div class="channel-list" id="channel-list"></div>
-  </div>
-
-</div>
-```
-
-  </div>
-
-  <div class="divider"></div>
-
   <div class="sidebar-section">
     <div class="section-label">⚽ Leagues to Monitor</div>
+    <div class="scan-all-toggle">
+      <span class="scan-all-label">📡 Scan ALL Leagues</span>
+      <div class="scheduler-toggle" onclick="toggleScanAllMode()">
+        <div class="toggle-switch on" id="scan-all-toggle"><div class="toggle-knob"></div></div>
+        <span id="scan-all-label" style="color:var(--accent);font-size:10px;">On</span>
+      </div>
+    </div>
     <div class="leagues-grid" id="leagues-grid"></div>
   </div>
 
@@ -487,7 +385,7 @@ select option{background:#141720;}
         <div id="sched-preview" style="font-size:9px;color:var(--orange);font-family:'JetBrains Mono',monospace;margin-top:3px;">Posts 30 minutes before kickoff</div>
       </div>
       <div class="settings-note" style="margin-top:2px;">
-        Auto-schedules posts in Blogger at the set time before kickoff.
+        Auto-schedules posts in Blogger at the set time before kickoff. Posts appear as "Scheduled" in your Blogger dashboard and publish automatically.
       </div>
     </div>
   </div>
@@ -509,9 +407,33 @@ select option{background:#141720;}
   <div class="divider"></div>
 
   <div class="sidebar-section">
+    <div class="section-label">📺 Channel Library <span class="badge-cyan">NEW</span></div>
+    <div class="input-group">
+      <label class="input-label">Player Base URL</label>
+      <input id="player-base-url" type="text" placeholder="https://yoursite.com/player.html"/>
+    </div>
+    <div class="channel-list" id="channel-list"></div>
+    <div class="channel-add-form" id="channel-add-form">
+      <div style="font-size:9px;font-weight:700;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px;">➕ Add Channel</div>
+      <input type="text" id="ch-name-input" placeholder="Channel name (e.g. Sky Sports 1)"/>
+      <input type="text" id="ch-aliases-input" placeholder="Aliases comma-sep (e.g. sky,sky sports)"/>
+      <input type="text" id="ch-url-input" placeholder="Stream URL"/>
+      <button class="btn btn-cyan btn-full" onclick="addChannel()" style="padding:7px;">
+        <span class="btn-text">➕ Add Channel</span>
+      </button>
+    </div>
+    <button class="tvguide-btn btn-full" id="tvguide-btn" onclick="fetchTVGuide()">
+      <div class="spin"></div><span class="btn-text">📡 Fetch TV Guide</span>
+    </button>
+    <div class="settings-note">TV Guide auto-matches channels to game cards using keyword fuzzy matching.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sidebar-section">
     <div class="section-label">📋 Activity Log</div>
     <div class="log-panel" id="log-panel">
-      <div class="log-line info"><span class="ts">--:--</span><span class="msg">Dashboard v2 ready.</span></div>
+      <div class="log-line info"><span class="ts">--:--</span><span class="msg">Dashboard v3 ready.</span></div>
     </div>
     <button class="btn btn-secondary btn-full" onclick="clearLog()" style="font-size:10px;padding:6px;">
       <span class="btn-text">🗑 Clear Log</span>
@@ -534,7 +456,7 @@ select option{background:#141720;}
         <span class="btn-text">📦 Bulk Post All</span><div class="spin"></div>
       </button>
       <button class="btn btn-primary" id="scan-btn" onclick="scanAllLeagues()">
-        <span class="btn-text">📡 Scan Leagues</span><div class="spin"></div>
+        <span class="btn-text">📡 Scan All Leagues</span><div class="spin"></div>
       </button>
     </div>
   </div>
@@ -582,34 +504,56 @@ select option{background:#141720;}
 
 <div class="toast" id="toast"></div>
 
-<script src="https://accounts.google.com/gsi/client" onload="onGISLoaded()" onerror="console.warn('GIS failed to load')"></script>
-
 <script>
 // ─── CONFIG ────────────────────────────────────────────────────────────────
 const LEAGUES = [
-  {id:'soccer/uefa.champions',name:'UCL',           emoji:'🏆',label:'champions league',espn:true },
-  {id:'soccer/eng.1',         name:'Premier Lg',    emoji:'⚽', label:'premier league',  espn:true },
-  {id:'soccer/esp.1',         name:'La Liga',        emoji:'⚽', label:'la liga',          espn:true },
-  {id:'soccer/ita.1',         name:'Serie A',        emoji:'⚽', label:'serie a',          espn:true },
-  {id:'soccer/ger.1',         name:'Bundesliga',     emoji:'⚽', label:'bundesliga',       espn:true },
-  {id:'soccer/fra.1',         name:'Ligue 1',        emoji:'⚽', label:'ligue 1',          espn:true },
-  {id:'soccer/uefa.europa',   name:'Europa Lg',      emoji:'🟠',label:'europa league',    espn:true },
-  {id:'soccer/eng.fa',        name:'FA Cup',          emoji:'⚽', label:'fa cup',           espn:true },
-  {id:'soccer/usa.1',         name:'MLS',             emoji:'⚽', label:'mls',              espn:true },
-  {id:'soccer/tur.1',         name:'Super Lig',       emoji:'⚽', label:'turkish',          espn:true },
-  {id:'basketball/nba',       name:'NBA',             emoji:'🏀',label:'nba',              espn:true },
-  {id:'football/nfl',         name:'NFL',             emoji:'🏈',label:'nfl',              espn:true },
-  {id:'hockey/nhl',           name:'NHL / Ice Hockey',emoji:'🏒',label:'ice hockey',       espn:true },
-  {id:'racing/f1',            name:'Formula 1',       emoji:'🏎',label:'f1',               espn:true },
-  {id:'racing/motogp',        name:'MotoGP',          emoji:'🏍',label:'motogp',           espn:false},
-  {id:'racing/indycar',       name:'IndyCar',         emoji:'🏎',label:'indycar',          espn:false},
-  {id:'racing/lemans',        name:'Le Mans / WEC',   emoji:'🏎',label:'le mans',          espn:false},
-  {id:'mma/ufc',              name:'UFC / MMA',       emoji:'🥊',label:'ufc',              espn:false},
-  {id:'boxing/wbc',           name:'Boxing',          emoji:'🥊',label:'boxing',           espn:false},
-  {id:'wrestling/wwe',        name:'WWE',             emoji:'🤼',label:'wwe',              espn:false},
-  {id:'tennis/atp',           name:'Tennis',          emoji:'🎾',label:'tennis',           espn:false},
-  {id:'cycling/road',         name:'Cycling',         emoji:'🚴',label:'cycling',          espn:false},
-  {id:'cricket/icc',          name:'Cricket',         emoji:'🏏',label:'cricket',          espn:false},
+  // ── Soccer ─────────────────────────────────────────────────────
+  {id:'soccer/uefa.champions',name:'UCL',              emoji:'🏆',label:'champions league',    espn:true },
+  {id:'soccer/eng.1',         name:'Premier Lg',       emoji:'⚽',label:'premier league',      espn:true },
+  {id:'soccer/esp.1',         name:'La Liga',          emoji:'⚽',label:'la liga',              espn:true },
+  {id:'soccer/ita.1',         name:'Serie A',          emoji:'⚽',label:'serie a',              espn:true },
+  {id:'soccer/ger.1',         name:'Bundesliga',       emoji:'⚽',label:'bundesliga',           espn:true },
+  {id:'soccer/fra.1',         name:'Ligue 1',          emoji:'⚽',label:'ligue 1',              espn:true },
+  {id:'soccer/uefa.europa',   name:'Europa Lg',        emoji:'🟠',label:'europa league',        espn:true },
+  {id:'soccer/uefa.conference',name:'Conference Lg',   emoji:'🟢',label:'conference league',    espn:true },
+  {id:'soccer/eng.fa',        name:'FA Cup',           emoji:'⚽',label:'fa cup',               espn:true },
+  {id:'soccer/eng.league_cup',name:'Carabao Cup',      emoji:'🏆',label:'carabao cup',          espn:true },
+  {id:'soccer/usa.1',         name:'MLS',              emoji:'⚽',label:'mls',                  espn:true },
+  {id:'soccer/tur.1',         name:'Super Lig',        emoji:'⚽',label:'turkish',              espn:true },
+  {id:'soccer/ned.1',         name:'Eredivisie',       emoji:'⚽',label:'eredivisie',           espn:true },
+  {id:'soccer/por.1',         name:'Primeira Liga',    emoji:'⚽',label:'primeira liga',        espn:true },
+  {id:'soccer/sco.1',         name:'Scottish Prem',    emoji:'⚽',label:'scottish premiership', espn:true },
+  {id:'soccer/mex.1',         name:'Liga MX',          emoji:'⚽',label:'liga mx',              espn:true },
+  {id:'soccer/bra.1',         name:'Brasileirao',      emoji:'⚽',label:'brasileirao',          espn:true },
+  // ── Basketball ─────────────────────────────────────────────────
+  {id:'basketball/nba',       name:'NBA',              emoji:'🏀',label:'nba',                  espn:true },
+  {id:'basketball/euroleague', name:'EuroLeague',      emoji:'🏀',label:'euroleague',           espn:false},
+  // ── American Football ───────────────────────────────────────────
+  {id:'football/nfl',         name:'NFL',              emoji:'🏈',label:'nfl',                  espn:true },
+  // ── Hockey ─────────────────────────────────────────────────────
+  {id:'hockey/nhl',           name:'NHL',              emoji:'🏒',label:'ice hockey',           espn:true },
+  // ── Racing ─────────────────────────────────────────────────────
+  {id:'racing/f1',            name:'Formula 1',        emoji:'🏎',label:'f1',                   espn:true },
+  {id:'racing/motogp',        name:'MotoGP',           emoji:'🏍',label:'motogp',               espn:false},
+  {id:'racing/nascar',        name:'NASCAR',           emoji:'🏎',label:'nascar',               espn:false},
+  {id:'racing/indycar',       name:'IndyCar',          emoji:'🏎',label:'indycar',              espn:false},
+  {id:'racing/lemans',        name:'Le Mans / WEC',    emoji:'🏎',label:'le mans',              espn:false},
+  // ── Combat ─────────────────────────────────────────────────────
+  {id:'mma/ufc',              name:'UFC / MMA',        emoji:'🥊',label:'ufc',                  espn:false},
+  {id:'boxing/wbc',           name:'Boxing',           emoji:'🥊',label:'boxing',               espn:false},
+  // ── Tennis ─────────────────────────────────────────────────────
+  {id:'tennis/atp',           name:'Tennis ATP',       emoji:'🎾',label:'tennis atp',           espn:false},
+  {id:'tennis/wta',           name:'Tennis WTA',       emoji:'🎾',label:'tennis wta',           espn:false},
+  // ── Golf ───────────────────────────────────────────────────────
+  {id:'golf/pga',             name:'Golf PGA',         emoji:'⛳',label:'golf',                  espn:false},
+  // ── Rugby ──────────────────────────────────────────────────────
+  {id:'rugby/world',          name:'Rugby Union',      emoji:'🏉',label:'rugby union',          espn:false},
+  // ── Cricket ────────────────────────────────────────────────────
+  {id:'cricket/icc',          name:'Cricket',          emoji:'🏏',label:'cricket',              espn:false},
+  // ── Other ──────────────────────────────────────────────────────
+  {id:'wrestling/wwe',        name:'WWE',              emoji:'🤼',label:'wwe',                  espn:false},
+  {id:'darts/pdc',            name:'Darts PDC',        emoji:'🎯',label:'darts',                espn:false},
+  {id:'cycling/road',         name:'Cycling',          emoji:'🚴',label:'cycling',              espn:false},
 ];
 
 const DEFAULT_ACTIVE = [
@@ -622,25 +566,8 @@ let detectedGames     = [];
 let config            = {};
 let globalSchedulerOn = false;
 let globalLabels      = ['sports 803','live stream'];
-
-// ─── CHANNEL LIBRARY STATE ─────────────────────────────────────────────────
-// Each channel: { id, name, emoji, url, leagues: [leagueId, ...] }
-let channelLibrary = [];
-// Selected channels per game card: { gameIdx → Set<channelId> }
-let cardChannels = {};
-
-// ─── BASE URL for player ─────────────────────────────────────────────────
-const PLAYER_BASE = 'https://soulmap1.blogspot.com/p/media-player.html';
-
-function buildIframeUrl(channelIds) {
-  if (!channelIds || channelIds.length === 0) return '';
-  var params = channelIds.map(function(cid) {
-    var ch = channelLibrary.find(function(c){ return c.id === cid; });
-    return ch ? 'mora=' + encodeURIComponent(ch.url) : null;
-  }).filter(Boolean);
-  if (!params.length) return '';
-  return PLAYER_BASE + '?' + params.join('&');
-}
+let scanAllMode       = true;   // Feature 4: Scan All toggle
+let channelLibrary    = [];     // Feature 1: Channel Library
 
 // ─── DATE STATE ────────────────────────────────────────────────────────────
 var selectedDate = getTodayStr();
@@ -712,15 +639,18 @@ function updateDateIndicator() {
   var label = formatDateLabel(selectedDate);
   ind.className = 'date-indicator';
   if (diff === 0) {
-    ind.classList.add('today'); txt.textContent = 'Today · ' + label;
+    ind.classList.add('today');
+    txt.textContent = 'Today · ' + label;
     if (titleEl) titleEl.innerHTML = 'Today\'s <span>Games</span>';
     if (notice) notice.classList.remove('visible');
   } else if (diff > 0) {
-    ind.classList.add('future'); txt.textContent = (diff===1?'Tomorrow':'+'+diff+' days') + ' · ' + label;
+    ind.classList.add('future');
+    txt.textContent = (diff===1?'Tomorrow':'+'+diff+' days') + ' · ' + label;
     if (titleEl) titleEl.innerHTML = '<span>'+label+'</span> Games';
     if (notice) notice.classList.add('visible');
   } else {
-    ind.classList.add('past'); txt.textContent = (diff===-1?'Yesterday':diff+' days') + ' · ' + label;
+    ind.classList.add('past');
+    txt.textContent = (diff===-1?'Yesterday':diff+' days') + ' · ' + label;
     if (titleEl) titleEl.innerHTML = '<span>'+label+'</span> Results';
     if (notice) notice.classList.remove('visible');
   }
@@ -739,348 +669,17 @@ window.addEventListener('DOMContentLoaded',function(){
   loadConfig();
   buildLeaguesGrid();
   renderGlobalLabels();
+  if (!channelLibrary.length) initDefaultChannels();
   renderChannelList();
   var inp = document.getElementById('custom-date-input');
   if (inp) inp.value = selectedDate;
   var todayBtn = document.getElementById('dq-today');
   if (todayBtn) { updateAllQuickBtns(todayBtn); }
   updateDateIndicator();
+  updateScanAllUI();
   setInterval(autoRefreshScores, 3*60*1000);
   setInterval(checkScheduledPosts, 60*1000);
 });
-
-// ─── CHANNEL LIBRARY: CRUD ────────────────────────────────────────────────
-
-function genChannelId() {
-  return 'ch-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,6);
-}
-
-function saveChannelLibraryToStorage() {
-  localStorage.setItem('s803_channels_v1', JSON.stringify(channelLibrary));
-}
-
-function loadChannelLibraryFromStorage() {
-  try {
-    var raw = localStorage.getItem('s803_channels_v1');
-    if (raw) channelLibrary = JSON.parse(raw);
-  } catch(e) { channelLibrary = []; }
-}
-
-// Build the league checkboxes inside the add/edit channel form
-// channel league grid functions removed (replaced by keyword matching)
-
-function getSelectedChLeagues() {
-  return []; // legacy stub — replaced by keyword matching
-}
-
-function saveChannel() {
-  var name     = document.getElementById('ch-name').value.trim();
-  var url      = document.getElementById('ch-url').value.trim();
-  var emoji    = document.getElementById('ch-emoji').value.trim() || '📺';
-  var editId   = document.getElementById('channel-edit-id').value.trim();
-  if (!name) { toast('Enter a channel name', 'err'); return; }
-  if (!url)  { toast('Enter a stream URL', 'err'); return; }
-  // Strip player prefix if user accidentally pasted the full URL
-  var stripped = url;
-  if (stripped.startsWith(PLAYER_BASE)) {
-    var moraPart = stripped.split('mora=')[1];
-    if (moraPart) stripped = decodeURIComponent(moraPart.split('&mora=')[0]);
-  }
-
-  if (editId) {
-    var idx = channelLibrary.findIndex(function(c){ return c.id === editId; });
-    if (idx !== -1) {
-      channelLibrary[idx] = { id: editId, name: name, emoji: emoji, url: stripped };
-      toast('✓ Channel updated: ' + name, 'ok');
-      log('ok', '✓ Channel updated: ' + name);
-    }
-  } else {
-    channelLibrary.push({ id: genChannelId(), name: name, emoji: emoji, url: stripped });
-    toast('✓ Channel saved: ' + name, 'ok');
-    log('ok', '✓ Channel saved: ' + name);
-  }
-
-  saveChannelLibraryToStorage();
-  resetChannelForm();
-  renderChannelList();
-}
-
-function resetChannelForm() {
-  document.getElementById('ch-name').value = '';
-  document.getElementById('ch-url').value = '';
-  document.getElementById('ch-emoji').value = '';
-  document.getElementById('channel-edit-id').value = '';
-  document.getElementById('channel-form-title').textContent = '➕ Add New Channel';
-  document.getElementById('ch-save-btn-text').textContent = '💾 Save Channel';
-  document.getElementById('ch-cancel-btn').style.display = 'none';
-}
-
-function cancelChannelEdit() {
-  resetChannelForm();
-}
-
-function editChannel(id) {
-  var ch = channelLibrary.find(function(c){ return c.id === id; });
-  if (!ch) return;
-  document.getElementById('ch-name').value = ch.name;
-  document.getElementById('ch-url').value = ch.url;
-  document.getElementById('ch-emoji').value = ch.emoji || '📺';
-  document.getElementById('channel-edit-id').value = ch.id;
-  document.getElementById('channel-form-title').textContent = '✏️ Editing: ' + ch.name;
-  document.getElementById('ch-save-btn-text').textContent = '✅ Update Channel';
-  document.getElementById('ch-cancel-btn').style.display = 'flex';
-  document.getElementById('channel-add-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function deleteChannel(id) {
-  var ch = channelLibrary.find(function(c){ return c.id === id; });
-  if (!ch) return;
-  if (!confirm('Delete channel "' + ch.name + '"?')) return;
-  channelLibrary = channelLibrary.filter(function(c){ return c.id !== id; });
-  saveChannelLibraryToStorage();
-  renderChannelList();
-  toast('Channel deleted', 'ok');
-  log('ok', '🗑 Channel deleted: ' + ch.name);
-}
-
-function renderChannelList() {
-  var list = document.getElementById('channel-list');
-  var emptyMsg = document.getElementById('channel-empty-msg');
-  if (!list) return;
-  if (!channelLibrary.length) {
-    list.innerHTML = '';
-    if (emptyMsg) emptyMsg.style.display = 'block';
-    return;
-  }
-  if (emptyMsg) emptyMsg.style.display = 'none';
-  list.innerHTML = channelLibrary.map(function(ch) {
-    var kwTags = '';  // no keywords — auto-detection is fully automatic
-    return '<div class="channel-item">'
-      + '<div class="channel-item-emoji">'+escHtml(ch.emoji||'📺')+'</div>'
-      + '<div class="channel-item-info">'
-        + '<div class="channel-item-name">'+escHtml(ch.name)+'</div>'
-        + '<div class="channel-item-url">'+escHtml(ch.url)+'</div>'
-        + (kwTags ? '<div class="channel-item-leagues">'+kwTags+'</div>' : '')
-      + '</div>'
-      + '<div class="channel-item-actions">'
-        + '<button class="channel-edit-btn" onclick="editChannel(\''+ch.id+'\')">✏️</button>'
-        + '<button class="channel-del-btn" onclick="deleteChannel(\''+ch.id+'\')">🗑</button>'
-      + '</div>'
-      + '</div>';
-  }).join('');
-}
-
-// league defaults removed — replaced by keyword matching
-
-
-
-// ═══════════════════════════════════════════════════════════════════════════
-// 📡 REAL-DATA BROADCASTER LOOKUP — TheSportsDB + Claude AI fallback
-// Flow for each game after scan:
-//   1. Search TheSportsDB for the event by team names → get event ID
-//   2. Fetch TV channels for that event ID (lookuptv.php)
-//   3. Fuzzy-match returned channel names against your saved channel library
-//   4. Auto-select matches; show unmatched ones as ➕ hints
-//   5. If TheSportsDB returns nothing → fall back to Claude AI lookup
-// ═══════════════════════════════════════════════════════════════════════════
-
-var TSDB_KEY = '3';  // free TheSportsDB key
-var TSDB_BASE = 'https://www.thesportsdb.com/api/v1/json/' + TSDB_KEY;
-
-// Cache event-id lookups so we don't repeat calls for the same match
-var tsdbEventCache = {};  // key: "Home vs Away" → tsdbEventId or null
-
-// ─── Step 1: Find TheSportsDB event ID from team names ────────────────────
-async function fetchTSDBEventId(homeName, awayName, dateStr) {
-  var cacheKey = homeName + '|' + awayName + '|' + dateStr;
-  if (tsdbEventCache.hasOwnProperty(cacheKey)) return tsdbEventCache[cacheKey];
-
-  // Try searching by event name (Home_vs_Away format)
-  var query = encodeURIComponent(homeName.replace(/\s+/g, '_') + '_vs_' + awayName.replace(/\s+/g, '_'));
-  try {
-    var ctrl = new AbortController();
-    setTimeout(function(){ ctrl.abort(); }, 8000);
-    var r = await fetch(TSDB_BASE + '/searchevents.php?e=' + query, { signal: ctrl.signal });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    var data = await r.json();
-    var events = data.event || [];
-    // Try to find the event closest to the match date
-    var matchDate = dateStr ? dateStr.substring(0, 10) : null;
-    var found = null;
-    if (matchDate) {
-      found = events.find(function(ev) { return ev.dateEvent && ev.dateEvent.startsWith(matchDate.substring(0, 7)); });
-    }
-    if (!found && events.length) found = events[0];
-    var id = found ? found.idEvent : null;
-    tsdbEventCache[cacheKey] = id;
-    return id;
-  } catch(e) {
-    tsdbEventCache[cacheKey] = null;
-    return null;
-  }
-}
-
-// ─── Step 2: Fetch TV channels for a TheSportsDB event ID ─────────────────
-async function fetchTSDBChannels(eventId) {
-  if (!eventId) return [];
-  try {
-    var ctrl = new AbortController();
-    setTimeout(function(){ ctrl.abort(); }, 8000);
-    var r = await fetch(TSDB_BASE + '/lookuptv.php?id=' + eventId, { signal: ctrl.signal });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    var data = await r.json();
-    var tvEvents = data.tvevent || [];
-    // Return unique channel name strings (lowercase)
-    var seen = {};
-    return tvEvents.reduce(function(acc, tv) {
-      var name = (tv.strChannel || '').toLowerCase().trim();
-      if (name && !seen[name]) { seen[name] = true; acc.push({ name: name, logo: tv.strLogo || null, country: tv.strCountry || '' }); }
-      return acc;
-    }, []);
-  } catch(e) {
-    return [];
-  }
-}
-
-// ─── Step 3: Claude AI fallback (only used when TheSportsDB returns nothing) ─
-async function fetchAIBroadcasters(gd) {
-  var c        = getCompetitors(gd);
-  var homeName = (c.home.team && c.home.team.displayName) || '?';
-  var awayName = (c.away.team && c.away.team.displayName) || '?';
-  var league   = gd.league.name || '';
-  var dateStr  = gd.espnEvent.date ? new Date(gd.espnEvent.date).toDateString() : 'unknown date';
-  var prompt   = 'Sports broadcast rights expert. For: ' + homeName + ' vs ' + awayName
-    + ' (' + league + ', ' + dateStr + '). List all major global TV channels/streaming services '
-    + 'that typically broadcast this. UK, Spain, USA, Germany, France, Netherlands, Italy, '
-    + 'Middle East, Australia. Reply ONLY with a raw JSON array of lowercase strings. '
-    + 'Example: ["sky sports","tnt sport","bein sports 1","dazn","espn+","canal+"]';
-  try {
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 300,
-        messages: [{ role: 'user', content: prompt }] })
-    });
-    if (!resp.ok) return [];
-    var data = await resp.json();
-    var text = ((data.content && data.content[0] && data.content[0].text) || '').replace(/```json|```/g, '').trim();
-    var parsed = JSON.parse(text);
-    if (Array.isArray(parsed)) return parsed.map(function(s){
-      return { name: String(s).toLowerCase(), logo: null, country: '' };
-    });
-  } catch(e) { log('err', '🤖 AI fallback failed: ' + e.message); }
-  return [];
-}
-
-// ─── Fuzzy-match a list of {name, logo} broadcaster objects → saved channel IDs
-function matchBroadcastersToChannels(broadcasters) {
-  if (!broadcasters.length || !channelLibrary.length) return [];
-  var matched = [];
-  channelLibrary.forEach(function(ch) {
-    var chLower = (ch.name || '').toLowerCase();
-    var chWords = chLower.split(/[\s\-_]+/).filter(function(w){ return w.length > 2; });
-    var hit = broadcasters.some(function(b) {
-      var bName = b.name;
-      if (bName.indexOf(chLower) !== -1 || chLower.indexOf(bName) !== -1) return true;
-      return chWords.some(function(w){ return w.length > 2 && bName.indexOf(w) !== -1; });
-    });
-    if (hit) matched.push(ch.id);
-  });
-  return matched;
-}
-
-// ─── Main auto-detect: Phase 1 (instant) → Phase 2 (TheSportsDB) → Phase 3 (AI fallback) ──
-function applyDefaultChannels(idx) {
-  var gd = detectedGames[idx];
-  if (!gd || !channelLibrary.length) return;
-
-  // Phase 1 — instant: broadcaster intelligence table (name-based, zero config)
-  var matchedIds = getAutoMatchedChannelIds(idx);
-  if (matchedIds.length) {
-    if (!cardChannels[idx]) cardChannels[idx] = new Set();
-    matchedIds.forEach(function(cid){ cardChannels[idx].add(cid); });
-    var url = buildIframeUrl(Array.from(cardChannels[idx]));
-    if (url) gd.iframeSrc = url;
-    var names = matchedIds.map(function(cid){
-      var ch = channelLibrary.find(function(c){ return c.id === cid; });
-      return ch ? ch.name : cid;
-    }).join(', ');
-    log('ai', '⚡ Intelligence match for ' + getMatchTitle(gd) + ': ' + names);
-  }
-
-  // Phase 2 + 3 — async: TheSportsDB real data, then AI fallback
-  lookupAndApplyRealChannels(idx);
-}
-
-async function lookupAndApplyRealChannels(idx) {
-  var gd = detectedGames[idx];
-  if (!gd) return;
-
-  var c        = getCompetitors(gd);
-  var homeName = (c.home.team && c.home.team.displayName) || '';
-  var awayName = (c.away.team && c.away.team.displayName) || '';
-  var dateStr  = gd.espnEvent.date || '';
-
-  // ── Phase 2: TheSportsDB real TV data ────────────────────────────────────
-  var broadcasters = [];
-  var source = '';
-  var eventId = await fetchTSDBEventId(homeName, awayName, dateStr);
-  if (eventId) {
-    var tsdbChannels = await fetchTSDBChannels(eventId);
-    if (tsdbChannels.length) {
-      broadcasters = tsdbChannels;
-      source = '📡 TheSportsDB';
-      log('ok', '📡 TheSportsDB found ' + tsdbChannels.length + ' broadcaster(s) for ' + getMatchTitle(gd)
-        + ': ' + tsdbChannels.slice(0,4).map(function(b){ return b.name; }).join(', ')
-        + (tsdbChannels.length > 4 ? ' +' + (tsdbChannels.length - 4) + ' more' : ''));
-    }
-  }
-
-  // ── Phase 3: Claude AI fallback if TheSportsDB found nothing ─────────────
-  if (!broadcasters.length) {
-    broadcasters = await fetchAIBroadcasters(gd);
-    if (broadcasters.length) {
-      source = '🤖 AI';
-      log('ai', '🤖 AI fallback found ' + broadcasters.length + ' broadcaster(s) for ' + getMatchTitle(gd));
-    }
-  }
-
-  if (!broadcasters.length) {
-    gd.broadcasterSource = null;
-    gd.broadcasterHints  = [];
-    return;
-  }
-
-  gd.broadcasterSource = source;
-  gd.broadcasterHints  = broadcasters; // full list stored for picker hints
-
-  // Match against saved library
-  var newMatchedIds = matchBroadcastersToChannels(broadcasters);
-  if (!cardChannels[idx]) cardChannels[idx] = new Set();
-  var newOnes = newMatchedIds.filter(function(cid){ return !cardChannels[idx].has(cid); });
-  newOnes.forEach(function(cid){ cardChannels[idx].add(cid); });
-
-  if (newOnes.length) {
-    var url = buildIframeUrl(Array.from(cardChannels[idx]));
-    gd.iframeSrc = url;
-    var iframeDomEl = document.getElementById('iframe-src-' + idx);
-    if (iframeDomEl) iframeDomEl.value = url;
-    var newNames = newOnes.map(function(cid){
-      var ch = channelLibrary.find(function(c){ return c.id === cid; });
-      return ch ? (ch.emoji + ' ' + ch.name) : cid;
-    }).join(', ');
-    log('ok', source + ' added channels for ' + getMatchTitle(gd) + ': ' + newNames);
-  } else if (newMatchedIds.length) {
-    log('ai', source + ' confirmed existing channels for ' + getMatchTitle(gd));
-  } else {
-    log('ai', source + ' found broadcasters for ' + getMatchTitle(gd)
-      + ' but none matched saved library. Showing as hints.');
-  }
-
-  // Refresh the channel picker panel if it's open
-  var panel = document.getElementById('text-channels-' + idx);
-  if (panel && panel.style.display !== 'none') panel.innerHTML = buildChannelPickerHtml(idx);
-}
 
 // ─── PERSISTENT POST STORAGE ───────────────────────────────────────────────
 function getGameKey(gd) {
@@ -1090,6 +689,7 @@ function getGameKey(gd) {
   var day  = gd.espnEvent.date ? gd.espnEvent.date.substring(0,10) : (gd.gameDate||'unknown');
   return 's803_post_' + [gd.league.id, home, away, day].join('|').replace(/\s+/g,'_').toLowerCase();
 }
+
 function savePostToStorage(gd) {
   var key = getGameKey(gd);
   var data = {
@@ -1101,6 +701,7 @@ function savePostToStorage(gd) {
   };
   localStorage.setItem(key, JSON.stringify(data));
 }
+
 function loadPostFromStorage(gd) {
   var key = getGameKey(gd);
   try {
@@ -1114,6 +715,7 @@ function loadPostFromStorage(gd) {
     return data;
   } catch(e) { return null; }
 }
+
 function restorePostStateForAllGames() {
   detectedGames.forEach(function(gd) {
     var saved = loadPostFromStorage(gd);
@@ -1148,8 +750,7 @@ function linkExistingPost(idx) {
   savePostToStorage(gd);
   inputEl.value = '';
   renderGames();
-  restoreActiveTabs();
-  toast('✓ Post linked!', 'ok');
+  toast('✓ Post linked! You can now post highlights to it.', 'ok');
   log('ok', '🔗 Linked existing post ' + postId + ' → ' + getMatchTitle(gd));
 }
 
@@ -1159,7 +760,6 @@ var GOOGLE_CLIENT_ID = '';
 var IMGBB_API_KEY    = 'c8cd5657bfdfc6c298c9366deebfa7a7';
 
 function loadConfig() {
-  loadChannelLibraryFromStorage();
   try {
     var saved = JSON.parse(localStorage.getItem('s803_config_v2')||'{}');
     if (saved.blogId)      document.getElementById('blog-id').value = saved.blogId;
@@ -1174,6 +774,9 @@ function loadConfig() {
     updateSchedPreview();
     if (saved.globalLabels) globalLabels = saved.globalLabels;
     if (saved.globalSchedulerOn) { globalSchedulerOn = saved.globalSchedulerOn; updateSchedulerUI(); }
+    if (saved.scanAllMode !== undefined) { scanAllMode = saved.scanAllMode; updateScanAllUI(); }
+    if (saved.channelLibrary) { channelLibrary = saved.channelLibrary; } else { initDefaultChannels(); }
+    if (saved.playerBaseUrl) document.getElementById('player-base-url').value = saved.playerBaseUrl;
     if (saved.oauthToken && saved.tokenExpiresAt && Date.now() < saved.tokenExpiresAt) {
       oauthToken = saved.oauthToken; oauthUser = saved.oauthUser||null; tokenExpiresAt = saved.tokenExpiresAt;
       setSignedInUI(oauthUser);
@@ -1198,6 +801,8 @@ function saveConfig() {
     schedAmount: document.getElementById('sched-amount').value,
     schedUnit:   document.getElementById('sched-unit').value,
     globalLabels, globalSchedulerOn,
+    scanAllMode, channelLibrary,
+    playerBaseUrl: document.getElementById('player-base-url').value.trim(),
   };
   localStorage.setItem('s803_config_v2', JSON.stringify(config));
   updatePills();
@@ -1220,69 +825,29 @@ function updatePills() {
 }
 
 // ─── GOOGLE OAUTH ──────────────────────────────────────────────────────────
-// ─── GOOGLE OAUTH ──────────────────────────────────────────────────────────
 var gisClient = null;
-var gisReady  = false;
-
-function onGISLoaded() {
-  gisReady = true;
-}
-
-// ── Manual token fallback UI toggle ──────────────────────────────────────
-var manualMode = false;
-function toggleManualSignIn() {
-  manualMode = !manualMode;
-  document.getElementById('gis-signin-wrap').style.display   = manualMode ? 'none'  : 'block';
-  document.getElementById('manual-token-wrap').style.display = manualMode ? 'block' : 'none';
-  var btn = document.getElementById('toggle-manual-btn');
-  if (btn) btn.textContent = manualMode ? '← Back to Google Sign-In' : 'Having trouble? Use manual token instead';
-}
-
-// ── Manual token sign-in (when GIS is blocked) ────────────────────────────
-function signInManualToken() {
-  var token = document.getElementById('manual-token-input').value.trim();
-  var name  = document.getElementById('manual-name-input').value.trim() || 'Sports 803 User';
-  if (!token) { toast('Paste your access token first', 'err'); return; }
-  if (!token.startsWith('ya29.')) { toast('Token should start with ya29.', 'err'); return; }
-  oauthToken     = token;
-  tokenExpiresAt = Date.now() + 3600 * 1000; // assume 1hr
-  oauthUser      = { name: name, email: '', picture: '' };
-  setSignedInUI(oauthUser);
-  saveConfig();
-  toast('✓ Connected with manual token', 'ok');
-  log('ok', '✓ Manual token sign-in: ' + name);
-}
-
-// ── Standard GIS sign-in ─────────────────────────────────────────────────
 function signInWithGoogle() {
   if (!GOOGLE_CLIENT_ID) {
     var cid = prompt('Paste your Google OAuth Client ID\n(ends in .apps.googleusercontent.com):');
-    if (!cid || !cid.trim()) return;
+    if (!cid||!cid.trim()) return;
     GOOGLE_CLIENT_ID = cid.trim();
     saveConfig();
   }
   requestGISToken();
 }
-
 function requestGISToken() {
-  if (typeof google === 'undefined' || !google.accounts) {
-    // GIS blocked — auto-switch to manual mode
-    toggleManualSignIn();
-    toast('Google Sign-In blocked — use manual token instead', 'err');
-    log('err', '✗ GIS unavailable — switched to manual token mode');
-    return;
-  }
+  if (typeof google==='undefined'||!google.accounts){ toast('GIS not loaded','err'); return; }
   gisClient = google.accounts.oauth2.initTokenClient({
     client_id: GOOGLE_CLIENT_ID,
     scope: 'https://www.googleapis.com/auth/blogger https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
     callback: function(r) {
-      if (r.error) { toast('Sign-in failed: ' + r.error, 'err'); return; }
-      oauthToken     = r.access_token;
-      tokenExpiresAt = Date.now() + parseInt(r.expires_in || '3600', 10) * 1000;
+      if (r.error){ toast('Sign-in failed: '+r.error,'err'); return; }
+      oauthToken = r.access_token;
+      tokenExpiresAt = Date.now() + parseInt(r.expires_in||'3600',10)*1000;
       fetchGoogleProfile();
     },
   });
-  gisClient.requestAccessToken({ prompt: 'select_account' });
+  gisClient.requestAccessToken({prompt:'select_account'});
 }
 async function fetchGoogleProfile() {
   try {
@@ -1370,7 +935,6 @@ async function checkScheduledPosts() {
     }
   }
   renderGames();
-  restoreActiveTabs();
 }
 
 // ─── BULK POST ─────────────────────────────────────────────────────────────
@@ -1400,7 +964,6 @@ async function bulkPostAll() {
   setTimeout(function(){ banner.classList.remove('visible'); },4000);
   btn.classList.remove('loading'); btn.disabled=false;
   renderGames();
-  restoreActiveTabs();
   toast('✓ Bulk posted '+done+' games!','ok');
   log('ok','✓ Bulk post finished: '+done+' posts');
 }
@@ -1444,7 +1007,6 @@ function toggleLeague(el) {
   var id=el.getAttribute('data-league-id');
   if (activeLeagues.has(id)){ activeLeagues.delete(id); el.classList.remove('active'); el.querySelector('.lcheck').textContent=''; }
   else{ activeLeagues.add(id); el.classList.add('active'); el.querySelector('.lcheck').textContent='✓'; }
-  // Refresh league defaults panel
 }
 
 // ─── ESPN FETCH ────────────────────────────────────────────────────────────
@@ -1515,9 +1077,7 @@ async function scanAllLeagues() {
   var btn=document.getElementById('scan-btn');
   btn.classList.add('loading'); btn.disabled=true;
   detectedGames=[];
-  cardChannels={};  // reset per-card channel selections
-  activeCardTabs={};  // reset tab memory
-  var selected=LEAGUES.filter(function(l){ return activeLeagues.has(l.id); });
+  var selected = scanAllMode ? LEAGUES : LEAGUES.filter(function(l){ return activeLeagues.has(l.id); });
   var scanLabel = formatDateLabel(selectedDate);
   log('info','Scanning '+selected.length+' leagues for '+scanLabel+'...');
   var totalFound=0;
@@ -1536,11 +1096,9 @@ async function scanAllLeagues() {
           league,preContent:null,highlightContent:null,blogPostId:null,blogPostUrl:null,
           status:'idle',thumbUrl:null,isManual:true,customLabels:[],customTitle:null,
           scheduledPosted:false,gameDate:selectedDate,
-          iframeSrc:''
+          iframeSrc:''   // ← stores the stream URL persistently
         });
-        totalFound++;
-        applyDefaultChannels(detectedGames.length - 1);
-        continue;
+        totalFound++; continue;
       }
       var events=await fetchESPN(league.id);
       events.forEach(function(ev){
@@ -1551,9 +1109,8 @@ async function scanAllLeagues() {
           blogPostId:null,blogPostUrl:null,status:'idle',thumbUrl:null,
           customLabels:[],customTitle:null,scheduledPosted:false,
           stats:extractStats(ev),gameDate:selectedDate,
-          iframeSrc:''
+          iframeSrc:''   // ← stores the stream URL persistently
         });
-        applyDefaultChannels(detectedGames.length - 1);
         totalFound++;
       });
       log('ok','✓ '+league.name+': '+events.length+' game(s)');
@@ -1566,7 +1123,6 @@ async function scanAllLeagues() {
   document.getElementById('main-subtitle').textContent=totalFound+' game'+(totalFound!==1?'s':'')+
     ' found '+contextStr+' · '+new Date().toLocaleTimeString();
   renderGames();
-  restoreActiveTabs();
   btn.classList.remove('loading'); btn.disabled=false;
   var bulkBtn=document.getElementById('bulk-btn');
   if (bulkBtn) bulkBtn.disabled=totalFound===0;
@@ -1606,7 +1162,6 @@ async function refreshScores() {
     } catch(e){ log('err','Refresh error: '+e.message); }
   }
   renderGames();
-  restoreActiveTabs();
   log('ok','Scores updated.');
 }
 async function autoRefreshScores(){ if (detectedGames.length) await refreshScores(); }
@@ -1663,418 +1218,9 @@ function buildSEOTitle(homeName,awayName,leagueName,type,score) {
   }
 }
 
-// ─── FIX: sync iframeSrc into game object ──────────────────────────────────
+// ─── FIX: sync iframeSrc into game object on every keystroke/paste ──────────
 function updateIframeSrc(idx, value) {
   if (detectedGames[idx] !== undefined) detectedGames[idx].iframeSrc = value;
-}
-
-// ─── PER-CARD CHANNEL TOGGLE ─────────────────────────────────────────────
-function toggleCardChannel(idx, channelId) {
-  if (!cardChannels[idx]) cardChannels[idx] = new Set();
-  if (cardChannels[idx].has(channelId)) {
-    cardChannels[idx].delete(channelId);
-  } else {
-    cardChannels[idx].add(channelId);
-  }
-  // Rebuild iframe URL
-  var url = buildIframeUrl(Array.from(cardChannels[idx]));
-  detectedGames[idx].iframeSrc = url;
-
-  // Update the preview box in the picker panel
-  var previewEl = document.getElementById('ch-picker-preview-' + idx);
-  if (previewEl) {
-    if (url) {
-      previewEl.className = 'channel-preview-url';
-      previewEl.textContent = url;
-    } else {
-      previewEl.className = 'channel-preview-url empty';
-      previewEl.textContent = 'No channels selected — stream URL will be empty';
-    }
-  }
-
-  // Also sync the raw iframe textarea
-  var iframeDomEl = document.getElementById('iframe-src-' + idx);
-  if (iframeDomEl) iframeDomEl.value = url;
-
-  // Refresh button states
-  var buttons = document.querySelectorAll('#ch-picker-grid-' + idx + ' .channel-pick-btn');
-  buttons.forEach(function(btn) {
-    var cid = btn.getAttribute('data-ch-id');
-    btn.classList.toggle('selected', cardChannels[idx].has(cid));
-    btn.querySelector('.cpcheck').textContent = cardChannels[idx].has(cid) ? '✓' : '';
-  });
-}
-
-// ─── BROADCASTER INTELLIGENCE TABLE ─────────────────────────────────────
-// Maps known broadcaster name fragments → leagues/sports they carry.
-// When a saved channel's name contains any of these keys, the associated
-// sport tags are automatically added to its detection haystack.
-var BROADCASTER_INTELLIGENCE = {
-  // ── UK / Ireland ──
-  'tnt sport':        ['premier league','champions league','europa league','fa cup','serie a','bundesliga'],
-  'bt sport':         ['premier league','champions league','europa league','fa cup','moto','formula'],
-  'sky sport':        ['premier league','champions league','formula 1','f1','cricket','boxing','nfl','nba'],
-  'sky sports':       ['premier league','champions league','formula 1','f1','cricket','boxing','nfl','nba'],
-  'bbc sport':        ['premier league','fa cup','formula 1','f1','cricket','rugby'],
-  'itv sport':        ['champions league','europa league','formula 1'],
-  'channel 4':        ['formula 1','f1','cricket'],
-  'dazn':             ['champions league','premier league','serie a','bundesliga','ligue 1','la liga','boxing','formula 1','nba','nfl','mma','ufc'],
-  // ── Spain / LatAm ──
-  'laliga tv':        ['la liga','laliga','spain','spanish'],
-  'laliga':           ['la liga','laliga','spain','barcelona','real madrid'],
-  'movistar':         ['la liga','champions league','formula 1','f1','motogp'],
-  'gol play':         ['la liga','champions league'],
-  'espn':             ['premier league','la liga','serie a','bundesliga','ligue 1','champions league','nba','nfl','mls','ufc','mma','formula 1','tennis','cricket'],
-  'espn+':            ['premier league','la liga','mls','ufc','nfl','nba','nhl','formula 1'],
-  // ── beIN / Middle East / Global ──
-  'bein sport':       ['la liga','champions league','bundesliga','serie a','ligue 1','turkish','premier league'],
-  'bein':             ['la liga','champions league','bundesliga','serie a','ligue 1','turkish','premier league'],
-  // ── Italy ──
-  'sky italia':       ['serie a','champions league','formula 1','f1'],
-  'dazn it':          ['serie a','champions league','europa league'],
-  'mediaset':         ['champions league','serie a'],
-  // ── Germany ──
-  'dazn de':          ['bundesliga','champions league','nba','nfl','formula 1'],
-  'sat.1':            ['bundesliga','champions league'],
-  'sport1':           ['bundesliga','formula 1','nfl'],
-  // ── France ──
-  'canal+':           ['ligue 1','champions league','formula 1','rugby','nba'],
-  'canal plus':       ['ligue 1','champions league','formula 1','rugby','nba'],
-  'free ligue':       ['ligue 1'],
-  'amazon prime':     ['premier league','champions league','ligue 1'],
-  // ── Netherlands ──
-  'ziggo sport':      ['formula 1','f1','premier league','champions league','la liga','motogp','tennis'],
-  'ziggo':            ['formula 1','f1','premier league','champions league','motogp'],
-  'espn nl':          ['eredivisie','netherlands','ajax','psv','feyenoord'],
-  // ── USA ──
-  'fox sport':        ['nfl','nba','soccer','mls','ufc','formula 1','nascar'],
-  'fox sports':       ['nfl','nba','soccer','mls','ufc','formula 1','nascar'],
-  'nbc sport':        ['premier league','formula 1','nfl','nhl'],
-  'nbc sports':       ['premier league','formula 1','nfl','nhl'],
-  'cbs sport':        ['nfl','champions league','soccer'],
-  'cbs sports':       ['nfl','champions league','soccer'],
-  'abc sport':        ['nba','nfl','mma','ufc'],
-  'tbs':              ['nba','nfl'],
-  'tnt':              ['nba','champions league','premier league'],
-  'peacock':          ['premier league','formula 1','nfl'],
-  'paramount':        ['champions league','serie a','nfl'],
-  'fubo':             ['premier league','la liga','serie a','bundesliga','mls','nba','nfl'],
-  'apple tv':         ['mls','premier league'],
-  // ── Australia ──
-  'optus sport':      ['premier league','champions league','la liga','serie a','bundesliga','ligue 1'],
-  'foxtel':           ['nrl','afl','cricket','formula 1','nba','nfl'],
-  'kayo':             ['nrl','afl','cricket','formula 1','nba','nfl','nfl'],
-  // ── MotoGP / Racing ──
-  'motogp tv':        ['motogp','moto2','moto3','motorcycle'],
-  'motogp':           ['motogp','moto2','moto3','motorcycle'],
-  'f1 tv':            ['formula 1','f1','grand prix'],
-  'f1tv':             ['formula 1','f1','grand prix'],
-  'race':             ['formula 1','f1','motogp','nascar','indycar','le mans'],
-  // ── UFC / MMA ──
-  'ufc fight pass':   ['ufc','mma','bellator','one championship'],
-  'ufc':              ['ufc','mma'],
-  'fight pass':       ['ufc','mma','bellator'],
-  // ── Tennis ──
-  'tennis tv':        ['tennis','atp','wta','wimbledon','roland garros'],
-  'tennis channel':   ['tennis','atp','wta'],
-  // ── Cricket ──
-  'willow':           ['cricket','icc','ipl','test match'],
-  'star sport':       ['cricket','ipl','icc','indian','india'],
-  'star sports':      ['cricket','ipl','icc','indian','india'],
-  'super sport':      ['cricket','rugby','soccer','premier league'],
-  // ── WWE / Combat ──
-  'wwe network':      ['wwe','wrestling'],
-  'peacock wwe':      ['wwe','wrestling'],
-  // ── NBA / Basketball ──
-  'nba tv':           ['nba','basketball'],
-  'league pass':      ['nba','basketball'],
-  // ── NFL ──
-  'nfl network':      ['nfl','american football'],
-  'nfl+':             ['nfl','american football'],
-  'nfl game pass':    ['nfl','american football'],
-  // ── NHL ──
-  'nhl network':      ['nhl','ice hockey'],
-  'nhl tv':           ['nhl','ice hockey'],
-  // ── Generic streaming ──
-  'premier sport':    ['premier league','champions league','europa league'],
-  'premier sports':   ['premier league','champions league','europa league'],
-  'sport news':       ['premier league','la liga','champions league','serie a','bundesliga'],
-  'sportsnews':       ['premier league','la liga','champions league','serie a','bundesliga'],
-};
-
-// ─── AUTO-MATCH: broadcaster intelligence (name-based, fully automatic) ──────
-// Builds detection needles for a channel purely from its name:
-//   1. Sports inferred from the channel name via BROADCASTER_INTELLIGENCE
-//   2. Significant words from the channel name itself (length > 2)
-// No user keywords needed — it's all automatic.
-function getChannelNeedles(ch) {
-  var nameLower = (ch.name || '').toLowerCase();
-  var needles   = [];  // no user keywords — fully automatic
-
-  // Walk broadcaster intelligence table: if channel name contains a key,
-  // add all that broadcaster's known sports as additional needles
-  Object.keys(BROADCASTER_INTELLIGENCE).forEach(function(key) {
-    if (nameLower.indexOf(key) !== -1) {
-      BROADCASTER_INTELLIGENCE[key].forEach(function(sport) {
-        if (needles.indexOf(sport) === -1) needles.push(sport);
-      });
-    }
-  });
-
-  // Also add significant words from the channel name itself
-  nameLower.split(/[\s\-_]+/).forEach(function(w) {
-    if (w.length > 2 && needles.indexOf(w) === -1) needles.push(w);
-  });
-
-  return needles;
-}
-
-function getAutoMatchedChannelIds(idx) {
-  var gd = detectedGames[idx];
-  if (!gd || !channelLibrary.length) return [];
-
-  var c           = getCompetitors(gd);
-  var homeName    = ((c.home.team && c.home.team.displayName) || '').toLowerCase();
-  var awayName    = ((c.away.team && c.away.team.displayName) || '').toLowerCase();
-  var leagueName  = (gd.league.name  || '').toLowerCase();
-  var leagueLabel = (gd.league.label || '').toLowerCase();
-  // haystack = everything we know about this match
-  var haystack = [leagueName, leagueLabel, homeName, awayName].join(' ');
-
-  var matched = [];
-  channelLibrary.forEach(function(ch) {
-    var needles = getChannelNeedles(ch);
-    var hit = needles.some(function(needle) {
-      return needle.length > 2 && haystack.indexOf(needle) !== -1;
-    });
-    if (hit) matched.push(ch.id);
-  });
-  return matched;
-}
-
-function buildChannelPickerHtml(idx) {
-  var gd = detectedGames[idx];
-  if (!channelLibrary.length) {
-    return '<div class="channel-no-channels">No channels in library yet.<br/>Add channels in the sidebar first.</div>';
-  }
-
-  var set = cardChannels[idx] || new Set();
-  // Figure out which channels were auto-detected via keyword match
-  var autoDetected = getAutoMatchedChannelIds(idx);
-
-  var buttonsHtml = channelLibrary.map(function(ch) {
-    var isSelected = set.has(ch.id);
-    var isAuto = autoDetected.includes(ch.id);
-    return '<div class="channel-pick-btn' + (isSelected ? ' selected' : '') + '"'
-      + ' data-ch-id="' + ch.id + '"'
-      + ' onclick="toggleCardChannel(' + idx + ',\'' + ch.id + '\')">'
-      + '<div class="cpcheck">' + (isSelected ? '✓' : '') + '</div>'
-      + '<span class="channel-pick-btn-emoji">' + escHtml(ch.emoji || '📺') + '</span>'
-      + '<span class="channel-pick-btn-name">' + escHtml(ch.name) + '</span>'
-      + (isAuto ? '<span title="Auto-detected for this league" style="font-size:8px;color:var(--green);">⚡</span>' : '')
-      + '</div>';
-  }).join('');
-
-  var currentUrl = buildIframeUrl(Array.from(set));
-
-  // Broadcaster hints panel — channels found by TheSportsDB/AI not yet in your library
-  var hintsHtml = '';
-  var hints = gd.broadcasterHints || [];
-  if (hints.length) {
-    var unmatched = hints.filter(function(b) {
-      var bName = b.name || '';
-      return !channelLibrary.some(function(ch) {
-        var chl = (ch.name||'').toLowerCase();
-        return chl.indexOf(bName) !== -1 || bName.indexOf(chl) !== -1 ||
-          chl.split(/[\s\-_]+/).some(function(w){ return w.length > 2 && bName.indexOf(w) !== -1; });
-      });
-    }).slice(0, 10);
-    if (unmatched.length) {
-      var sourceLabel = gd.broadcasterSource || '📡 Data';
-      hintsHtml = '<div style="margin-top:8px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.25);border-radius:6px;padding:9px 11px;">'
-        + '<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);margin-bottom:6px;">'
-        + sourceLabel + ' found these — not in your library yet:</div>'
-        + '<div style="display:flex;flex-wrap:wrap;gap:5px;">'
-        + unmatched.map(function(b) {
-            var logoHtml = b.logo
-              ? '<img src="' + escHtml(b.logo) + '" style="width:14px;height:14px;object-fit:contain;vertical-align:middle;margin-right:3px;" onerror="this.style.display=\'none\'"/>'
-              : '';
-            var countryHtml = b.country ? '<span style="opacity:.5;font-size:8px;"> (' + escHtml(b.country) + ')</span>' : '';
-            return '<span onclick="prefillChannelForm(\'' + escAttr(b.name) + '\')" '
-              + 'title="Click to pre-fill the add-channel form with this broadcaster" '
-              + 'style="display:inline-flex;align-items:center;font-size:9px;padding:3px 8px;border-radius:10px;'
-              + 'background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);color:var(--accent2);'
-              + 'cursor:pointer;transition:all .12s;" '
-              + 'onmouseover="this.style.background=\'rgba(0,212,255,.2)\'" onmouseout="this.style.background=\'rgba(0,212,255,.1)\'">'
-              + logoHtml + escHtml(b.name) + countryHtml + ' <span style="margin-left:4px;font-size:10px;">➕</span>'
-              + '</span>';
-          }).join('')
-        + '</div>'
-        + '<div style="font-size:9px;color:var(--muted);margin-top:6px;">👆 Click any channel → sidebar form pre-fills → paste its URL → Save. Next time it auto-selects.</div>'
-        + '</div>';
-    }
-  }
-
-  // Source status badge
-  var aiStatus = gd.broadcasterSource
-    ? '<span style="font-size:8px;font-weight:700;letter-spacing:.04em;padding:1px 6px;border-radius:8px;background:rgba(46,213,115,.1);border:1px solid rgba(46,213,115,.3);color:var(--green);">' + escHtml(gd.broadcasterSource) + ' ✓</span>'
-    : '<span style="font-size:8px;color:var(--muted);font-style:italic;">📡 looking up channels…</span>';
-
-  return '<div class="channel-picker-panel">'
-    + '<div class="channel-picker-head">'
-      + '<div class="channel-picker-title" style="gap:5px;flex-wrap:wrap;">📺 Channels '
-        + (autoDetected.length ? '<span class="channel-auto-badge">⚡ ' + autoDetected.length + ' auto</span>' : '')
-        + aiStatus
-      + '</div>'
-      + '<button class="btn btn-secondary" style="padding:5px 10px;font-size:9px;" onclick="clearCardChannels(' + idx + ')">✕ Clear All</button>'
-    + '</div>'
-    + '<div class="channel-picker-grid" id="ch-picker-grid-' + idx + '">' + buttonsHtml + '</div>'
-    + hintsHtml
-    // ── Manual channel selector — pick any saved channel by name ──
-    + '<div style="margin-top:8px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;display:flex;flex-direction:column;gap:7px;">'
-      + '<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);">➕ Add Channel Manually</div>'
-      + '<div style="display:flex;gap:6px;align-items:center;">'
-        + '<select id="manual-ch-select-' + idx + '" style="flex:1;font-size:10px;padding:7px 9px;border-radius:var(--r);">'
-          + '<option value="">— Pick a saved channel —</option>'
-          + channelLibrary.map(function(ch){
-              var alreadyOn = set.has(ch.id);
-              return '<option value="' + ch.id + '"' + (alreadyOn ? ' disabled' : '') + '>'
-                + escHtml(ch.emoji || '📺') + ' ' + escHtml(ch.name)
-                + (alreadyOn ? ' ✓' : '')
-                + '</option>';
-            }).join('')
-        + '</select>'
-        + '<button class="btn btn-cyan" style="padding:8px 14px;font-size:10px;flex-shrink:0;" onclick="addSavedChannelFromDropdown(' + idx + ')">'
-          + '<span class="btn-text">➕ Add</span>'
-        + '</button>'
-      + '</div>'
-      + '<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);margin-top:4px;">Or paste a one-off URL</div>'
-      + '<div style="display:flex;gap:6px;">'
-        + '<input type="text" id="manual-ch-url-' + idx + '" placeholder="https://tv.sportsnews.id/p/channel.html" style="flex:1;font-size:10px;padding:7px 9px;"/>'
-        + '<button class="btn btn-cyan" style="padding:8px 14px;font-size:10px;flex-shrink:0;" onclick="addManualChannelUrl(' + idx + ')">'
-          + '<span class="btn-text">➕ Add</span>'
-        + '</button>'
-      + '</div>'
-      + '<div style="font-size:9px;color:var(--muted);">Paste a URL to add it directly to this event only — without saving to library.</div>'
-    + '</div>'
-    + '<div class="channel-preview-box" style="margin-top:8px;">'
-      + '<div class="channel-preview-label">📡 Generated Stream URL</div>'
-      + '<div class="channel-preview-url' + (currentUrl ? '' : ' empty') + '" id="ch-picker-preview-' + idx + '">'
-        + (currentUrl ? escHtml(currentUrl) : 'No channels selected — stream URL will be empty')
-      + '</div>'
-    + '</div>'
-    + '<div style="display:flex;gap:6px;margin-top:6px;">'
-      + '<button class="btn btn-green btn-full" onclick="applyChannelsToIframe(' + idx + ')"><span class="btn-text">✅ Apply to Post</span></button>'
-    + '</div>'
-    + '</div>';
-}
-
-// Pre-fill the add-channel sidebar form from an AI-suggested broadcaster name
-function prefillChannelForm(broadcasterName) {
-  var nameEl  = document.getElementById('ch-name');
-  var emojiEl = document.getElementById('ch-emoji');
-  if (!nameEl) return;
-  var titled = broadcasterName.replace(/\b\w/g, function(c){ return c.toUpperCase(); });
-  nameEl.value  = titled;
-  emojiEl.value = '📺';
-  var form = document.getElementById('channel-add-form');
-  if (form) {
-    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    form.style.outline = '2px solid var(--accent2)';
-    setTimeout(function(){ form.style.outline = ''; }, 1800);
-  }
-  toast('📋 Pre-filled: ' + titled + ' — add the URL and save!', 'ok');
-}
-
-// ─── Add a saved channel from the dropdown selector ────────────────────────
-function addSavedChannelFromDropdown(idx) {
-  var sel = document.getElementById('manual-ch-select-' + idx);
-  if (!sel || !sel.value) { toast('Pick a channel from the list first', 'err'); return; }
-  var chId = sel.value;
-  var ch   = channelLibrary.find(function(c){ return c.id === chId; });
-  if (!ch) { toast('Channel not found', 'err'); return; }
-
-  if (!cardChannels[idx]) cardChannels[idx] = new Set();
-  if (cardChannels[idx].has(chId)) { toast(ch.name + ' is already added', 'err'); return; }
-
-  cardChannels[idx].add(chId);
-  var url = buildIframeUrl(Array.from(cardChannels[idx]));
-  detectedGames[idx].iframeSrc = url;
-
-  // Sync raw textarea
-  var ta = document.getElementById('iframe-src-' + idx);
-  if (ta) ta.value = url;
-
-  // Reset dropdown
-  sel.value = '';
-
-  // Refresh picker
-  var panel = document.getElementById('text-channels-' + idx);
-  if (panel) panel.innerHTML = buildChannelPickerHtml(idx);
-
-  toast('✓ ' + ch.emoji + ' ' + ch.name + ' added!', 'ok');
-  log('ok', '➕ Manually added: ' + ch.name + ' to ' + getMatchTitle(detectedGames[idx]));
-}
-
-// ─── Add a one-off URL directly to an event (no library save needed) ────────
-function addManualChannelUrl(idx) {
-  var input = document.getElementById('manual-ch-url-' + idx);
-  if (!input || !input.value.trim()) { toast('Paste a URL first', 'err'); return; }
-  var rawUrl = input.value.trim();
-
-  // Strip player prefix if pasted in full
-  if (rawUrl.startsWith(PLAYER_BASE)) {
-    var m = rawUrl.split('mora=')[1];
-    if (m) rawUrl = decodeURIComponent(m.split('&mora=')[0]);
-  }
-
-  // Build a temporary one-off entry — not saved to library
-  var tempId = 'temp-' + Date.now();
-  var tempCh = { id: tempId, name: 'Custom URL', emoji: '🔗', url: rawUrl };
-
-  // Add to channelLibrary temporarily (in-memory only, not persisted)
-  channelLibrary.push(tempCh);
-
-  if (!cardChannels[idx]) cardChannels[idx] = new Set();
-  cardChannels[idx].add(tempId);
-
-  var url = buildIframeUrl(Array.from(cardChannels[idx]));
-  detectedGames[idx].iframeSrc = url;
-
-  var ta = document.getElementById('iframe-src-' + idx);
-  if (ta) ta.value = url;
-
-  input.value = '';
-
-  var panel = document.getElementById('text-channels-' + idx);
-  if (panel) panel.innerHTML = buildChannelPickerHtml(idx);
-
-  toast('✓ URL added to this event', 'ok');
-  log('ok', '➕ One-off URL added to ' + getMatchTitle(detectedGames[idx]));
-}
-
-function clearCardChannels(idx) {
-  cardChannels[idx] = new Set();
-  detectedGames[idx].iframeSrc = '';
-  var iframeDomEl = document.getElementById('iframe-src-' + idx);
-  if (iframeDomEl) iframeDomEl.value = '';
-  // Re-render the picker panel
-  var panel = document.getElementById('text-channels-' + idx);
-  if (panel) panel.innerHTML = buildChannelPickerHtml(idx);
-  toast('Channels cleared', 'ok');
-}
-
-function applyChannelsToIframe(idx) {
-  var url = buildIframeUrl(Array.from(cardChannels[idx] || new Set()));
-  detectedGames[idx].iframeSrc = url;
-  var iframeDomEl = document.getElementById('iframe-src-' + idx);
-  if (iframeDomEl) iframeDomEl.value = url;
-  if (url) {
-    toast('✅ Stream URL applied!', 'ok');
-    log('ok', '📺 Stream URL applied for ' + getMatchTitle(detectedGames[idx]));
-  } else {
-    toast('No channels selected', 'err');
-  }
 }
 
 // ─── RENDER GAMES ──────────────────────────────────────────────────────────
@@ -2115,13 +1261,6 @@ function renderGames() {
                    :                         '<span class="post-status idle">○ Not Posted</span>';
 
     var kickoffBadge = kickoffTime ? '<span class="kickoff-badge">⏰ '+kickoffTime+'</span>' : '';
-
-    // Channel count badge
-    var chCount = (cardChannels[idx] && cardChannels[idx].size) || 0;
-    var chBadge = chCount > 0
-      ? '<span style="font-size:9px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:3px;background:rgba(0,212,255,.12);color:var(--accent2);border:1px solid rgba(0,212,255,.3);">📺 '+chCount+' ch</span>'
-      : '';
-
     var schedCountdown='';
     if (globalSchedulerOn) {
       var kickoff=gd.espnEvent.date?new Date(gd.espnEvent.date).getTime():null;
@@ -2148,10 +1287,6 @@ function renderGames() {
     var previewHtml=gd.preContent?'<div class="content-text">'+escHtml(gd.preContent)+'</div>':'<div class="content-empty">⏳ Generating content...</div>';
     var hlText=gd.highlightContent?'<div class="content-text">'+escHtml(gd.highlightContent)+'</div>':'<div class="content-empty">'+(state==='post'?'⏳ Generating highlights...':'⏱ Available after match ends')+'</div>';
     var statsHtml=buildStatsHtml(gd);
-
-    // Channel picker HTML
-    var chPickerHtml = buildChannelPickerHtml(idx);
-
     var thumbPanelHtml=gd.thumbUrl
       ?'<div class="thumb-preview-wrap"><img class="thumb-preview-img" src="'+gd.thumbUrl+'" alt="Match thumbnail" onclick="openLightbox(this.src)"/></div>'
         +'<div class="thumb-actions">'
@@ -2189,6 +1324,8 @@ function renderGames() {
       ?'<button class="btn btn-danger" onclick="deletePost('+idx+')"><span class="btn-text">🗑 Delete</span><div class="spin"></div></button>'
       :'';
 
+    // ── FIX: textarea repopulates from gd.iframeSrc on every render,
+    //         and oninput + onchange + onpaste all sync back to gd.iframeSrc ──
     var iframeVal = escHtml(gd.iframeSrc || '');
     var iframeInput = '<textarea class="iframe-input" id="iframe-src-'+idx+'" rows="2"'
       +' placeholder="Paste iframe src= URL here e.g. https://soulmap1.blogspot.com/p/media-player.html?mora=..."'
@@ -2209,7 +1346,6 @@ html+='<div class="game-card" id="card-'+idx+'">'
       +'<span class="league-tag">'+gd.league.emoji+' '+gd.league.name+'</span>'
       +statusBadge
       +kickoffBadge
-      +chBadge
       +schedCountdown
     +'</div>'
   +'</div>'
@@ -2219,8 +1355,8 @@ html+='<div class="game-card" id="card-'+idx+'">'
       +'<button class="ctab" id="tab-hl-'+idx+'" onclick="switchTab('+idx+',\'highlights\',this)">🏆 Highlights</button>'
       +'<button class="ctab" id="tab-st-'+idx+'" onclick="switchTab('+idx+',\'stats\',this)">📊 Stats</button>'
       +'<button class="ctab" id="tab-th-'+idx+'" onclick="switchTab('+idx+',\'thumbnail\',this)">🖼 Thumb</button>'
-      +'<button class="ctab" id="tab-ch-'+idx+'" onclick="switchTab('+idx+',\'channels\',this)" style="'+(chCount>0?'color:var(--accent2);':'')+'">📺 Channels'+(chCount>0?' ('+chCount+')':'')+'</button>'
       +'<button class="ctab" id="tab-lb-'+idx+'" onclick="switchTab('+idx+',\'labels\',this)">🏷 SEO</button>'
+      +'<button class="ctab" id="tab-bc-'+idx+'" onclick="switchTab('+idx+',\'broadcast\',this)" style="color:var(--accent2);">📺 Channels</button>'
       +'<button class="ctab" id="tab-lk-'+idx+'" onclick="switchTab('+idx+',\'link\',this)" style="'+(gd.status==='idle'?'color:var(--purple)':'')+'">🔗 Link</button>'
     +'</div>'
     +'<div class="content-area">'
@@ -2228,7 +1364,6 @@ html+='<div class="game-card" id="card-'+idx+'">'
       +'<div id="text-highlights-'+idx+'" style="display:none">'+hlText+'</div>'
       +'<div id="text-stats-'+idx+'" style="display:none">'+statsHtml+'</div>'
       +'<div id="text-thumbnail-'+idx+'" style="display:none"><div class="thumb-panel">'+thumbPanelHtml+'</div></div>'
-      +'<div id="text-channels-'+idx+'" style="display:none">'+chPickerHtml+'</div>'
       +'<div id="text-labels-'+idx+'" style="display:none">'
         +'<div style="display:flex;flex-direction:column;gap:10px;padding:4px 0;">'
           +'<div class="input-group"><label class="input-label">SEO Title <span class="badge-new">OPTIMIZER</span></label>'
@@ -2239,17 +1374,15 @@ html+='<div class="game-card" id="card-'+idx+'">'
           +'<div class="input-group"><label class="input-label">Post Labels <span class="badge-purple">CUSTOM</span></label>'+labelsHtml+'</div>'
         +'</div>'
       +'</div>'
+      +'<div id="text-broadcast-'+idx+'" style="display:none">'+buildBroadcastPanel(idx,gd)+'</div>'
       +'<div id="text-link-'+idx+'" style="display:none">'+linkPanelHtml+'</div>'
     +'</div>'
-    +'<div class="iframe-row"><div class="iframe-label">📺 Stream URL (iframe src) <span class="badge-tip">OPTIONAL</span> — <span style="color:var(--green);font-size:9px;">use 📺 Channels tab to pick</span></div>'
+    +'<div class="iframe-row"><div class="iframe-label">📺 Stream URL (iframe src) <span class="badge-tip">OPTIONAL</span></div>'
       + iframeInput
     +'</div>'
     +postLinkHtml
     +'<div class="content-actions">'
       +'<button class="btn btn-secondary" onclick="regenPreview('+idx+')"><span class="btn-text">🔄 Regen</span><div class="spin"></div></button>'
-      +'<button class="btn btn-cyan" onclick="switchTab('+idx+',\'channels\',document.getElementById(\'tab-ch-'+idx+'\'))" title="Pick which channels stream this match">'
-        +'<span class="btn-text">📺 Channels'+(chCount>0?' ('+chCount+')':'')+'</span>'
-      +'</button>'
       +hlBtns
       +deleteBtn
       +'<button class="btn btn-primary" onclick="postToBlogger('+idx+',\'preview\')" '+(gd.preContent?'':'disabled')+'><span class="btn-text">📤 Post Preview</span><div class="spin"></div></button>'
@@ -2262,35 +1395,20 @@ html+='<div class="game-card" id="card-'+idx+'">'
 container.innerHTML=html;
 }
 
-// ─── TAB STATE — remember which tab is open per card across re-renders ──────
-var activeCardTabs = {};  // { idx: ‘channels’ | ‘preview’ | ‘highlights’ | … }
-
 function switchTab(idx,tab,el) {
-activeCardTabs[idx] = tab;  // remember choice
-[‘pre’,‘hl’,‘st’,‘th’,‘ch’,‘lb’,‘lk’].forEach(function(t){
+[‘pre’,‘hl’,‘st’,‘th’,‘lb’,‘bc’,‘lk’].forEach(function(t){
 var tabEl=document.getElementById(‘tab-’+t+’-’+idx);
 if (tabEl) tabEl.classList.remove(‘active’);
 });
 if (el) el.classList.add(‘active’);
-var allPanels=[‘text-preview-’,‘text-highlights-’,‘text-stats-’,‘text-thumbnail-’,‘text-channels-’,‘text-labels-’,‘text-link-’];
+var allPanels=[‘text-preview-’,‘text-highlights-’,‘text-stats-’,‘text-thumbnail-’,‘text-labels-’,‘text-broadcast-’,‘text-link-’];
 allPanels.forEach(function(p){ var el2=document.getElementById(p+idx); if(el2) el2.style.display=‘none’; });
-var panelMap={preview:‘text-preview-’,highlights:‘text-highlights-’,stats:‘text-stats-’,thumbnail:‘text-thumbnail-’,channels:‘text-channels-’,labels:‘text-labels-’,link:‘text-link-’};
+var panelMap={preview:‘text-preview-’,highlights:‘text-highlights-’,stats:‘text-stats-’,thumbnail:‘text-thumbnail-’,labels:‘text-labels-’,broadcast:‘text-broadcast-’,link:‘text-link-’};
 var panel=document.getElementById((panelMap[tab]||‘text-preview-’)+idx);
 if (panel) panel.style.display=‘block’;
-var tabId={preview:‘tab-pre-’,highlights:‘tab-hl-’,stats:‘tab-st-’,thumbnail:‘tab-th-’,channels:‘tab-ch-’,labels:‘tab-lb-’,link:‘tab-lk-’};
+var tabId={preview:‘tab-pre-’,highlights:‘tab-hl-’,stats:‘tab-st-’,thumbnail:‘tab-th-’,labels:‘tab-lb-’,broadcast:‘tab-bc-’,link:‘tab-lk-’};
 var activeTab=document.getElementById((tabId[tab]||‘tab-pre-’)+idx);
 if (activeTab) activeTab.classList.add(‘active’);
-}
-
-// Call after renderGames() to restore whichever tabs were open
-function restoreActiveTabs() {
-Object.keys(activeCardTabs).forEach(function(idx) {
-var tab = activeCardTabs[idx];
-if (!tab || tab === ‘preview’) return;  // preview is default, no need to restore
-var tabId = {highlights:‘tab-hl-’,stats:‘tab-st-’,thumbnail:‘tab-th-’,channels:‘tab-ch-’,labels:‘tab-lb-’,link:‘tab-lk-’};
-var tabEl = document.getElementById((tabId[tab]||‘tab-pre-’) + idx);
-if (tabEl) switchTab(Number(idx), tab, tabEl);
-});
 }
 
 // ─── STATS HTML ─────────────────────────────────────────────────────────────
@@ -2428,7 +1546,6 @@ throw new Error((err.error&&err.error.message)||’Delete failed: ’+r.status);
 localStorage.removeItem(getGameKey(gd));
 gd.blogPostId=null; gd.blogPostUrl=null; gd.status=‘deleted’;
 renderGames();
-restoreActiveTabs();
 toast(‘✓ Post deleted’,‘ok’);
 log(‘ok’,’✓ Deleted post: ’+getMatchTitle(gd));
 } catch(e){
@@ -2441,148 +1558,26 @@ cardBtns.forEach(function(b){ b.disabled=false; });
 // ─── LANGUAGE PHRASES ─────────────────────────────────────────────────────
 var LANG_PHRASES = {
 English:{
-preview_opener:[
-“This is set to be a thrilling encounter as”,
-“Football fans are in for a real treat as”,
-“All eyes are firmly on this fixture as”,
-“The stage is set for an exciting clash as”,
-“Anticipation is building ahead of this standout match as”
-],
-form:[
-“Both teams arrive in strong form, having picked up positive results recently and looking sharp heading into this contest.”,
-“Recent form suggests this could be a tightly contested affair, with neither side willing to give an inch.”,
-“Form coming into this fixture has been impressive on both sides, making it incredibly difficult to call a winner.”,
-“Both managers will be confident heading into this one after solid performances in their most recent outings.”
-],
-tactical:[
-“Expect a fascinating tactical battle between two well-organised sides who will look to exploit space on the counter. The midfield battle will be absolutely crucial, with both teams possessing the quality to control possession and dictate tempo.”,
-“The midfield battle will shape the flow of this game from the first whistle. Both sides have shown a willingness to press high and win the ball back quickly, which should make for an intense and physical encounter.”,
-“Tactically, this is a mouth-watering contest. Both coaches have shown flexibility in recent weeks and will no doubt have specific game plans designed to nullify the opponent’s key threats while maximising their own strengths.”,
-“Set up and shape will be fascinating to analyse in this one. The pressing intensity, defensive organisation, and the ability to transition quickly from defence to attack could well be the deciding factors.”
-],
-player:[
-“All eyes will be on the attacking players who have been in devastating form this season, consistently delivering match-winning performances when their teams need it most. The wide areas should be particularly lively, with pace and creativity likely to cause problems throughout the ninety minutes.”,
-“Set pieces could play a major role in deciding this contest, with both teams possessing genuine aerial threats from dead ball situations. The quality from corners and free kicks on both sides makes this a real danger zone for the defences.”,
-“The creative midfielders will be the ones to watch in this fixture. Their ability to pick a pass, beat a man, and get into goal-scoring positions has been a constant feature of both sides’ recent performances, and they will look to impose themselves from the first whistle.”,
-“Individual quality could prove the difference at the highest level. Both squads contain players capable of producing moments of absolute brilliance, and with the stakes this high, expect somebody to step up and deliver something truly special.”
-],
-build_up:[
-“In the build-up to this match, both camps have spoken positively about their preparations, with injury concerns appearing minimal heading into the game. The atmosphere is expected to be electric, with a full house anticipated and supporters ready to play their part.”,
-“Preparation has gone smoothly for both sides leading into this fixture. Training reports suggest both squads are in good health, with key players available and ready to perform. The coaching staff have left no stone unturned in their planning for what promises to be a momentous occasion.”,
-“The pre-match build-up has been dominated by talk of individual battles across the pitch, and it is easy to see why. Across every department, these two teams are evenly matched, and whoever edges the key individual duels is likely to come out on top.”
-],
-cta:[
-“Watch the full live stream completely free on Sports 803 — no subscription, no registration required. Just click and enjoy the action from the very first whistle.”,
-“Stream every single kick free on Sports 803, your number one destination for live sports coverage online. Catch every goal, every save, and every moment of drama.”,
-“Do not miss a second of the action — Sports 803 has you covered with a free live stream that kicks off right on time. No ads, no paywall, just pure live football.”,
-“Tune in to Sports 803 for complete live coverage at no cost whatsoever. We bring you the best live sports streams online so you never have to miss a moment.”
-],
-closing:[
-“This is a fixture that rarely disappoints, and with both teams motivated and fully prepared, all the ingredients are in place for a memorable contest. Make sure you are tuned in from the very first minute.”,
-“All the ingredients are in place for a truly memorable match. With quality, intensity, and motivation in abundance on both sides, this has the makings of an all-time classic. Do not miss it.”,
-“With so much riding on this result, expect both teams to leave absolutely everything on the pitch. This is the kind of match that gets talked about for years — be there to witness it live on Sports 803.”,
-“Whatever happens, this promises to be a match to remember. The quality on display, the tactical battle, and the sheer intensity of the occasion will make for ninety minutes of unmissable football.”
-],
-hl_opener:[
-“A dramatic and pulsating contest delivered plenty of talking points —”,
-“An enthralling battle that fully lived up to its billing, ending with”,
-“What a match — a breathless encounter from start to finish, concluding with”,
-“The drama never let up for a single second in this one, which ended with”,
-“This was everything the previews promised and more — an absorbing contest concluding with”
-],
-hl_first_half:[
-“The opening forty-five minutes were tightly contested, with both teams cancelling each other out and refusing to give the opposition a clear sight of goal. Defensive solidity was on show from the first whistle, but moments of quality still shone through.”,
-“The first half saw both sides trade blows in an intense opening period. Neither team was able to establish dominance, though there were clear signs of the quality that would eventually tell in the second period.”,
-“It was a cagey start to proceedings, with both teams clearly determined not to concede the first goal. The managers had clearly done their homework and instructed their players to remain compact and disciplined in the early stages.”
-],
-hl_second_half:[
-“The second half burst into life almost immediately, with both teams throwing caution to the wind and committing bodies forward in search of the decisive goal. The intensity lifted to another level entirely.”,
-“After the break, the game opened up dramatically as both sides chased the match. The increased tempo and commitment to attacking play made for a thrilling conclusion that kept supporters on the edge of their seats.”,
-“The momentum shifted dramatically in the second period. What had been a tight and tactical contest suddenly became an end-to-end affair as both teams began to take more risks and play with greater urgency.”
-],
-hl_analysis:[
-“The first half set the tone beautifully, with both sides creating opportunities and testing the resolve of the opposition defence. As the game wore on, the pattern became clearer and the tactical plans of both managers began to come to life.”,
-“An absorbing opening forty-five minutes gave way to a far more intense and open second half, as both teams recognised that the time for caution was over and began to commit to attacking the game with real purpose.”,
-“Over the course of ninety minutes, the quality of both teams shone through in equal measure. It was a match that ebbed and flowed, with momentum shifting multiple times and keeping every neutral supporter thoroughly entertained throughout.”
-],
-hl_cta:[
-“Relive all the goals, key moments, and highlights completely free on Sports 803. Watch back every piece of the action at your convenience.”,
-“Watch the extended highlights and all the goals free on Sports 803, available on demand anytime you want to relive the drama.”,
-“Missed the match? Catch every goal and talking point in the full highlights package, available free right now on Sports 803.”,
-“All the action from this incredible match is available to watch back for free on Sports 803. Relive every moment of the drama.”
-],
+preview_opener:[“This is set to be a thrilling encounter as”,“Football fans are in for a treat as”,“All eyes are on this fixture as”],
+form:[“Both teams arrive in good form, having picked up positive results recently.”,“Recent form suggests this could be evenly contested.”],
+tactical:[“Expect a fascinating tactical battle between two well-organised sides.”,“The midfield battle will shape the flow of this game from the first whistle.”],
+player:[“All eyes will be on the attacking players in devastating form this season.”,“Set pieces could play a major role, with both teams possessing aerial threats.”],
+cta:[“Watch the full live stream free on Sports 803 — no subscription required.”,“Stream every kick free on Sports 803, your go-to for live sports online.”],
+closing:[“This is a fixture that rarely disappoints. Make sure you are tuned in from kickoff.”,“All the ingredients are in place for a memorable match.”],
+hl_opener:[“A dramatic contest delivered plenty of talking points —”,“An enthralling battle that lived up to its billing, ending with”],
+hl_analysis:[“The first half set the tone, with both sides creating opportunities.”,“An absorbing opening gave way to a more intense second half.”],
+hl_cta:[“Relive all the goals and highlights free on Sports 803.”,“Watch the extended highlights free on Sports 803 anytime.”],
 },
 Spanish:{
-preview_opener:[
-“Este partido promete ser un encuentro verdaderamente emocionante entre”,
-“Los aficionados están de enhorabuena ya que”,
-“Toda la atención se centra en este extraordinario partido mientras”,
-“El ambiente es inmejorable de cara a este esperado enfrentamiento entre”,
-“La expectación es máxima antes de este partido de alto voltaje entre”
-],
-form:[
-“Ambos equipos llegan en un excelente estado de forma, con resultados positivos recientes que les dan confianza de cara a este encuentro.”,
-“La forma reciente sugiere que este partido puede ser muy igualado, con ambos equipos en un nivel óptimo de rendimiento.”,
-“Los dos conjuntos llegan en un gran momento, lo que hace que sea muy difícil decantarse por un favorito claro.”,
-“Ambos entrenadores llegarán al partido con la moral muy alta después de actuaciones sólidas en sus compromisos más recientes.”
-],
-tactical:[
-“Esperamos un fascinante duelo táctico entre dos equipos bien organizados que buscarán explotar los espacios en la contra. La batalla en el centro del campo será absolutamente crucial.”,
-“La batalla en el centro del campo definirá el ritmo del juego desde el primer silbato. Ambos equipos han demostrado una gran capacidad para presionar alto y recuperar el balón con rapidez.”,
-“Tácticamente, este es un enfrentamiento apasionante. Ambos entrenadores han demostrado flexibilidad en las últimas semanas y sin duda tendrán planes de juego específicos.”,
-“El esquema táctico será fascinante de analizar. La intensidad del pressing, la organización defensiva y la capacidad de transición rápida podrían ser los factores decisivos.”
-],
-player:[
-“Toda la atención estará en los delanteros que están en una forma devastadora esta temporada, entregando actuaciones decisivas cuando sus equipos más lo necesitan.”,
-“Las jugadas a balón parado podrían jugar un papel importantísimo en la decisión de este partido, con ambos equipos poseyendo auténticas amenazas aéreas.”,
-“Los mediocampistas creativos serán los jugadores a seguir en este encuentro. Su capacidad para dar el pase decisivo y crear ocasiones de gol ha sido una constante.”,
-“La calidad individual podría marcar la diferencia. Ambos equipos cuentan con jugadores capaces de producir momentos de brillantez absoluta.”
-],
-build_up:[
-“En la previa de este partido, ambos bandos han mostrado confianza en sus preparativos, con problemas de lesiones aparentemente mínimos de cara al encuentro.”,
-“La preparación ha ido bien para ambos equipos. Los informes de entrenamiento indican que ambas plantillas están en buen estado de salud con los jugadores clave disponibles.”,
-“La previa del partido ha estado dominada por conversaciones sobre los duelos individuales a lo largo del campo, y es fácil entender por qué.”
-],
-cta:[
-“Ve la transmisión en vivo completamente gratis en Sports 803, sin suscripción ni registro requerido. Solo haz clic y disfruta de la acción.”,
-“Sigue cada minuto gratis en Sports 803, tu destino número uno para el fútbol en vivo online.”,
-“No te pierdas ni un segundo de la acción — Sports 803 te ofrece una transmisión gratuita que comienza puntualmente.”,
-“Sintoniza Sports 803 para una cobertura en vivo completa sin ningún coste.”
-],
-closing:[
-“Este es un partido que raramente decepciona, y con ambos equipos motivados y bien preparados, todos los ingredientes están en su lugar para un duelo memorable.”,
-“Todos los ingredientes están en su lugar para un partido verdaderamente memorable. Con calidad, intensidad y motivación en ambos lados, esto tiene los ingredientes de un clásico.”,
-“Con tanto en juego, espera que ambos equipos lo den todo sobre el campo. Este es el tipo de partido del que se habla durante años.”,
-“Pase lo que pase, esto promete ser un partido para recordar.”
-],
-hl_opener:[
-“Un partido dramático y palpitante que dejó muchos momentos para el recuerdo —”,
-“Un encuentro apasionante que estuvo a la altura de las expectativas, terminando con”,
-“¡Qué partido! Una contienda sin aliento de principio a fin que concluyó con”,
-“El drama no cesó ni un solo segundo en este encuentro, que terminó con”,
-“Esto fue todo lo que prometían las previas y más — un partido absorbente que concluyó con”
-],
-hl_first_half:[
-“Los primeros cuarenta y cinco minutos estuvieron muy disputados, con ambos equipos anulándose mutuamente y negándose a dar al rival una ocasión clara de gol.”,
-“La primera parte vio a ambos lados intercambiar golpes en un período inicial de gran intensidad.”,
-“Fue un comienzo cauteloso, con ambos equipos claramente decididos a no encajar el primer gol.”
-],
-hl_second_half:[
-“La segunda mitad cobró vida casi de inmediato, con ambos equipos lanzándose al ataque en busca del gol decisivo.”,
-“Después del descanso, el partido se abrió dramáticamente mientras ambos lados perseguían el partido.”,
-“El ímpetu cambió drásticamente en el segundo período, convirtiéndose en un partido de ida y vuelta.”
-],
-hl_analysis:[
-“La primera parte marcó el tono a la perfección, con ambos lados creando ocasiones y poniendo a prueba la solidez defensiva del rival.”,
-“Una absorbente primera mitad dio paso a una segunda mucho más intensa y abierta.”,
-“A lo largo de los noventa minutos, la calidad de ambos equipos brilló en igual medida.”
-],
-hl_cta:[
-“Revive todos los goles y los mejores momentos completamente gratis en Sports 803.”,
-“Mira el resumen extendido y todos los goles gratis en Sports 803, disponible en cualquier momento.”,
-“¿Te perdiste el partido? Disfruta de todos los goles en el resumen completo, disponible gratis ahora en Sports 803.”,
-“Toda la acción de este increíble partido está disponible para ver gratis en Sports 803.”
-],
+preview_opener:[“Este partido promete ser un encuentro emocionante entre”,“Los aficionados están de enhorabuena ya que”,“Toda la atención se centra en este partido mientras”],
+form:[“Ambos equipos llegan en buen estado de forma con resultados positivos recientes.”,“La forma reciente sugiere que este partido puede ser muy igualado.”],
+tactical:[“Esperamos un fascinante duelo táctico entre dos equipos bien organizados.”,“La batalla en el centro del campo definirá el ritmo del juego.”],
+player:[“Toda la atención estará en los delanteros en una forma devastadora.”,“Las jugadas a balón parado podrían jugar un papel importante.”],
+cta:[“Ve la transmisión en vivo gratis en Sports 803 — sin suscripción.”,“Sigue cada minuto gratis en Sports 803, tu destino para deportes en vivo.”],
+closing:[“Este es un partido que raramente decepciona. Asegúrate de estar sintonizado.”,“Todos los ingredientes están listos para un partido memorable.”],
+hl_opener:[“Un partido dramático con muchos momentos destacables —”,“Un encuentro emocionante que terminó con”],
+hl_analysis:[“El primer tiempo marcó el tono con ambos equipos creando oportunidades.”,“Una apertura absorbente dio paso a una segunda parte más intensa.”],
+hl_cta:[“Revive todos los goles y destacados gratis en Sports 803.”,“Mira el resumen extendido gratis en Sports 803.”],
 },
 };
 function getLang(){ return document.getElementById(‘post-lang’).value||‘English’; }
@@ -2591,126 +1586,40 @@ var lang=getLang();
 var bank=(LANG_PHRASES[lang]&&LANG_PHRASES[lang][key])||LANG_PHRASES[‘English’][key]||[’’];
 return bank[Math.floor(Math.random()*bank.length)];
 }
-
 function buildPreviewText(homeName,awayName,leagueName,venue,dateStr,stats) {
-var sep = ’ vs ’;
-var venueTxt = venue ? ’ at ’+venue : ‘’;
-var dateTxt  = dateStr ? ’ on ‘+dateStr : ’ today’;
-
-// P1 — intro + stream CTA
-var p1 = pickLang(‘preview_opener’)+’ ‘+homeName+sep+awayName+venueTxt+dateTxt
-+’. ’+pickLang(‘cta’);
-
-// P2 — form
-var p2 = pickLang(‘form’);
-
-// P3 — tactical breakdown
-var p3 = pickLang(‘tactical’);
-
-// P4 — build-up / atmosphere
-var p4 = pickLang(‘build_up’);
-
-// P5 — player focus
-var p5 = pickLang(‘player’);
-
-// P6 — head to head / context
-var p6 = homeName+’ and ‘+awayName+’ have produced some memorable encounters over the years, ’
-+’and this latest meeting in the ‘+leagueName+’ looks set to add another chapter to their ’
-+’rivalry. Both sides know exactly what is at stake, and the preparation and hunger on show ’
-+’in training this week suggests there will be no shortage of effort or commitment when the ’
-+‘referee's whistle kicks proceedings off.’;
-
-// P7 — match importance / league context
-var p7 = ’In the context of the ‘+leagueName+’ season, this fixture carries significant weight. ’
-+’Every point matters at this stage of the campaign, and both managers will have drilled into ’
-+’their players the importance of not just turning up, but delivering a performance worthy of ’
-+’the occasion. Dropped points here could prove costly, which makes this one of the most ’
-+‘eagerly anticipated matches of the midweek or weekend schedule.’;
-
-// P8 — closing
-var p8 = pickLang(‘closing’)+’ ‘+homeName+sep+awayName+’ — live and free on Sports 803.’;
-
-// Optional stats paragraph
-var p9 = ‘’;
+var sep=Math.random()>0.5?’ vs ‘:’ x ‘;
+var venueTxt=venue?’ at ‘+venue:’’;
+var dateTxt=dateStr?’ on ‘+dateStr:’ today’;
+var p1=pickLang(‘preview_opener’)+’ ‘+homeName+sep+awayName+venueTxt+dateTxt+’ — ‘+pickLang(‘cta’);
+var p2=pickLang(‘form’)+’ ‘+pickLang(‘tactical’);
+var p3=pickLang(‘player’)+’ ‘+pickLang(‘closing’);
+var p4=’’;
 if (stats&&stats.possession) {
-p9 = ’Key areas to watch: possession and territory will be fiercely contested, ’
-+’with pressing intensity, clinical finishing, and set-piece delivery all likely ’
-+‘to prove decisive across the ninety minutes.’;
+p4=’\n\n’+homeName+’ vs ‘+awayName+’ – ‘+leagueName+’. ’
++‘Key stats to watch: possession, pressing intensity, and clinical finishing will be the deciding factors.’;
 }
-
-var parts = [p1, p2, p3, p4, p5, p6, p7, p8];
-if (p9) parts.push(p9);
-return parts.join(’\n\n’);
+return p1+’\n\n’+p2+’\n\n’+p3+p4;
 }
-
 function buildHighlightText(homeName,awayName,homeScore,awayScore,leagueName,headlines,stats) {
-var scoreLine = homeName+’ ‘+homeScore+’-’+awayScore+’ ‘+awayName;
-var hScore    = parseInt(homeScore,10), aScore=parseInt(awayScore,10);
-var winner    = hScore>aScore?homeName:aScore>hScore?awayName:null;
-var loser     = winner===(homeName)?awayName:homeName;
-var margin    = Math.abs(hScore-aScore);
-var resultStr = winner
-? winner+’ claimed a ‘+(margin===1?‘hard-fought’:margin>=3?‘commanding’:‘well-deserved’)+’ victory over ‘+(winner===homeName?awayName:homeName)+’.’
-: ‘the two sides served up an absorbing contest that ended all square, with both teams perhaps feeling they could have nicked all three points.’;
-
-// P1 — result headline
-var p1 = scoreLine+’ — ‘+pickLang(‘hl_opener’)+’ a ‘+leagueName+’ fixture. ’
-+(headlines?headlines+’ ‘:’’)+resultStr;
-
-// P2 — first half narrative
-var p2 = pickLang(‘hl_first_half’);
-
-// P3 — second half narrative
-var p3 = pickLang(‘hl_second_half’);
-
-// P4 — overall analysis
-var p4 = pickLang(‘hl_analysis’);
-
-// P5 — reaction paragraph
-var p5 = winner
-? winner+’'s fans were in rapturous mood at the full-time whistle, and ’
-+’rightly so. It was a performance that underlined exactly why they are a ’
-+’force to be reckoned with in the ‘+leagueName+’ this season. The manager ’
-+’will be delighted with the character, quality, and clinical edge shown ’
-+‘throughout this performance.’
-: ’Both sets of supporters will feel hard done by in some respects — ’
-+’there were periods when each team looked like they had done enough to take all three points. ’
-+’Ultimately, a share of the spoils was perhaps a fair outcome given the balance of play across ’
-+‘the full ninety minutes.’;
-
-// P6 — looking ahead
-var p6 = winner
-? ’This result will do wonders for ‘+winner+’'s confidence heading into the next fixture. ’
-+’The momentum generated by a performance of this quality is invaluable, and the squad ’
-+’will be eager to build on it in the coming weeks. For ‘+loser+’, the task now is to ’
-+’dust themselves off quickly and refocus — there are still plenty of points to play for ’
-+‘in the ‘+leagueName+’ this season.’
-: ’Both teams will need to regroup and refocus after this result. ’
-+’The ‘+leagueName+’ remains wide open, and with so many twists and turns still to come, ’
-+’neither side can afford to dwell too long on what might have been. The next fixture ’
-+’will arrive quickly, and performances like this show that both teams are more than capable ’
-+‘of competing at the very highest level.’;
-
-// P7 — stats block
-var p7 = ‘’;
+var scoreLine=homeName+’ ‘+homeScore+’-’+awayScore+’ ‘+awayName;
+var hScore=parseInt(homeScore,10), aScore=parseInt(awayScore,10);
+var winner=hScore>aScore?homeName:aScore>hScore?awayName:null;
+var margin=Math.abs(hScore-aScore);
+var resultStr=winner
+?winner+’ claimed a ‘+(margin===1?‘hard-fought’:margin>=3?‘dominant’:‘well-deserved’)+’ victory.’
+:‘the two sides shared the spoils in an entertaining draw.’;
+var p1=scoreLine+’ — ‘+pickLang(‘hl_opener’)+’ a ‘+leagueName+’ fixture. ‘+(headlines?headlines+’ ‘:’’)+resultStr;
+var p2=pickLang(‘hl_analysis’);
+var p3=’’;
 if (stats&&stats.possession) {
-p7 = ‘Match stats: Possession — ‘+homeName+’ ‘+stats.possession.home+’%, ‘+awayName+’ ‘+stats.possession.away+’%.’;
-if (stats.shots)   p7 += ’ Shots: ‘+stats.shots.home+’–’+stats.shots.away+’.’;
-if (stats.corners) p7 += ’ Corners: ‘+stats.corners.home+’–’+stats.corners.away+’.’;
-if (stats.fouls)   p7 += ’ Fouls: ‘+stats.fouls.home+’–’+stats.fouls.away+’.’;
-p7 += ’ The numbers reflect the competitive nature of this encounter and the effort both sides ’
-+‘put into every single minute of the ninety.’;
+p3=’\n\nPossession: ‘+homeName+’ ‘+stats.possession.home+’% – ‘+awayName+’ ‘+stats.possession.away+’%.’;
+if (stats.shots) p3+=’ Shots: ‘+stats.shots.home+’–’+stats.shots.away+’.’;
+if (stats.corners) p3+=’ Corners: ‘+stats.corners.home+’–’+stats.corners.away+’.’;
 } else {
-p7 = (winner?winner+’ will be delighted with the three points.’:‘Both sides will take positives from this result.’)
-+’ The performance levels on show today underline just how competitive and compelling the ’
-+leagueName+’ continues to be at every level, and supporters of both clubs will have plenty to ’
-+‘discuss and look forward to in the matches ahead.’;
+p3=(winner?winner+’ will be delighted with the three points.’:‘Both sides will take something from the game.’)
++’ The performance levels today underline just how competitive this competition continues to be.’;
 }
-
-// P8 — CTA
-var p8 = pickLang(‘hl_cta’);
-
-return [p1, p2, p3, p4, p5, p6, p7, p8].join(’\n\n’);
+return p1+’\n\n’+p2+’\n\n’+p3+’\n\n’+pickLang(‘hl_cta’);
 }
 
 async function generatePreviewContent(idx) {
@@ -2755,9 +1664,7 @@ gd.highlightContent=text;
 var el=document.getElementById(‘text-highlights-’+idx);
 if (el) el.innerHTML=’<div class="content-text">’+escHtml(text)+’</div>’;
 log(‘ok’,‘✓ Highlights ready: ‘+homeName+’ vs ‘+awayName);
-// Update just the highlights button state without full re-render
-var hlBtn = document.querySelector(’#card-’+idx+’ [onclick*=“postToBlogger”][onclick*=“highlights”]’);
-if (hlBtn && gd.blogPostId) hlBtn.removeAttribute(‘disabled’);
+renderGames();
 }
 async function regenPreview(idx) {
 detectedGames[idx].preContent=null;
@@ -3046,7 +1953,8 @@ if (type === ‘highlights’ && !gd.highlightContent) { toast(‘No highlights 
 if (type === ‘highlights’ && !gd.blogPostId) { toast(‘Post Preview first (or link an existing post)’, ‘err’); return; }
 if (type === ‘preview’ && !gd.preContent) { toast(‘No preview content yet’, ‘err’); return; }
 
-// Sync iframe from DOM
+// ── FIX: sync iframe from DOM into gd object right before posting ──────────
+// This catches right-click pastes and any input method that bypasses oninput.
 var iframeDomEl = document.getElementById(‘iframe-src-’ + idx);
 if (iframeDomEl && iframeDomEl.value.trim()) {
 gd.iframeSrc = iframeDomEl.value.trim();
@@ -3069,7 +1977,6 @@ success = await postToBloggerCore(idx, type, pubMode);
 
 btn.classList.remove(‘loading’); btn.disabled = false;
 if (success) renderGames();
-restoreActiveTabs();
 }
 
 async function postToBloggerCore(idx, type, pubModeOverride, kickoffTimestamp) {
@@ -3088,9 +1995,14 @@ var titleEl = document.getElementById(‘seo-title-’ + idx);
 var title = (titleEl && titleEl.value.trim()) || gd.customTitle || buildSEOTitle(homeName, awayName, gd.league.name, type, score);
 if (type === ‘highlights’) title = homeName + ’ ’ + score.home + ‘-’ + score.away + ’ ’ + awayName + ’ | ’ + gd.league.name + ’ Highlights | Sports 803’;
 
+// ── FIX: always read live DOM value first, fall back to stored gd.iframeSrc.
+// This is the critical fix — when postToBloggerCore is called from the
+// auto-scheduler (checkScheduledPosts), the DOM element still exists and has
+// the user’s typed/pasted value. Reading it here ensures it is never missed
+// regardless of how the value was entered (keyboard, right-click paste, etc).
 var iframeDomEl = document.getElementById(‘iframe-src-’ + idx);
 var iframeSrc = (iframeDomEl && iframeDomEl.value.trim()) || gd.iframeSrc || ‘’;
-if (iframeSrc) gd.iframeSrc = iframeSrc;
+if (iframeSrc) gd.iframeSrc = iframeSrc; // keep in sync for future calls
 
 var iframeHtml = iframeSrc
 ? ‘<div style="margin:18px 0;"><iframe loading=“lazy” class=“video-iframe”’
@@ -3129,6 +2041,8 @@ method = ‘PUT’;
 url = ‘https://www.googleapis.com/blogger/v3/blogs/’ + blogId + ‘/posts/’ + gd.blogPostId + ‘?publish=’ + (pubMode === ‘LIVE’ ? ‘true’ : ‘false’);
 body = { id: gd.blogPostId, title, content: htmlContent, labels: allLabels };
 } else if (pubMode === ‘SCHEDULED’ && kickoffTimestamp) {
+// Blogger native scheduling: set published = future ISO date + isDraft=false
+// Blogger auto-publishes at that time. Shows as “Scheduled” in dashboard.
 var scheduledDate = new Date(kickoffTimestamp).toISOString();
 method = ‘POST’;
 url = ‘https://www.googleapis.com/blogger/v3/blogs/’ + blogId + ‘/posts/?isDraft=false’;
@@ -3182,6 +2096,358 @@ clearTimeout(toastTimer); toastTimer=setTimeout(function(){ t.classList.remove(�
 }
 function escHtml(s){ return (s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’).replace(/’/g,’'’); }
 function escAttr(s){ return (s||’’).replace(/’/g,”\’”).replace(/”/g,’"’); }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ─── FEATURE 4: SCAN ALL SPORTS MODE ─────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+function toggleScanAllMode() {
+scanAllMode = !scanAllMode;
+updateScanAllUI();
+saveConfig();
+toast(scanAllMode ? ‘📡 Scanning ALL leagues’ : ‘📡 Scanning selected leagues only’, ‘ok’);
+}
+function updateScanAllUI() {
+var tog = document.getElementById(‘scan-all-toggle’);
+var lbl = document.getElementById(‘scan-all-label’);
+var btn = document.getElementById(‘scan-btn’);
+var grid = document.getElementById(‘leagues-grid’);
+if (!tog) return;
+if (scanAllMode) {
+tog.classList.add(‘on’); lbl.textContent=‘On’; lbl.style.color=‘var(–accent)’;
+if (btn) { btn.querySelector(’.btn-text’).textContent = ‘📡 Scan All Leagues’; }
+if (grid) grid.style.opacity = ‘0.45’;
+} else {
+tog.classList.remove(‘on’); lbl.textContent=‘Off’; lbl.style.color=‘var(–muted2)’;
+if (btn) { btn.querySelector(’.btn-text’).textContent = ‘📡 Scan Selected’; }
+if (grid) grid.style.opacity = ‘1’;
+}
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ─── FEATURE 1: CHANNEL LIBRARY ──────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+var DEFAULT_CHANNELS = [
+{id:‘tnt-sports’,      name:‘TNT Sports’,      aliases:[‘tnt sports’,‘tnt’,‘bt sport’,‘discovery+’],           url:’’},
+{id:‘sky-sports-main’, name:‘Sky Sports Main’,  aliases:[‘sky sports main event’,‘sky sports’,‘sky main’],      url:’’},
+{id:‘sky-sports-pl’,   name:‘Sky Sports PL’,    aliases:[‘sky sports premier league’,‘sky pl’],                 url:’’},
+{id:‘sky-sports-fn’,   name:‘Sky Sports F1’,    aliases:[‘sky sports f1’,‘sky f1’],                            url:’’},
+{id:‘bein-1’,          name:‘beIN Sports 1’,    aliases:[‘bein sports 1’,‘bein 1’,‘bein sports’],              url:’’},
+{id:‘bein-2’,          name:‘beIN Sports 2’,    aliases:[‘bein sports 2’,‘bein 2’],                            url:’’},
+{id:‘bein-3’,          name:‘beIN Sports 3’,    aliases:[‘bein sports 3’,‘bein 3’],                            url:’’},
+{id:‘espn’,            name:‘ESPN’,             aliases:[‘espn’,‘espn us’],                                     url:’’},
+{id:‘espn2’,           name:‘ESPN 2’,           aliases:[‘espn 2’,‘espn2’],                                     url:’’},
+{id:‘espn-plus’,       name:‘ESPN+’,            aliases:[‘espn plus’,‘espn+’],                                  url:’’},
+{id:‘ziggo’,           name:‘Ziggo Sport’,      aliases:[‘ziggo’,‘ziggo sport’,‘ziggo sport select’],          url:’’},
+{id:‘laliga-tv’,       name:‘LaLiga TV’,        aliases:[‘laliga tv’,‘la liga tv’,‘laliga+’],                   url:’’},
+{id:‘f1-tv’,           name:‘F1 TV’,            aliases:[‘f1 tv’,‘f1tv’,‘formula 1 tv’],                       url:’’},
+{id:‘motogp-tv’,       name:‘MotoGP TV’,        aliases:[‘motogp tv’,‘motogp+’],                               url:’’},
+{id:‘dazn’,            name:‘DAZN’,             aliases:[‘dazn’],                                               url:’’},
+{id:‘canal-plus’,      name:‘Canal+’,           aliases:[‘canal plus’,‘canal+’,‘canal+ sport’],                 url:’’},
+{id:‘sport-tv1’,       name:‘Sport TV 1’,       aliases:[‘sport tv 1’,‘sport tv1’,‘sport tv’],                  url:’’},
+{id:‘eleven-sports’,   name:‘Eleven Sports’,    aliases:[‘eleven sports’,‘eleven’],                             url:’’},
+{id:‘rtl’,             name:‘RTL’,              aliases:[‘rtl’,‘rtl sport’],                                    url:’’},
+{id:‘sport1’,          name:‘Sport1 DE’,        aliases:[‘sport1’,‘sport1 de’],                                 url:’’},
+{id:‘nba-tv’,          name:‘NBA TV’,           aliases:[‘nba tv’,‘nba league pass’],                          url:’’},
+{id:‘nfl-network’,     name:‘NFL Network’,      aliases:[‘nfl network’,‘nfl+’],                                 url:’’},
+{id:‘eurosport’,       name:‘Eurosport’,        aliases:[‘eurosport’,‘eurosport 1’,‘eurosport 2’,‘eurosport1’,‘eurosport2’], url:’’},
+{id:‘cbs-sports’,      name:‘CBS Sports’,       aliases:[‘cbs sports’,‘cbssports’,‘paramount+’],                url:’’},
+{id:‘peacock’,         name:‘Peacock’,          aliases:[‘peacock’],                                            url:’’},
+{id:‘amazon-prime’,    name:‘Amazon Prime’,     aliases:[‘amazon prime video’,‘prime video’,‘amazon prime’],    url:’’},
+{id:‘paramount’,       name:‘Paramount+’,       aliases:[‘paramount+’,‘paramount plus’],                        url:’’},
+{id:‘superflash-sport’,name:‘SuperFlash Sport’, aliases:[‘superflash’,‘superflash sport’],                     url:’’},
+];
+
+function initDefaultChannels() {
+channelLibrary = DEFAULT_CHANNELS.map(function(c){ return Object.assign({},c); });
+}
+
+function renderChannelList() {
+var list = document.getElementById(‘channel-list’);
+if (!list) return;
+if (!channelLibrary.length) {
+list.innerHTML = ‘<div style="color:var(--muted);font-size:10px;padding:6px;">No channels yet. Add some below.</div>’;
+return;
+}
+list.innerHTML = channelLibrary.map(function(ch,i){
+return ‘<div class="channel-item">’
++’<span class="channel-name" title="'+escHtml(ch.name)+'">’+escHtml(ch.name)+’</span>’
++’<input type=“text” style=“flex:1.5;min-width:0;font-size:9px;padding:3px 5px;background:var(–s3);border:1px solid var(–border);border-radius:4px;color:var(–muted2);” ’
++‘value=”’+escHtml(ch.url||’’)+’” placeholder=“Stream URL” ’
++‘oninput=“channelLibrary[’+i+’].url=this.value;saveConfig();” />’
++’<button class="channel-del" onclick="removeChannel('+i+')" title="Remove">×</button>’
++’</div>’;
+}).join(’’);
+}
+
+function addChannel() {
+var name    = (document.getElementById(‘ch-name-input’).value   ||’’).trim();
+var aliases = (document.getElementById(‘ch-aliases-input’).value||’’).trim();
+var url     = (document.getElementById(‘ch-url-input’).value    ||’’).trim();
+if (!name) { toast(‘Channel name required’,‘err’); return; }
+var aliasArr = aliases ? aliases.split(’,’).map(function(a){ return a.trim().toLowerCase(); }).filter(Boolean) : [name.toLowerCase()];
+var id = name.toLowerCase().replace(/\s+/g,’-’).replace(/[^a-z0-9-]/g,’’);
+channelLibrary.push({ id, name, aliases: aliasArr, url });
+document.getElementById(‘ch-name-input’).value = ‘’;
+document.getElementById(‘ch-aliases-input’).value = ‘’;
+document.getElementById(‘ch-url-input’).value = ‘’;
+renderChannelList();
+saveConfig();
+toast(’✓ Channel added: ’+name,‘ok’);
+}
+
+function removeChannel(i) {
+channelLibrary.splice(i,1);
+renderChannelList();
+saveConfig();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ─── FEATURE 2: AUTO CHANNEL MATCHING + BROADCAST PANEL ──────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+function fuzzyChannelMatch(text) {
+// Returns array of channel library entries whose aliases appear in text
+var lc = (text||’’).toLowerCase();
+return channelLibrary.filter(function(ch){
+return (ch.aliases||[]).some(function(alias){ return lc.includes(alias.toLowerCase()); });
+});
+}
+
+function autoMatchChannels(gd) {
+// Look at league name + team names
+var c = getCompetitors(gd);
+var searchText = [
+gd.league.name, gd.league.label||’’,
+(c.home.team&&c.home.team.displayName)||’’,
+(c.away.team&&c.away.team.displayName)||’’
+].join(’ ‘).toLowerCase();
+// Also check tvGuideChannels stored on the game
+var guideText = (gd.tvGuideChannels||[]).join(’ ’).toLowerCase();
+var combined = searchText + ’ ’ + guideText;
+var matched = fuzzyChannelMatch(combined);
+// Merge with any TV guide channels that directly matched channel names
+if (gd.tvGuideChannels && gd.tvGuideChannels.length) {
+gd.tvGuideChannels.forEach(function(chName){
+var direct = channelLibrary.filter(function(ch){
+return ch.name.toLowerCase()===chName.toLowerCase() ||
+(ch.aliases||[]).some(function(a){ return a.toLowerCase()===chName.toLowerCase(); });
+});
+direct.forEach(function(ch){
+if (!matched.find(function(m){ return m.id===ch.id; })) matched.push(ch);
+});
+});
+}
+return matched;
+}
+
+function buildBroadcastIframeUrl(idx) {
+var gd = detectedGames[idx];
+if (!gd) return ‘’;
+var baseUrl = (document.getElementById(‘player-base-url’).value||’’).trim();
+var channels = gd.broadcastChannels || [];
+if (!channels.length || !baseUrl) return ‘’;
+var urls = channels.map(function(ch){
+var lib = channelLibrary.find(function(c){ return c.id===ch.id; });
+return lib && lib.url ? lib.url : ‘’;
+}).filter(Boolean);
+if (!urls.length) return ‘’;
+return baseUrl + ‘?’ + urls.map(function(u){ return ‘mora=’+encodeURIComponent(u); }).join(’&’);
+}
+
+function buildBroadcastPanel(idx, gd) {
+var matched = autoMatchChannels(gd);
+// Init broadcastChannels from matched if not set
+if (!gd.broadcastChannels) {
+gd.broadcastChannels = matched.map(function(ch){ return {id:ch.id,name:ch.name}; });
+}
+var tags = gd.broadcastChannels.map(function(ch,ci){
+return ‘<span class="broadcast-tag">📺 ‘+escHtml(ch.name)
++’<span class="rm-ch" onclick="removeBroadcastChannel('+idx+','+ci+')">×</span></span>’;
+}).join(’’);
+
+var builtUrl = buildBroadcastIframeUrl(idx);
+var channelOptions = channelLibrary.map(function(ch){
+return ‘<option value="'+escHtml(ch.id)+'">’+escHtml(ch.name)+’</option>’;
+}).join(’’);
+
+return ‘<div class="broadcast-panel">’
++’<div class="broadcast-panel-title">📺 Broadcast Channels <span class="badge-cyan">AUTO</span></div>’
++’<div class="broadcast-tags" id="bcast-tags-'+idx+'">’+(tags||’<span style="color:var(--muted);font-size:10px;">No channels matched yet</span>’)+’</div>’
++’<div class="add-channel-row">’
++’<select id="bcast-add-select-'+idx+'" style="flex:1;"><option value="">— add channel —</option>’+channelOptions+’</select>’
++’<button class="btn btn-cyan" style="padding:6px 10px;font-size:10px;" onclick="addBroadcastChannel('+idx+')">’
++’<span class="btn-text">➕ Add</span></button>’
++’</div>’
++’<div style="font-size:9px;color:var(--muted2);font-weight:600;margin-top:4px;">Built iframe src URL:</div>’
++’<textarea class=“iframe-input” id=“bcast-built-url-’+idx+’” rows=“2” style=“font-size:9px;” ’
++‘placeholder=“Set Player Base URL in sidebar + add channels with URLs to auto-build”>’
++escHtml(builtUrl)+’</textarea>’
++’<button class="btn btn-cyan btn-full" style="font-size:10px;padding:6px;" onclick="applyBroadcastUrl('+idx+')">’
++’<span class="btn-text">▶ Apply → Stream URL field</span></button>’
++’<div style="font-size:9px;color:var(--muted);line-height:1.5;">Matched from channel library. Add URLs to each channel in the sidebar Channel Library to auto-build the player URL.</div>’
++’</div>’;
+}
+
+function removeBroadcastChannel(idx, ci) {
+var gd = detectedGames[idx];
+if (!gd||!gd.broadcastChannels) return;
+gd.broadcastChannels.splice(ci,1);
+var panel = document.getElementById(‘text-broadcast-’+idx);
+if (panel) panel.innerHTML = buildBroadcastPanel(idx,gd);
+refreshBuiltUrl(idx);
+}
+
+function addBroadcastChannel(idx) {
+var sel = document.getElementById(‘bcast-add-select-’+idx);
+if (!sel||!sel.value) return;
+var ch = channelLibrary.find(function(c){ return c.id===sel.value; });
+if (!ch) return;
+var gd = detectedGames[idx];
+if (!gd.broadcastChannels) gd.broadcastChannels=[];
+if (gd.broadcastChannels.find(function(c){ return c.id===ch.id; })) { toast(‘Already added’,‘err’); return; }
+gd.broadcastChannels.push({id:ch.id,name:ch.name});
+var panel = document.getElementById(‘text-broadcast-’+idx);
+if (panel) panel.innerHTML = buildBroadcastPanel(idx,gd);
+refreshBuiltUrl(idx);
+toast(‘✓ ‘+ch.name+’ added’,‘ok’);
+}
+
+function refreshBuiltUrl(idx) {
+var builtUrl = buildBroadcastIframeUrl(idx);
+var el = document.getElementById(‘bcast-built-url-’+idx);
+if (el) el.value = builtUrl;
+}
+
+function applyBroadcastUrl(idx) {
+// Reads from the built-url textarea (allows manual override) and copies to the main iframe src
+var builtEl = document.getElementById(‘bcast-built-url-’+idx);
+var url = builtEl ? builtEl.value.trim() : buildBroadcastIframeUrl(idx);
+if (!url) { toast(‘No URL to apply — set Player Base URL & channel URLs first’,‘err’); return; }
+// Update the main iframeSrc field and game object
+var iframeDomEl = document.getElementById(‘iframe-src-’+idx);
+if (iframeDomEl) iframeDomEl.value = url;
+if (detectedGames[idx]) detectedGames[idx].iframeSrc = url;
+toast(‘✓ Stream URL applied!’,‘ok’);
+log(‘ok’,’📺 Broadcast URL applied for ’+getMatchTitle(detectedGames[idx]));
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ─── FEATURE 3: TV GUIDE FETCH ────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+async function fetchTVGuide() {
+var btn = document.getElementById(‘tvguide-btn’);
+if (btn) { btn.classList.add(‘loading’); btn.disabled=true; }
+log(‘info’,‘📡 Fetching TV Guide from sport-tv-guide.live…’);
+var results = [];
+var sources = [
+‘https://api.allorigins.win/get?url=’ + encodeURIComponent(‘https://www.sport-tv-guide.live/’),
+‘https://api.allorigins.win/get?url=’ + encodeURIComponent(‘https://www.livesoccertv.com/schedules/’),
+];
+for (var si=0; si<sources.length; si++) {
+try {
+var ctrl = new AbortController(); var timer = setTimeout(function(){ ctrl.abort(); },15000);
+var r = await fetch(sources[si], {signal:ctrl.signal}); clearTimeout(timer);
+var json = await r.json();
+var html = json.contents||’’;
+if (html) {
+var parsed = parseTVGuideHTML(html);
+parsed.forEach(function(p){ results.push(p); });
+log(‘ok’,‘✓ TV Guide source ‘+(si+1)+’: ‘+parsed.length+’ fixtures found’);
+}
+} catch(e){ log(‘err’,‘TV Guide source ‘+(si+1)+’ failed: ‘+e.message); }
+}
+if (!results.length) {
+toast(‘TV Guide: no fixtures found (sites may block scrapers)’,‘err’);
+if (btn) { btn.classList.remove(‘loading’); btn.disabled=false; }
+return;
+}
+// Match results to detectedGames
+var matched=0;
+results.forEach(function(fix){
+detectedGames.forEach(function(gd){
+var c = getCompetitors(gd);
+var h = (c.home.team&&c.home.team.displayName)||’’;
+var a = (c.away.team&&c.away.team.displayName)||’’;
+if (fuzzyTeamMatch(fix.home,h) && fuzzyTeamMatch(fix.away,a)) {
+if (!gd.tvGuideChannels) gd.tvGuideChannels=[];
+fix.channels.forEach(function(ch){
+if (!gd.tvGuideChannels.includes(ch)) gd.tvGuideChannels.push(ch);
+});
+// Also update broadcastChannels
+var newBcast = autoMatchChannels(gd);
+gd.broadcastChannels = newBcast.map(function(ch){ return {id:ch.id,name:ch.name}; });
+matched++;
+log(‘ok’,’📺 TV Guide: ‘+h+’ vs ‘+a+’ → ‘+fix.channels.join(’, ’));
+}
+});
+});
+renderGames();
+toast(‘📡 TV Guide: ‘+matched+’ game(s) matched’,‘ok’);
+log(‘ok’,‘TV Guide complete: ‘+matched+’ matches updated’);
+if (btn) { btn.classList.remove(‘loading’); btn.disabled=false; }
+}
+
+function parseTVGuideHTML(html) {
+// Parse “Team A vs Team B” patterns and nearby channel text
+var fixtures = [];
+// Strip tags for text scanning
+var text = html.replace(/<script[^>]*>[\s\S]*?</script>/gi,’’)
+.replace(/<style[^>]*>[\s\S]*?</style>/gi,’’)
+.replace(/<[^>]+>/g,’ ‘)
+.replace(/&/g,’&’).replace(/ /g,’ ‘).replace(/&#\d+;/g,’ ‘);
+// Match “Team A v Team B” or “Team A vs Team B”
+var vsPattern = /([A-Z][^\n\r\t]{2,40})\s+(?:vs?.?|v.)\s+([A-Z][^\n\r\t]{2,40})/gi;
+var match;
+while ((match = vsPattern.exec(text)) !== null) {
+var home = match[1].trim().replace(/\s+/g,’ ‘);
+var away = match[2].trim().replace(/\s+/g,’ ’);
+// Get surrounding 200 chars to find channel names
+var surrounding = text.substring(Math.max(0,match.index-50), Math.min(text.length, match.index+match[0].length+200));
+var channels = extractChannelsFromText(surrounding);
+if (home.length > 2 && away.length > 2) {
+fixtures.push({home, away, channels});
+}
+}
+return fixtures;
+}
+
+function extractChannelsFromText(text) {
+var found = [];
+var lc = text.toLowerCase();
+channelLibrary.forEach(function(ch){
+(ch.aliases||[]).forEach(function(alias){
+if (lc.includes(alias.toLowerCase()) && !found.includes(ch.name)) {
+found.push(ch.name);
+}
+});
+});
+// Also scan for raw channel mentions using common patterns
+var chPattern = /\b(sky sports\s*\d*|bein sports\s*\d*|tnt sports|espn+?|dazn|canal+?|eurosport\s*\d*|bt sport\s*\d*|laliga tv|f1 tv|motogp tv|ziggo sport|eleven sports?)\b/gi;
+var m;
+while ((m=chPattern.exec(text))!==null) {
+var raw = m[1].trim();
+if (!found.includes(raw)) found.push(raw);
+}
+return found;
+}
+
+function fuzzyTeamMatch(a, b) {
+if (!a||!b) return false;
+var al = a.toLowerCase().replace(/[^a-z0-9 ]/g,’’).trim();
+var bl = b.toLowerCase().replace(/[^a-z0-9 ]/g,’’).trim();
+if (al===bl) return true;
+// Check if either contains the other (handles “Manchester City” vs “Man City”)
+if (al.includes(bl)||bl.includes(al)) return true;
+// Check first word match (handles abbreviations)
+var aw = al.split(’ ‘), bw = bl.split(’ ’);
+if (aw[0]===bw[0] && aw[0].length>2) return true;
+// Jaccard similarity on words
+var aSet = new Set(aw.filter(function(w){ return w.length>2; }));
+var bSet = new Set(bw.filter(function(w){ return w.length>2; }));
+var intersect = 0;
+aSet.forEach(function(w){ if (bSet.has(w)) intersect++; });
+var union = aSet.size + bSet.size - intersect;
+return union > 0 && (intersect/union) >= 0.4;
+}
 </script>
 
 </body>
