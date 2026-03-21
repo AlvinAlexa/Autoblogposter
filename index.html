@@ -406,57 +406,44 @@ select option{background:#141720;}
 </div>
 <div class="toast" id="toast"></div>
 <script>
-// Global error handler - catches JS errors that would silently kill all buttons
-window.onerror = function(msg, src, line, col, err) {
-  console.error('JS Error:', msg, 'at line', line);
-  var logPanel = document.getElementById('log-panel');
-  if(logPanel) {
-    var line2 = document.createElement('div');
-    line2.className = 'log-line err';
-    line2.innerHTML = '<span class="ts">ERR</span><span class="msg">JS Error: ' + (msg||'unknown') + ' (line ' + (line||'?') + ')</span>';
-    logPanel.appendChild(line2);
-  }
-  return false;
-};
-
 // ── ALL LEAGUES (ALL SPORTS) ─────────────────────────────────────────────
 const LEAGUES=[
-{id:‘soccer/uefa.champions’,name:‘UCL’,emoji:‘🏆’,espn:true},
-{id:‘soccer/eng.1’,name:‘Premier League’,emoji:‘⚽’,espn:true},
-{id:‘soccer/esp.1’,name:‘La Liga’,emoji:‘⚽’,espn:true},
-{id:‘soccer/ita.1’,name:‘Serie A’,emoji:‘⚽’,espn:true},
-{id:‘soccer/ger.1’,name:‘Bundesliga’,emoji:‘⚽’,espn:true},
-{id:‘soccer/fra.1’,name:‘Ligue 1’,emoji:‘⚽’,espn:true},
-{id:‘soccer/uefa.europa’,name:‘Europa League’,emoji:‘🟠’,espn:true},
-{id:‘soccer/uefa.euroconf’,name:‘Conference Lg’,emoji:‘⚽’,espn:true},
-{id:‘soccer/eng.fa’,name:‘FA Cup’,emoji:‘⚽’,espn:true},
-{id:‘soccer/eng.league_cup’,name:‘Carabao Cup’,emoji:‘⚽’,espn:true},
-{id:‘soccer/usa.1’,name:‘MLS’,emoji:‘⚽’,espn:true},
-{id:‘soccer/tur.1’,name:‘Super Lig’,emoji:‘⚽’,espn:true},
-{id:‘soccer/ned.1’,name:‘Eredivisie’,emoji:‘⚽’,espn:true},
-{id:‘soccer/por.1’,name:‘Primeira Liga’,emoji:‘⚽’,espn:true},
-{id:‘soccer/sco.1’,name:‘Scottish Prem’,emoji:‘⚽’,espn:true},
-{id:‘soccer/mex.1’,name:‘Liga MX’,emoji:‘⚽’,espn:true},
-{id:‘soccer/bra.1’,name:‘Brasileirão’,emoji:‘⚽’,espn:true},
-{id:‘basketball/nba’,name:‘NBA’,emoji:‘🏀’,espn:true},
-{id:‘basketball/euroleague’,name:‘EuroLeague’,emoji:‘🏀’,espn:true},
-{id:‘football/nfl’,name:‘NFL’,emoji:‘🏈’,espn:true},
-{id:‘hockey/nhl’,name:‘NHL’,emoji:‘🏒’,espn:true},
-{id:‘baseball/mlb’,name:‘MLB’,emoji:‘⚾’,espn:true},
-{id:‘racing/f1’,name:‘Formula 1’,emoji:‘🏎’,espn:true},
-{id:‘racing/motogp’,name:‘MotoGP’,emoji:‘🏍’,espn:false},
-{id:‘racing/nascar’,name:‘NASCAR’,emoji:‘🏎’,espn:false},
-{id:‘racing/indycar’,name:‘IndyCar’,emoji:‘🏎’,espn:false},
-{id:‘mma/ufc’,name:‘UFC / MMA’,emoji:‘🥊’,espn:false},
-{id:‘boxing/wbc’,name:‘Boxing’,emoji:‘🥊’,espn:false},
-{id:‘tennis/atp’,name:‘Tennis ATP’,emoji:‘🎾’,espn:false},
-{id:‘tennis/wta’,name:‘Tennis WTA’,emoji:‘🎾’,espn:false},
-{id:‘cricket/icc’,name:‘Cricket’,emoji:‘🏏’,espn:false},
-{id:‘rugby/irb’,name:‘Rugby Union’,emoji:‘🏉’,espn:false},
-{id:‘golf/pga’,name:‘Golf PGA’,emoji:‘⛳’,espn:false},
-{id:‘cycling/road’,name:‘Cycling’,emoji:‘🚴’,espn:false},
-{id:‘wrestling/wwe’,name:‘WWE’,emoji:‘🤼’,espn:false},
-{id:‘darts/pdc’,name:‘Darts PDC’,emoji:‘🎯’,espn:false},
+  {id:'soccer/uefa.champions',name:'UCL',emoji:'🏆',espn:true},
+  {id:'soccer/eng.1',name:'Premier League',emoji:'⚽',espn:true},
+  {id:'soccer/esp.1',name:'La Liga',emoji:'⚽',espn:true},
+  {id:'soccer/ita.1',name:'Serie A',emoji:'⚽',espn:true},
+  {id:'soccer/ger.1',name:'Bundesliga',emoji:'⚽',espn:true},
+  {id:'soccer/fra.1',name:'Ligue 1',emoji:'⚽',espn:true},
+  {id:'soccer/uefa.europa',name:'Europa League',emoji:'🟠',espn:true},
+  {id:'soccer/uefa.euroconf',name:'Conference Lg',emoji:'⚽',espn:true},
+  {id:'soccer/eng.fa',name:'FA Cup',emoji:'⚽',espn:true},
+  {id:'soccer/eng.league_cup',name:'Carabao Cup',emoji:'⚽',espn:true},
+  {id:'soccer/usa.1',name:'MLS',emoji:'⚽',espn:true},
+  {id:'soccer/tur.1',name:'Super Lig',emoji:'⚽',espn:true},
+  {id:'soccer/ned.1',name:'Eredivisie',emoji:'⚽',espn:true},
+  {id:'soccer/por.1',name:'Primeira Liga',emoji:'⚽',espn:true},
+  {id:'soccer/sco.1',name:'Scottish Prem',emoji:'⚽',espn:true},
+  {id:'soccer/mex.1',name:'Liga MX',emoji:'⚽',espn:true},
+  {id:'soccer/bra.1',name:'Brasileirão',emoji:'⚽',espn:true},
+  {id:'basketball/nba',name:'NBA',emoji:'🏀',espn:true},
+  {id:'basketball/euroleague',name:'EuroLeague',emoji:'🏀',espn:true},
+  {id:'football/nfl',name:'NFL',emoji:'🏈',espn:true},
+  {id:'hockey/nhl',name:'NHL',emoji:'🏒',espn:true},
+  {id:'baseball/mlb',name:'MLB',emoji:'⚾',espn:true},
+  {id:'racing/f1',name:'Formula 1',emoji:'🏎',espn:true},
+  {id:'racing/motogp',name:'MotoGP',emoji:'🏍',espn:false},
+  {id:'racing/nascar',name:'NASCAR',emoji:'🏎',espn:false},
+  {id:'racing/indycar',name:'IndyCar',emoji:'🏎',espn:false},
+  {id:'mma/ufc',name:'UFC / MMA',emoji:'🥊',espn:false},
+  {id:'boxing/wbc',name:'Boxing',emoji:'🥊',espn:false},
+  {id:'tennis/atp',name:'Tennis ATP',emoji:'🎾',espn:false},
+  {id:'tennis/wta',name:'Tennis WTA',emoji:'🎾',espn:false},
+  {id:'cricket/icc',name:'Cricket',emoji:'🏏',espn:false},
+  {id:'rugby/irb',name:'Rugby Union',emoji:'🏉',espn:false},
+  {id:'golf/pga',name:'Golf PGA',emoji:'⛳',espn:false},
+  {id:'cycling/road',name:'Cycling',emoji:'🚴',espn:false},
+  {id:'wrestling/wwe',name:'WWE',emoji:'🤼',espn:false},
+  {id:'darts/pdc',name:'Darts PDC',emoji:'🎯',espn:false},
 ];
 
 // ── BUILT-IN CHANNEL LIBRARY ─────────────────────────────────────────────
@@ -784,41 +771,18 @@ if(mc){log(‘ok’,‘✓ Auto-stream matched: ‘+mc+’ game(s)’);renderGam
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 window.addEventListener(‘DOMContentLoaded’,function(){
-try{loadConfig();}catch(e){console.error(‘loadConfig error:’,e);}
-try{loadChannelLibrary();}catch(e){console.error(‘loadChannelLibrary error:’,e);}
-try{renderChannelLibrary();}catch(e){console.error(‘renderChannelLibrary error:’,e);}
-try{buildLeaguesGrid();}catch(e){console.error(‘buildLeaguesGrid error:’,e);}
-try{renderGlobalLabels();}catch(e){console.error(‘renderGlobalLabels error:’,e);}
-try{
+loadConfig();
+loadChannelLibrary();
+renderChannelLibrary();
+buildLeaguesGrid();
+renderGlobalLabels();
 var inp=document.getElementById(‘custom-date-input’);
 if(inp)inp.value=selectedDate;
 updateAllQBtns(document.getElementById(‘dq-today’));
 updateDateIndicator();
-}catch(e){console.error(‘date init error:’,e);}
-try{setInterval(autoRefreshScores,3*60*1000);}catch(e){}
-try{setInterval(checkScheduledPosts,60*1000);}catch(e){}
-// Attach all button events via addEventListener as backup (works even if onclick attr fails)
-attachButtonEvents();
+setInterval(autoRefreshScores,3*60*1000);
+setInterval(checkScheduledPosts,60*1000);
 });
-
-function attachButtonEvents(){
-try{
-var scanBtn=document.getElementById(‘scan-btn’);
-if(scanBtn)scanBtn.addEventListener(‘click’,function(){scanAllLeagues();});
-var bulkBtn=document.getElementById(‘bulk-btn’);
-if(bulkBtn)bulkBtn.addEventListener(‘click’,function(){bulkPostAll();});
-var siBtn=document.getElementById(‘gis-signin-btn’);
-if(siBtn)siBtn.addEventListener(‘click’,function(){signInWithGoogle();});
-var tvBtn=document.querySelector(’[onclick*=“fetchTVGuideManual”]’);
-if(tvBtn)tvBtn.addEventListener(‘click’,function(){fetchTVGuideManual();});
-var rfBtn=document.querySelector(’[onclick*=“refreshScores”]’);
-if(rfBtn)rfBtn.addEventListener(‘click’,function(){refreshScores();});
-var saveBtn=document.querySelector(’[onclick*=“saveConfig”]’);
-if(saveBtn)saveBtn.addEventListener(‘click’,function(){saveConfig();});
-var signoutBtn=document.querySelector(’[onclick*=“signOut”]’);
-if(signoutBtn)signoutBtn.addEventListener(‘click’,function(){signOut();});
-}catch(e){console.error(‘attachButtonEvents error:’,e);}
-}
 
 // ── STORAGE ──────────────────────────────────────────────────────────────────
 function getGameKey(gd){var c=getCompetitors(gd);var h=(c.home.team&&c.home.team.displayName)||’?’;var a=(c.away.team&&c.away.team.displayName)||’?’;var d=gd.espnEvent.date?gd.espnEvent.date.substring(0,10):gd.gameDate||‘x’;return’s803_’+[gd.league.id,h,a,d].join(’|’).replace(/\s+/g,’_’).toLowerCase();}
@@ -840,7 +804,7 @@ if(s.lang)document.getElementById(‘post-lang’).value=s.lang;
 if(s.style)document.getElementById(‘post-style’).value=s.style;
 if(s.publishMode)document.getElementById(‘publish-mode’).value=s.publishMode;
 if(s.activeLeagues)activeLeagues=new Set(s.activeLeagues);
-if(s.clientId)GOOGLE_CLIENT_ID=s.clientId||GOOGLE_CLIENT_ID;
+// Never overwrite hardcoded client ID from old saved config
 if(s.schedAmount)document.getElementById(‘sched-amount’).value=s.schedAmount;
 if(s.schedUnit){document.getElementById(‘sched-unit’).value=s.schedUnit;updateSchedUnitLimits();}
 updateSchedPreview();
@@ -848,6 +812,8 @@ if(s.globalLabels)globalLabels=s.globalLabels;
 if(s.globalSchedulerOn){globalSchedulerOn=s.globalSchedulerOn;updateSchedulerUI();}
 if(s.scanAllMode!==undefined)scanAllMode=s.scanAllMode;
 if(s.oauthToken&&s.tokenExpiresAt&&Date.now()<s.tokenExpiresAt){oauthToken=s.oauthToken;oauthUser=s.oauthUser||null;tokenExpiresAt=s.tokenExpiresAt;setSignedInUI(oauthUser);}
+// Force correct client ID always - ignore any saved value
+GOOGLE_CLIENT_ID=‘985566043500-5iktnbam2up75fehdkdfhp4sn829jrhd.apps.googleusercontent.com’;
 config=s;updatePills();
 }catch(e){log(‘err’,’loadConfig: ’+e.message);}
 }
