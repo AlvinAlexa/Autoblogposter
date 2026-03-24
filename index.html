@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sports 803 · AI Auto-Post Dashboard v5 (Fixed Logos)</title>
+<title>Sports 803 · AI Auto-Post Dashboard v5</title>
 <style>
 :root {
   --bg:#0a0e1a;--bg2:#111827;--bg3:#1a2235;--border:#1e2d45;
@@ -11,1784 +11,351 @@
   --text:#e2e8f0;--muted:#64748b;--card:#111827;--radius:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;overflow-x:hidden}
 a{color:var(--blue);text-decoration:none}
 input,select,textarea{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 10px;font-size:13px;width:100%;outline:none}
 input:focus,select:focus,textarea:focus{border-color:var(--accent)}
-button{cursor:pointer;border:none;border-radius:6px;padding:7px 14px;font-size:13px;font-weight:600;transition:.2s}
-.btn{background:var(--accent);color:#fff}.btn:hover{background:#c1121f}
-.btn-blue{background:var(--blue);color:#0a0e1a}.btn-blue:hover{opacity:.85}
-.btn-green{background:var(--green);color:#0a0e1a}.btn-green:hover{opacity:.85}
-.btn-orange{background:var(--accent2);color:#0a0e1a}.btn-orange:hover{opacity:.85}
-.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-ghost:hover{background:var(--bg3)}
-.btn-sm{padding:4px 10px;font-size:12px}
-.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:16px;height:52px;position:sticky;top:0;z-index:100}
-.topbar .logo{font-weight:800;font-size:1.1rem;color:var(--accent);letter-spacing:-.5px;white-space:nowrap}
-.topbar .logo span{color:var(--text)}
-.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.sidebar{width:220px;background:var(--bg2);border-right:1px solid var(--border);min-height:calc(100vh - 52px);padding:16px 0;position:fixed;top:52px;left:0}
-.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:9px 20px;color:var(--muted);font-size:13px;font-weight:500;transition:.15s;border-left:3px solid transparent}
-.sidebar-nav a:hover,.sidebar-nav a.active{color:var(--text);background:var(--bg3);border-left-color:var(--accent)}
-.sidebar-nav a .ico{font-size:16px;width:20px;text-align:center}
-.main{margin-left:220px;padding:24px}
+button{cursor:pointer;border:none;border-radius:6px;padding:7px 14px;font-weight:600;transition:0.2s;display:inline-flex;align-items:center;gap:6px;font-size:13px}
+button:disabled{opacity:0.5;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#ff4d5a}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-outline:hover{background:var(--bg3)}
+
+/* Layout */
+.app-container{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:20px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+.main-content{padding:25px;max-width:1400px;margin:0 auto;width:100%}
+
+/* Header/Stats */
+.dashboard-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
+.stat-bar{display:flex;gap:15px;margin-bottom:20px}
+.stat-item{background:var(--card);padding:10px 15px;border-radius:var(--radius);border:1px solid var(--border);flex:1}
+.stat-val{display:block;font-size:20px;font-weight:bold;color:var(--accent)}
+.stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase}
+
+/* Grid & Cards */
+.event-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:15px}
+.event-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:15px;position:relative;transition:0.2s}
+.event-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.event-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:8px}
+.teams-area{display:flex;align-items:center;justify-content:space-between;margin:10px 0;text-align:center}
+.team-slot{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px}
+.team-logo{width:50px;height:50px;object-fit:contain;background:var(--bg3);border-radius:50%;padding:5px;border:1px solid var(--border)}
+.team-name{font-weight:600;font-size:13px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vs{color:var(--muted);font-weight:bold;font-size:12px;margin:0 10px}
+
+/* Modals/Pages */
 .page{display:none}.page.active{display:block}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px}
-.card-title{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:12px}
-.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
-.event-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:10px;transition:.2s}
-.event-card:hover{border-color:var(--accent);transform:translateY(-1px)}
-.event-card.has-highlights{border-color:rgba(244,162,97,.4)}
-.ec-league{display:flex;align-items:center;justify-content:space-between;font-size:.72rem}
-.ec-league-name{color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-.ec-status{padding:2px 8px;border-radius:10px;font-weight:700;font-size:.68rem;background:#1a2235;color:var(--muted)}
-.ec-status.live{background:rgba(230,57,70,.15);color:var(--accent);animation:pulse 1.5s infinite}
-.ec-status.final{background:rgba(6,214,160,.1);color:var(--green)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
-.ec-match{display:flex;align-items:center;gap:10px}
-.ec-team{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
-.ec-team-logo{width:40px;height:40px;object-fit:contain;border-radius:4px;background:transparent}
-.ec-team-placeholder{width:40px;height:40px;background:var(--bg3);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.ec-score{font-size:1.3rem;font-weight:800;color:var(--text);min-width:48px;text-align:center}
-.ec-time{font-size:.72rem;color:var(--muted);text-align:center}
-.ec-event-img{width:100%;height:80px;object-fit:cover;border-radius:6px;background:var(--bg3)}
-.ec-race-title{font-size:.9rem;font-weight:700;color:var(--text)}
-.ec-race-venue{font-size:.75rem;color:var(--muted);margin-top:2px}
-.ec-race-entries{display:flex;flex-direction:column;gap:3px;margin-top:4px}
-.ec-race-entry{display:flex;align-items:center;gap:7px;font-size:.76rem;padding:3px 0;border-bottom:1px solid var(--border)}
-.ec-race-entry:last-child{border-bottom:none}
-.ec-race-pos{font-weight:800;color:var(--accent2);min-width:22px}
-.ec-race-entry img{width:18px;height:18px;object-fit:contain;border-radius:2px}
-.ec-actions{display:flex;gap:6px;flex-wrap:wrap}
-.ec-actions button{flex:1;font-size:.72rem;padding:5px 8px}
-.post-badge{font-size:.65rem;padding:2px 7px;border-radius:8px;font-weight:700;margin-left:auto}
-.post-badge.draft{background:#1a2e1a;color:#56d364;border:1px solid #238636}
-.post-badge.live{background:#1a2a3e;color:var(--blue);border:1px solid var(--blue)}
-.post-badge.scheduled{background:#2e2416;color:var(--accent2);border:1px solid var(--accent2)}
-.post-badge.highlights{background:#2e1a00;color:var(--accent2);border:1px solid var(--accent2)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.form-row.full{grid-template-columns:1fr}
-label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:4px}
-.form-group{margin-bottom:12px}
-.stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:20px}
-.stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center}
-.stat-box .num{font-size:1.6rem;font-weight:800;color:var(--accent)}
-.stat-box .lbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.tag{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:2px 10px;font-size:.72rem;color:var(--muted);display:flex;align-items:center;gap:4px}
-.tag .remove{cursor:pointer;color:var(--accent);font-weight:700}
-.toggle{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
-.toggle input{display:none}
-.toggle-slider{width:36px;height:20px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;position:relative;transition:.2s}
-.toggle-slider::after{content:'';position:absolute;width:14px;height:14px;background:var(--muted);border-radius:50%;top:2px;left:2px;transition:.2s}
-.toggle input:checked+.toggle-slider{background:var(--green);border-color:var(--green)}
-.toggle input:checked+.toggle-slider::after{background:#fff;left:18px}
-.ch-table{width:100%;border-collapse:collapse;font-size:.8rem}
-.ch-table th{background:var(--bg3);color:var(--muted);text-transform:uppercase;font-size:.68rem;letter-spacing:.5px;padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
-.ch-table td{padding:8px 10px;border-bottom:1px solid var(--border)}
-.ch-table tr:hover td{background:var(--bg3)}
-#toast-container{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:9999}
-.toast{padding:10px 16px;border-radius:8px;font-size:.82rem;font-weight:600;animation:slide-in .3s ease;max-width:320px}
-.toast.success{background:#1a3a2a;border:1px solid var(--green);color:var(--green)}
-.toast.error{background:#3a1a1a;border:1px solid var(--accent);color:var(--accent)}
-.toast.info{background:#1a2a3a;border:1px solid var(--blue);color:var(--blue)}
-@keyframes slide-in{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.open{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;padding:24px}
-.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.modal-head h3{font-size:1rem;font-weight:700}
-.modal-head .close-btn{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer}
-.league-pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
-.league-pill{padding:5px 12px;border-radius:20px;font-size:.75rem;font-weight:700;background:var(--bg3);border:1px solid var(--border);cursor:pointer;transition:.15s;white-space:nowrap}
-.league-pill.active{background:rgba(230,57,70,.15);border-color:var(--accent);color:var(--accent)}
-.league-pill:hover{border-color:var(--muted)}
-.search-bar{position:relative;margin-bottom:16px}
-.search-bar input{padding-left:32px}
-.search-bar::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:.8rem}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.stream-sources{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
-.stream-source-row{display:flex;gap:6px;align-items:center}
-.stream-source-row input{flex:1}
-.iframe-preview{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:.72rem;color:var(--muted);word-break:break-all;margin-top:8px;max-height:100px;overflow-y:auto;font-family:monospace}
-.highlights-row{display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(244,162,97,.07);border:1px solid rgba(244,162,97,.25);border-radius:6px;font-size:.73rem}
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
-@media(max-width:768px){.sidebar{display:none}.main{margin-left:0}.form-row{grid-template-columns:1fr}}
+#toast-container{position:fixed;bottom:20px;right:20px;z-index:9999}
+.toast{padding:12px 20px;background:var(--bg3);border-left:4px solid var(--blue);border-radius:6px;margin-top:10px;animation:slideIn 0.3s ease-out;box-shadow:0 10px 25px rgba(0,0,0,0.5)}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="logo">Sports <span>803</span> <span style="font-size:.65rem;color:var(--muted);font-weight:400;margin-left:4px">AI Auto-Post v5</span></div>
-  <div class="topbar-right">
-    <span id="auth-status" style="font-size:.75rem;color:var(--muted)">⚪ Not signed in</span>
-    <button class="btn btn-sm" id="auth-btn" onclick="handleAuth()">Sign in with Google</button>
-    <button class="btn-ghost btn-sm" onclick="openPage('settings')">⚙️</button>
-  </div>
-</div>
-
-<div class="sidebar">
-  <div class="sidebar-nav">
-    <a href="#" class="active" onclick="openPage('dashboard');return false"><span class="ico">🏠</span> Dashboard</a>
-    <a href="#" onclick="openPage('events');return false"><span class="ico">📅</span> Events</a>
-    <a href="#" onclick="openPage('compose');return false"><span class="ico">✍️</span> Compose Post</a>
-    <a href="#" onclick="openPage('channels');return false"><span class="ico">📺</span> Channels</a>
-    <a href="#" onclick="openPage('scheduler');return false"><span class="ico">⏰</span> Scheduler</a>
-    <a href="#" onclick="openPage('thumbnail');return false"><span class="ico">🖼️</span> Thumbnails</a>
-    <a href="#" onclick="openPage('settings');return false"><span class="ico">⚙️</span> Settings</a>
-  </div>
-  <div style="padding:16px 20px;margin-top:16px">
-    <div style="font-size:.7rem;color:var(--muted)">Blog ID</div>
-    <div id="sb-blogid" style="font-size:.72rem;color:var(--text);word-break:break-all;margin-top:2px">—</div>
-  </div>
-</div>
-
-<div class="main">
-
-<!-- DASHBOARD -->
-<div class="page active" id="page-dashboard">
-  <h2 style="margin-bottom:16px;font-size:1.1rem">Dashboard</h2>
-  <div class="stats-bar">
-    <div class="stat-box"><div class="num" id="stat-events">0</div><div class="lbl">Events Today</div></div>
-    <div class="stat-box"><div class="num" id="stat-posted">0</div><div class="lbl">Posts Made</div></div>
-    <div class="stat-box"><div class="num" id="stat-scheduled">0</div><div class="lbl">Scheduled</div></div>
-    <div class="stat-box"><div class="num" id="stat-channels">0</div><div class="lbl">Channels</div></div>
-    <div class="stat-box"><div class="num" id="stat-leagues">0</div><div class="lbl">Active Leagues</div></div>
-    <div class="stat-box"><div class="num" id="stat-highlights">0</div><div class="lbl">Highlights Posted</div></div>
-  </div>
-  <div class="card">
-    <div class="card-title">Quick Actions</div>
-    <div style="display:flex;flex-wrap:wrap;gap:10px">
-      <button class="btn" onclick="openPage('events');fetchAllEvents()">🔄 Fetch Today's Events</button>
-      <button class="btn-blue" onclick="openPage('compose')">✍️ Compose Post</button>
-      <button class="btn-green" onclick="openPage('scheduler')">⏰ Auto Scheduler</button>
-      <button class="btn-orange" onclick="checkHighlights()">🎬 Check for Highlights</button>
-      <button class="btn-ghost" onclick="openPage('channels')">📺 Manage Channels</button>
+<div class="app-container">
+  <aside class="sidebar">
+    <h2 style="color:var(--accent);margin-bottom:25px">Sports 803</h2>
+    <nav style="display:flex;flex-direction:column;gap:5px;flex:1">
+      <button class="btn-outline" onclick="openPage('dashboard')">🏠 Dashboard</button>
+      <button class="btn-outline" onclick="openPage('channels')">📺 Channels</button>
+      <button class="btn-outline" onclick="openPage('post-editor')">✍️ Manual Post</button>
+      <button class="btn-outline" onclick="openPage('settings')">⚙️ Settings</button>
+    </nav>
+    <div id="auth-section" style="padding-top:20px;border-top:1px solid var(--border)">
+       <button id="auth-btn" class="btn-primary" style="width:100%" onclick="handleAuth()">Sign in with Google</button>
+       <p id="auth-status" style="font-size:11px;margin-top:8px;color:var(--muted)">🔴 Not Connected</p>
     </div>
-  </div>
-  <div class="card">
-    <div class="card-title">Recent Posts</div>
-    <div id="recent-posts-list" style="font-size:.8rem;color:var(--muted)">No posts yet this session.</div>
-  </div>
-</div>
+  </aside>
 
-<!-- EVENTS -->
-<div class="page" id="page-events">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-    <h2 style="font-size:1.1rem">Events</h2>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn" onclick="fetchAllEvents()"><span id="fetch-spinner" style="display:none" class="spinner"></span>🔄 Fetch All</button>
-      <button class="btn-orange" onclick="checkHighlights()">🎬 Post Highlights</button>
-      <button class="btn-green" onclick="bulkPostAll()">📤 Bulk Post All</button>
-    </div>
-  </div>
-  <div class="league-pills" id="league-filter-pills"></div>
-  <div class="search-bar"><input type="text" id="event-search" placeholder="Search events…" oninput="filterEvents()"></div>
-  <div class="events-grid" id="events-grid">
-    <div style="color:var(--muted);font-size:.85rem;grid-column:1/-1;padding:30px;text-align:center">Click "Fetch All" to load today's events.</div>
-  </div>
-</div>
-
-<!-- COMPOSE -->
-<div class="page" id="page-compose">
-  <h2 style="margin-bottom:16px;font-size:1.1rem">Compose Post</h2>
-  <div style="display:grid;grid-template-columns:1fr 400px;gap:20px">
-    <div>
-      <div class="card">
-        <div class="card-title">Post Details</div>
-        <div class="form-group"><label>Post Title</label><input type="text" id="post-title" placeholder="e.g. Man City vs Arsenal – Match Preview"></div>
-        <div class="form-group"><label>Post Body</label><textarea id="post-body" rows="14" placeholder="Article content…"></textarea></div>
-        <div class="form-row">
-          <div><label>Labels (comma separated)</label><input type="text" id="post-labels" value="sports 803,live stream"></div>
-          <div><label>Custom Slug</label><input type="text" id="post-slug" placeholder="auto-generated"></div>
-        </div>
-        <div class="form-row">
-          <div><label>Post Status</label>
-            <select id="post-status">
-              <option value="DRAFT">Draft</option>
-              <option value="LIVE">Live</option>
-              <option value="SCHEDULED">Scheduled</option>
-            </select>
-          </div>
-          <div><label>Schedule Time</label><input type="datetime-local" id="post-schedule-time"></div>
-        </div>
-        <div style="display:flex;gap:10px;margin-top:4px;flex-wrap:wrap">
-          <button class="btn" onclick="postToBlogger()">📤 Post to Blogger</button>
-          <button class="btn-blue" onclick="generateAIContent()">🤖 AI Generate</button>
-          <button class="btn-orange" onclick="openHighlightsModal()">🎬 Post Highlights</button>
-          <button class="btn-ghost" onclick="previewPost()">👁 Preview</button>
+  <main class="main-content">
+    <div id="page-dashboard" class="page active">
+      <div class="dashboard-header">
+        <h1>Dashboard</h1>
+        <div style="display:flex;gap:10px">
+          <button id="fetch-btn" class="btn-primary" onclick="fetchAllEvents()">📥 Fetch Events</button>
+          <button class="btn-outline" onclick="toggleScheduler()" id="sched-btn">⏰ Start Scheduler</button>
         </div>
       </div>
+
+      <div class="stat-bar">
+        <div class="stat-item"><span class="stat-val" id="stat-leagues">0</span><span class="stat-lbl">Active Leagues</span></div>
+        <div class="stat-item"><span class="stat-val" id="stat-events">0</span><span class="stat-lbl">Upcoming Matches</span></div>
+        <div class="stat-item"><span class="stat-val" id="stat-channels">0</span><span class="stat-lbl">Connected Channels</span></div>
+      </div>
+
+      <div id="events-loader" style="display:none;text-align:center;padding:50px">🔄 Loading events and resolving logos...</div>
+      <div id="events-container" class="event-grid"></div>
     </div>
-    <div>
-      <div class="card">
-        <div class="card-title">Thumbnail</div>
-        <canvas id="thumb-canvas" width="400" height="210" style="background:#111;border-radius:6px;max-width:100%"></canvas>
-        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-          <button class="btn-green btn-sm" onclick="generateThumbnail()">🖼️ Generate</button>
-          <button class="btn-blue btn-sm" onclick="uploadToImgbb()">☁️ Upload</button>
+
+    <div id="page-settings" class="page">
+        <h2>System Settings</h2>
+        <div style="background:var(--card);padding:20px;border-radius:var(--radius);margin-top:15px;display:flex;flex-direction:column;gap:15px">
+            <div><label>Blogger Blog ID</label><input type="text" id="cfg-blogid" placeholder="123456789"></div>
+            <div><label>Google Client ID</label><input type="text" id="cfg-clientid" placeholder="xxxx.apps.googleusercontent.com"></div>
+            <div><label>ImgBB API Key</label><input type="text" id="cfg-imgbb" placeholder="c8cd5657bfdfc6c298c9366deebfa7a7"></div>
+            <button class="btn-primary" onclick="saveConfig()">Save Configuration</button>
         </div>
-        <div style="font-size:.67rem;color:var(--muted);margin-top:5px">Logos load via multi‑source system — check console (F12) for details</div>
-        <div style="margin-top:8px"><label>Image URL</label><input type="text" id="thumb-url" placeholder="Upload to get URL…" readonly></div>
-      </div>
-      <div class="card">
-        <div class="card-title">🎥 Stream Link Builder</div>
-        <div class="form-group"><label>Player Base URL</label><input type="text" id="player-base" value="https://soulmap1.blogspot.com/p/media-player.html"></div>
-        <label style="margin-bottom:6px">Stream Sources (mora= URLs)</label>
-        <div class="stream-sources" id="stream-sources-list">
-          <div class="stream-source-row">
-            <input type="text" placeholder="https://stream-source-1.com/…" class="mora-input">
-            <button class="btn-ghost btn-sm" onclick="removeStreamSource(this)">✕</button>
-          </div>
-        </div>
-        <button class="btn-ghost btn-sm" onclick="addStreamSource()" style="margin-bottom:10px">+ Add Source</button>
-        <div class="iframe-preview" id="iframe-preview-box">iframe will appear here…</div>
-        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-          <button class="btn-blue btn-sm" onclick="buildAndInsertIframe()">Insert iframe into Post</button>
-          <button class="btn-ghost btn-sm" onclick="previewIframe()">Preview</button>
-        </div>
-      </div>
     </div>
-  </div>
-</div>
-
-<!-- CHANNELS -->
-<div class="page" id="page-channels">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-    <h2 style="font-size:1.1rem">Channel Library</h2>
-    <button class="btn" onclick="openAddChannel()">+ Add Channel</button>
-  </div>
-  <div class="search-bar"><input type="text" id="ch-search" placeholder="Search channels…" oninput="filterChannels()"></div>
-  <div class="card" style="padding:0;overflow:hidden">
-    <table class="ch-table">
-      <thead>…
-<th>Channel</th><th>Sport/League</th><th>Stream URL</th><th>Region</th><th>Actions</th>
-</thead>
-      <tbody id="channels-tbody"></tbody>
-    </div>
-  </div>
-</div>
-
-<!-- SCHEDULER -->
-<div class="page" id="page-scheduler">
-  <h2 style="margin-bottom:16px;font-size:1.1rem">Auto Scheduler</h2>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-    <div class="card">
-      <div class="card-title">Settings</div>
-      <div class="form-group"><label>Post Timing (before event)</label>
-        <select id="sched-timing">
-          <option value="60">1 hour before</option>
-          <option value="120">2 hours before</option>
-          <option value="180">3 hours before</option>
-          <option value="360">6 hours before</option>
-          <option value="720">12 hours before</option>
-          <option value="1440">1 day before</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Default Post Status</label>
-        <select id="sched-status">
-          <option value="DRAFT">Draft</option>
-          <option value="LIVE">Live (publish immediately)</option>
-        </select>
-      </div>
-      <div class="form-group"><label>Auto-post Highlights after event ends</label>
-        <label class="toggle" style="margin-top:6px">
-          <input type="checkbox" id="auto-highlights">
-          <div class="toggle-slider"></div>
-          <span style="font-size:.82rem">Enable Auto Highlights</span>
-        </label>
-      </div>
-      <label class="toggle" style="margin-top:8px">
-        <input type="checkbox" id="sched-enabled" onchange="toggleScheduler()">
-        <div class="toggle-slider"></div>
-        <span style="font-size:.82rem">Enable Auto Scheduler</span>
-      </label>
-    </div>
-    <div class="card">
-      <div class="card-title">Scheduled Queue</div>
-      <div id="sched-queue" style="font-size:.8rem;color:var(--muted)">Fetch events first.</div>
-    </div>
-  </div>
-</div>
-
-<!-- THUMBNAIL -->
-<div class="page" id="page-thumbnail">
-  <h2 style="margin-bottom:16px;font-size:1.1rem">Thumbnail Builder</h2>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-    <div class="card">
-      <div class="card-title">Settings</div>
-      <div class="form-row">
-        <div><label>Home Team / Event Name</label><input type="text" id="tb-home" placeholder="Man City / GP Name"></div>
-        <div><label>Away Team (leave blank for races)</label><input type="text" id="tb-away" placeholder="Arsenal"></div>
-      </div>
-      <div class="form-row">
-        <div><label>Home Logo URL</label><input type="text" id="tb-home-logo" placeholder="https://…"></div>
-        <div><label>Away Logo URL</label><input type="text" id="tb-away-logo" placeholder="https://…"></div>
-      </div>
-      <div class="form-row">
-        <div><label>League Name</label><input type="text" id="tb-league" placeholder="Premier League"></div>
-        <div><label>Date/Time</label><input type="text" id="tb-datetime" placeholder="Sun 23 Mar · 15:00"></div>
-      </div>
-      <div class="form-row">
-        <div><label>BG Color 1</label><input type="color" id="tb-bg1" value="#0a0e1a"></div>
-        <div><label>BG Color 2</label><input type="color" id="tb-bg2" value="#1a0010"></div>
-      </div>
-      <div class="form-group"><label>Event Banner Image URL (optional override)</label><input type="text" id="tb-banner" placeholder="Auto-fetched from ESPN or circuit map"></div>
-      <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
-        <button class="btn" onclick="buildThumbnail()">🖼️ Build</button>
-        <button class="btn-blue" onclick="uploadThumbFromBuilder()">☁️ Upload</button>
-        <button class="btn-ghost" onclick="downloadThumb()">⬇️ Download</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Preview (800×420)</div>
-      <canvas id="thumb-canvas-big" width="800" height="420" style="max-width:100%;border-radius:8px;background:#111"></canvas>
-      <div style="margin-top:8px"><label>imgbb URL</label><input type="text" id="tb-imgbb-url" readonly placeholder="Upload to get URL…"></div>
-    </div>
-  </div>
-</div>
-
-<!-- SETTINGS -->
-<div class="page" id="page-settings">
-  <h2 style="margin-bottom:16px;font-size:1.1rem">Settings</h2>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-    <div class="card">
-      <div class="card-title">Blogger / Google OAuth</div>
-      <div class="form-group"><label>Blogger Blog ID</label><input type="text" id="cfg-blogid" placeholder="123456789012345678"></div>
-      <div class="form-group"><label>Google OAuth Client ID</label><input type="text" id="cfg-clientid" placeholder="xxxx.apps.googleusercontent.com"></div>
-      <button class="btn btn-sm" onclick="saveConfig()">Save</button>
-    </div>
-    <div class="card">
-      <div class="card-title">imgbb API</div>
-      <div class="form-group"><label>imgbb API Key</label><input type="text" id="cfg-imgbb" value="c8cd5657bfdfc6c298c9366deebfa7a7"></div>
-      <div class="form-group"><label>Highlights Source URL Template</label><input type="text" id="cfg-highlights-url" placeholder="https://highlights-api.com/{id}"></div>
-      <button class="btn btn-sm" onclick="saveConfig()">Save</button>
-    </div>
-    <div class="card" style="grid-column:1/-1">
-      <div class="card-title">Active Leagues</div>
-      <div id="league-toggles" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Global Post Labels</div>
-      <div class="form-group"><input type="text" id="new-label-input" placeholder="Add label + Enter"></div>
-      <div class="tags" id="global-labels-tags"></div>
-      <button class="btn btn-sm" style="margin-top:10px" onclick="saveConfig()">Save Labels</button>
-    </div>
-    <div class="card">
-      <div class="card-title">Data</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-ghost btn-sm" onclick="exportConfig()">📤 Export Config</button>
-        <button class="btn-ghost btn-sm" onclick="importConfig()">📥 Import Config</button>
-        <button class="btn btn-sm" style="background:#3d0c0c" onclick="clearStorage()">🗑 Clear All Data</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div><!-- /main -->
-
-<!-- MODALS -->
-<div class="modal-overlay" id="modal-preview">
-  <div class="modal">
-    <div class="modal-head"><h3>Post Preview</h3><button class="close-btn" onclick="closeModal('modal-preview')">✕</button></div>
-    <div id="preview-title" style="font-size:1.1rem;font-weight:700;margin-bottom:12px"></div>
-    <div id="preview-body" style="font-size:.85rem;line-height:1.7;color:var(--muted)"></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal-channel">
-  <div class="modal">
-    <div class="modal-head"><h3 id="modal-channel-title">Add Channel</h3><button class="close-btn" onclick="closeModal('modal-channel')">✕</button></div>
-    <div class="form-row">
-      <div><label>Channel Name</label><input type="text" id="ch-name" placeholder="TNT Sports"></div>
-      <div><label>Region</label><input type="text" id="ch-region" placeholder="UK, US, Global…"></div>
-    </div>
-    <div class="form-row">
-      <div><label>Sport / League Tags</label><input type="text" id="ch-sport" placeholder="epl, ucl, f1…"></div>
-      <div><label>Stream URL</label><input type="text" id="ch-url" placeholder="https://…"></div>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:8px">
-      <button class="btn" onclick="saveChannel()">Save Channel</button>
-      <button class="btn-ghost" onclick="closeModal('modal-channel')">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal-highlights">
-  <div class="modal">
-    <div class="modal-head"><h3>🎬 Post Highlights</h3><button class="close-btn" onclick="closeModal('modal-highlights')">✕</button></div>
-    <div class="form-group">
-      <label>Select Event</label>
-      <select id="hl-event-select" onchange="onHighlightEventChange()">
-        <option value="">— choose event —</option>
-      </select>
-    </div>
-    <div id="hl-existing-post" style="display:none" class="highlights-row">
-      <span>📝 Existing post found:</span>
-      <a id="hl-post-link" href="#" target="_blank" style="font-size:.73rem">View Post</a>
-      <span style="margin-left:auto;color:var(--green);font-size:.72rem">Will be updated with highlights</span>
-    </div>
-    <div class="form-group" style="margin-top:12px">
-      <label>Highlights Embed / Video URL</label>
-      <input type="text" id="hl-video-url" placeholder="https://youtube.com/embed/… or iframe src">
-    </div>
-    <div class="form-group">
-      <label>Highlights Body Text (auto-generated, editable)</label>
-      <textarea id="hl-body" rows="10" placeholder="Highlights article…"></textarea>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-      <button class="btn-blue btn-sm" onclick="generateHighlightsText()">🤖 AI Generate Text</button>
-      <button class="btn btn-sm" onclick="postHighlights()">📤 Update/Post Highlights</button>
-      <button class="btn-ghost btn-sm" onclick="closeModal('modal-highlights')">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modal-iframe-preview">
-  <div class="modal" style="max-width:820px">
-    <div class="modal-head"><h3>iframe Preview</h3><button class="close-btn" onclick="closeModal('modal-iframe-preview')">✕</button></div>
-    <div id="iframe-preview-render"></div>
-  </div>
+  </main>
 </div>
 
 <div id="toast-container"></div>
-<script src="https://accounts.google.com/gsi/client" async></script>
 
 <script>
-'use strict';
-
 // ═══════════════════════════════════════════════════════════
-// CONSTANTS
+// CONFIG & CONSTANTS
 // ═══════════════════════════════════════════════════════════
-const STORAGE_KEY_CFG      = 's803_config_v5';
-const STORAGE_KEY_CHANNELS = 's803_channels_v5';
-const STORAGE_KEY_POSTS    = 's803_posts_v5';
-const STORAGE_TTL_MS       = 7 * 24 * 60 * 60 * 1000;
-const PLAYER_BASE_DEFAULT  = 'https://soulmap1.blogspot.com/p/media-player.html';
-const ESPN_BASE            = 'https://site.api.espn.com/apis/site/v2/sports';
-const TSDB_BASE            = 'https://www.thesportsdb.com/api/v1/json/3';
-
-// ═══════════════════════════════════════════════════════════
-// LOGO CACHE & MANUAL OVERRIDES
-// ═══════════════════════════════════════════════════════════
-const LOGO_CACHE = {};
 const MANUAL_LOGOS = {
-  // Premier League
-  'arsenal': 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
-  'chelsea': 'https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg',
-  'liverpool': 'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg',
-  'manchester city': 'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg',
-  'manchester united': 'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg',
-  'tottenham hotspur': 'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg',
-  'leicester city': 'https://upload.wikimedia.org/wikipedia/en/6/63/Leicester_City_crest.svg',
-  'west ham united': 'https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg',
-  'newcastle united': 'https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg',
-  'aston villa': 'https://upload.wikimedia.org/wikipedia/en/9/9a/Aston_Villa_FC_crest.svg',
-  'everton': 'https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg',
-  'brighton & hove albion': 'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg',
-  'wolverhampton wanderers': 'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
-  'crystal palace': 'https://upload.wikimedia.org/wikipedia/en/a/a2/Crystal_Palace_FC_logo.svg',
-  // La Liga
-  'real madrid': 'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg',
-  'barcelona': 'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg',
-  'atletico madrid': 'https://upload.wikimedia.org/wikipedia/en/f/f9/Atletico_Madrid_2017_logo.svg',
-  'sevilla': 'https://upload.wikimedia.org/wikipedia/en/5/5c/Sevilla_FC_logo.svg',
-  'valencia': 'https://upload.wikimedia.org/wikipedia/en/2/20/Valencia_CF_logo.svg',
-  // Serie A
-  'juventus': 'https://upload.wikimedia.org/wikipedia/en/6/67/Juventus_FC_2017_logo.png',
-  'ac milan': 'https://upload.wikimedia.org/wikipedia/en/d/d0/AC_Milan_logo.svg',
-  'inter milan': 'https://upload.wikimedia.org/wikipedia/en/0/05/Inter_Milan_logo.svg',
-  'napoli': 'https://upload.wikimedia.org/wikipedia/en/2/2f/SSC_Napoli_logo.svg',
-  'roma': 'https://upload.wikimedia.org/wikipedia/en/f/f7/AS_Roma_logo.svg',
-  // Bundesliga
-  'bayern munich': 'https://upload.wikimedia.org/wikipedia/commons/1/1c/FC_Bayern_München_logo_%282017%29.svg',
-  'borussia dortmund': 'https://upload.wikimedia.org/wikipedia/commons/6/67/BVB_Logo.svg',
-  'rb leipzig': 'https://upload.wikimedia.org/wikipedia/en/9/98/RB_Leipzig_logo.svg',
-  // Ligue 1
-  'paris saint-germain': 'https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C._logo.svg',
-  'olympique lyonnais': 'https://upload.wikimedia.org/wikipedia/en/1/1f/Olympique_Lyonnais_logo.svg',
-  'marseille': 'https://upload.wikimedia.org/wikipedia/en/c/c3/Olympique_de_Marseille_logo.svg',
-  // NBA
-  'los angeles lakers': 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Los_Angeles_Lakers_logo.svg',
-  'golden state warriors': 'https://upload.wikimedia.org/wikipedia/en/0/01/Golden_State_Warriors_logo.svg',
-  'chicago bulls': 'https://upload.wikimedia.org/wikipedia/en/6/67/Chicago_Bulls_logo.svg',
-  'boston celtics': 'https://upload.wikimedia.org/wikipedia/en/8/8f/Boston_Celtics_logo.svg',
-  'miami heat': 'https://upload.wikimedia.org/wikipedia/en/f/fb/Miami_Heat_logo.svg',
-  // F1
-  'ferrari': 'https://upload.wikimedia.org/wikipedia/en/e/ed/Scuderia_Ferrari_Logo.svg',
-  'mercedes': 'https://upload.wikimedia.org/wikipedia/commons/8/8c/Mercedes-Benz_Logo.svg',
-  'red bull racing': 'https://upload.wikimedia.org/wikipedia/en/4/44/Red_Bull_Racing_logo.svg',
-  // UFC
-  'conor mcgregor': 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Conor_McGregor_2018.jpg',
-  'jon jones': 'https://upload.wikimedia.org/wikipedia/commons/2/27/Jon_Jones_2018.png',
-  // Women's Football
-  'lionesses': 'https://upload.wikimedia.org/wikipedia/en/6/60/England_women%27s_national_football_team_badge.png',
-  'uswnt': 'https://upload.wikimedia.org/wikipedia/en/a/a3/USWNT_logo_2020.svg',
-  'spain women': 'https://upload.wikimedia.org/wikipedia/en/e/e3/Spain_national_football_team_badge.svg',
-  // International Teams
-  'brazil': 'https://upload.wikimedia.org/wikipedia/en/0/05/Brazil_national_football_team_logo.svg',
-  'argentina': 'https://upload.wikimedia.org/wikipedia/en/1/1a/Argentina_national_football_team_logo.svg',
-  'france': 'https://upload.wikimedia.org/wikipedia/en/c/c3/France_national_football_team_logo.svg',
-  'germany': 'https://upload.wikimedia.org/wikipedia/en/b/ba/Germany_national_football_team_logo.svg',
-  'england': 'https://upload.wikimedia.org/wikipedia/en/b/be/England_national_football_team_logo.svg',
-  'italy': 'https://upload.wikimedia.org/wikipedia/en/0/0e/Italy_national_football_team_logo.svg',
-  'netherlands': 'https://upload.wikimedia.org/wikipedia/en/0/09/Netherlands_national_football_team_logo.svg',
-  'portugal': 'https://upload.wikimedia.org/wikipedia/en/d/d7/Portugal_national_football_team_logo.svg',
-  'belgium': 'https://upload.wikimedia.org/wikipedia/en/6/65/Belgium_national_football_team_logo.svg',
-  'croatia': 'https://upload.wikimedia.org/wikipedia/en/5/5f/Croatia_national_football_team_logo.svg',
-  'morocco': 'https://upload.wikimedia.org/wikipedia/en/3/33/Morocco_national_football_team_logo.svg',
-  'senegal': 'https://upload.wikimedia.org/wikipedia/en/9/98/Senegal_national_football_team_logo.svg',
+  "manchester united": "https://www.thesportsdb.com/images/media/team/badge/vshvcu1545564483.png",
+  "arsenal": "https://www.thesportsdb.com/images/media/team/badge/uy7lty1535904718.png",
+  "chelsea": "https://www.thesportsdb.com/images/media/team/badge/vwrptq1448812907.png",
+  "psg": "https://www.thesportsdb.com/images/media/team/badge/rwqrut1448812832.png",
+  "real madrid": "https://www.thesportsdb.com/images/media/team/badge/v79v541545561129.png",
+  "barcelona": "https://www.thesportsdb.com/images/media/team/badge/08460t1535904059.png"
 };
-function getManualLogo(teamName) {
-  const normalized = teamName.toLowerCase().trim();
-  const found = MANUAL_LOGOS[normalized];
-  if (found) console.log(`[Logo] Manual override for ${teamName}: ${found}`);
-  return found || null;
-}
 
-function getCachedLogo(teamName) {
-  const key = teamName.toLowerCase().trim();
-  return LOGO_CACHE[key] || null;
-}
-function setCachedLogo(teamName, url) {
-  const key = teamName.toLowerCase().trim();
-  if (url) LOGO_CACHE[key] = url;
-}
-
-// ═══════════════════════════════════════════════════════════
-// NAME NORMALIZATION
-// ═══════════════════════════════════════════════════════════
-function normalizeTeamName(name) {
-  const map = {
-    'man utd': 'manchester united',
-    'man united': 'manchester united',
-    'man city': 'manchester city',
-    'spurs': 'tottenham hotspur',
-    'tottenham': 'tottenham hotspur',
-    'newcastle': 'newcastle united',
-    'leeds': 'leeds united',
-    'wolves': 'wolverhampton wanderers',
-    'brighton': 'brighton & hove albion',
-    'crystal palace': 'crystal palace',
-    'aston villa': 'aston villa',
-    'everton': 'everton',
-    'southampton': 'southampton',
-    'norwich': 'norwich city',
-    'watford': 'watford',
-    'burnley': 'burnley',
-    'real': 'real madrid',
-    'barca': 'barcelona',
-    'atleti': 'atletico madrid',
-    'juve': 'juventus',
-    'milan': 'ac milan',
-    'inter': 'inter milan',
-    'bayern': 'bayern munich',
-    'dortmund': 'borussia dortmund',
-    'psg': 'paris saint-germain',
-    'lyon': 'olympique lyonnais',
-    'marseille': 'marseille',
-    'lakers': 'los angeles lakers',
-    'warriors': 'golden state warriors',
-    'bulls': 'chicago bulls',
-    'celtics': 'boston celtics',
-    'heat': 'miami heat',
-    'usa': 'uswnt',
-    'england women': 'lionesses',
-  };
-  const lower = name.toLowerCase().trim();
-  return map[lower] || name;
-}
-
-// ═══════════════════════════════════════════════════════════
-// PRIMARY FETCHERS
-// ═══════════════════════════════════════════════════════════
-async function fetchTheSportsDB(teamName) {
-  if (!teamName) return '';
-  const original = teamName;
-  teamName = normalizeTeamName(teamName);
-  const key = teamName.toLowerCase().trim();
-  if (LOGO_CACHE[key]) return LOGO_CACHE[key];
-  
-  const variations = [teamName];
-  let cleaned = teamName.replace(/\s*(FC|SC|CF|UD|CD|Racing|Club|Sporting|Athletic|Women|WFC)\s*$/i, '').trim();
-  if (cleaned !== teamName) variations.push(cleaned);
-  const firstWord = teamName.split(/\s+/)[0];
-  if (firstWord !== teamName && !variations.includes(firstWord)) variations.push(firstWord);
-  
-  for (const name of variations) {
-    try {
-      console.log(`[Logo] Trying TheSportsDB for "${name}"`);
-      const res = await fetch(`${TSDB_BASE}/searchteams.php?t=${encodeURIComponent(name)}`);
-      const data = await res.json();
-      const team = data?.teams?.[0];
-      if (team) {
-        const url = team.strTeamBadge || team.strTeamLogo || '';
-        if (url) {
-          LOGO_CACHE[key] = url;
-          console.log(`[Logo] TheSportsDB found: ${url}`);
-          return url;
-        }
-      }
-    } catch (e) {
-      console.warn(`[Logo] TheSportsDB error for ${name}:`, e.message);
-    }
-  }
-  LOGO_CACHE[key] = '';
-  console.log(`[Logo] No TheSportsDB logo for ${teamName}`);
-  return '';
-}
-
-async function fetchTheSportsDBPlayer(playerName) {
-  if (!playerName) return '';
-  try {
-    const res = await fetch(`${TSDB_BASE}/searchplayers.php?p=${encodeURIComponent(playerName)}`);
-    const data = await res.json();
-    const player = data?.player?.[0];
-    return player?.strThumb || player?.strCutout || player?.strRender || '';
-  } catch {
-    return '';
-  }
-}
-
-async function fetchCricketLogo(teamName) {
-  if (!teamName) return '';
-  const lc = teamName.toLowerCase();
-  const countryMap = {
-    'india': 'https://flagcdn.com/w320/in.png',
-    'australia': 'https://flagcdn.com/w320/au.png',
-    'england': 'https://flagcdn.com/w320/gb-eng.png',
-    'pakistan': 'https://flagcdn.com/w320/pk.png',
-    'south africa': 'https://flagcdn.com/w320/za.png',
-    'west indies': 'https://flagcdn.com/w320/bb.png',
-    'new zealand': 'https://flagcdn.com/w320/nz.png',
-    'sri lanka': 'https://flagcdn.com/w320/lk.png',
-    'bangladesh': 'https://flagcdn.com/w320/bd.png',
-    'afghanistan': 'https://flagcdn.com/w320/af.png',
-    'ireland': 'https://flagcdn.com/w320/ie.png',
-    'zimbabwe': 'https://flagcdn.com/w320/zw.png',
-    'netherlands': 'https://flagcdn.com/w320/nl.png',
-    'scotland': 'https://flagcdn.com/w320/gb-sct.png',
-  };
-  for (const [country, url] of Object.entries(countryMap)) {
-    if (lc.includes(country)) return url;
-  }
-  return '';
-}
-
-async function fetchFighterImage(fighterName, leagueId) {
-  if (!fighterName) return '';
-  const tsdbUrl = await fetchTheSportsDBPlayer(fighterName);
-  if (tsdbUrl) return tsdbUrl;
-  if (leagueId === 'ufc' || leagueId === 'boxing') {
-    try {
-      const q = encodeURIComponent(fighterName);
-      const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/mma/ufc/athletes?search=${q}&limit=1`);
-      const data = await res.json();
-      if (data.items && data.items[0] && data.items[0].headshot) return data.items[0].headshot.href;
-    } catch(e) {}
-  }
-  return '';
-}
-
-function rewriteESPNLogo(url) {
-  if (!url) return '';
-  let cleaned = url.replace(/^http:/, 'https:');
-  if (cleaned.includes('a.espncdn.com')) {
-    cleaned = cleaned.replace(/\/\d+\.png/, '/500.png');
-  }
-  return cleaned;
-}
-
-async function resolveLogo(espnLogoUrl, teamName, leagueId) {
-  console.log(`[Logo] Resolving for ${teamName} (${leagueId})`);
-
-  // 1. Manual override
-  const manual = getManualLogo(teamName);
-  if (manual) return manual;
-
-  // 2. Cache
-  const cached = getCachedLogo(teamName);
-  if (cached) {
-    console.log(`[Logo] Using cached: ${cached}`);
-    return cached;
-  }
-
-  // 3. ESPN logo (if provided and valid)
-  if (espnLogoUrl && espnLogoUrl !== '') {
-    const rewritten = rewriteESPNLogo(espnLogoUrl);
-    console.log(`[Logo] Using ESPN: ${rewritten}`);
-    setCachedLogo(teamName, rewritten);
-    return rewritten;
-  }
-
-  // 4. Fighter image (UFC/boxing)
-  if (leagueId === 'ufc' || leagueId === 'boxing') {
-    const fighter = await fetchFighterImage(teamName, leagueId);
-    if (fighter) {
-      console.log(`[Logo] Fighter image: ${fighter}`);
-      setCachedLogo(teamName, fighter);
-      return fighter;
-    }
-  }
-
-  // 5. Cricket flag
-  if (leagueId === 'cricket') {
-    const cricket = await fetchCricketLogo(teamName);
-    if (cricket) {
-      console.log(`[Logo] Cricket flag: ${cricket}`);
-      setCachedLogo(teamName, cricket);
-      return cricket;
-    }
-  }
-
-  // 6. TheSportsDB
-  const tsdb = await fetchTheSportsDB(teamName);
-  if (tsdb) {
-    console.log(`[Logo] TheSportsDB: ${tsdb}`);
-    setCachedLogo(teamName, tsdb);
-    return tsdb;
-  }
-
-  console.log(`[Logo] No logo found for ${teamName}`);
-  return '';
-}
-
-// ═══════════════════════════════════════════════════════════
-// BATCH ENRICHMENT
-// ═══════════════════════════════════════════════════════════
-async function enrichEventLogos(events) {
-  console.log(`[Logo] Enriching ${events.length} events...`);
-  const tasks = events.map(async (ev) => {
-    if (ev.type === 'match') {
-      console.log(`[Logo] Processing ${ev.home.name} vs ${ev.away.name} (${ev.league.id})`);
-      const [homeLogo, awayLogo] = await Promise.all([
-        resolveLogo(ev.home.logo, ev.home.name, ev.league.id),
-        resolveLogo(ev.away.logo, ev.away.name, ev.league.id)
-      ]);
-      ev.home.logo = homeLogo;
-      ev.away.logo = awayLogo;
-    }
-  });
-  await Promise.allSettled(tasks);
-  console.log('[Logo] Enrichment complete');
-}
-
-// ═══════════════════════════════════════════════════════════
-// loadImg – uses proxy for CORS safety
-// ═══════════════════════════════════════════════════════════
-async function loadImg(url, size=200) {
-  if (!url) return null;
-  if (url.startsWith('data:') || url.startsWith('blob:')) {
-    return new Promise(resolve => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = () => resolve(null);
-      img.src = url;
-    });
-  }
-  const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${size}&h=${size}&fit=contain&n=-1`;
-  return new Promise(resolve => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    const timeout = setTimeout(() => resolve(null), 8000);
-    img.onload = () => { clearTimeout(timeout); resolve(img); };
-    img.onerror = () => { clearTimeout(timeout); resolve(null); };
-    img.src = proxyUrl;
-  });
-}
-
-// ═══════════════════════════════════════════════════════════
-// RACE IMAGES (extended)
-// ═══════════════════════════════════════════════════════════
-const RACE_IMAGES = {
-  'bahrain': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Bahrain_Circuit.png.transform/7col/image.png',
-  'jeddah': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Saudi_Arabia_Circuit.png.transform/7col/image.png',
-  'melbourne': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Australia_Circuit.png.transform/7col/image.png',
-  'suzuka': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Japan_Circuit.png.transform/7col/image.png',
-  'shanghai': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/China_Circuit.png.transform/7col/image.png',
-  'miami': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Miami_Circuit.png.transform/7col/image.png',
-  'monaco': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Monaco_Circuit.png.transform/7col/image.png',
-  'montreal': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Canada_Circuit.png.transform/7col/image.png',
-  'barcelona': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Spain_Circuit.png.transform/7col/image.png',
-  'spielberg': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Austria_Circuit.png.transform/7col/image.png',
-  'silverstone': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Great_Britain_Circuit.png.transform/7col/image.png',
-  'hungaroring': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Hungary_Circuit.png.transform/7col/image.png',
-  'spa': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Belgium_Circuit.png.transform/7col/image.png',
-  'zandvoort': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Netherlands_Circuit.png.transform/7col/image.png',
-  'monza': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Italy_Circuit.png.transform/7col/image.png',
-  'singapore': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Singapore_Circuit.png.transform/7col/image.png',
-  'austin': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/USA_Circuit.png.transform/7col/image.png',
-  'mexico': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Mexico_Circuit.png.transform/7col/image.png',
-  'interlagos': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Brazil_Circuit.png.transform/7col/image.png',
-  'las vegas': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Las_Vegas_Circuit.png.transform/7col/image.png',
-  'qatar': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Qatar_Circuit.png.transform/7col/image.png',
-  'abu dhabi': 'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Abu_Dhabi_Circuit.png.transform/7col/image.png',
-  'formula 1': 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/1280px-F1.svg.png',
-  'motogp': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/MotoGP_Logo.svg/1280px-MotoGP_Logo.svg.png',
-  'nascar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/NASCAR_Logo.svg/1280px-NASCAR_Logo.svg.png',
-  'indycar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/IndyCar_Series_logo.svg/1280px-IndyCar_Series_logo.svg.png',
-  'pga': 'https://upload.wikimedia.org/wikipedia/en/thumb/c/ca/PGA_Tour_logo.svg/1280px-PGA_Tour_logo.svg.png',
-  'tour de france': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Tour_de_France_logo.svg/1280px-Tour_de_France_logo.svg.png',
+const LEAGUE_MAP = {
+  'epl': 'soccer/eng.1', 'laliga': 'soccer/esp.1', 'seriea': 'soccer/ita.1',
+  'bundesliga': 'soccer/ger.1', 'ligue1': 'soccer/fra.1', 'ucl': 'soccer/uefa.champions',
+  'nba': 'basketball/nba', 'ufc': 'mma/ufc', 'worldcup': 'soccer/fifa.world',
+  'euro': 'soccer/uefa.euro', 'afcon': 'soccer/caf.nations',
+  'intlfriendly': 'soccer/fifa.friendly', 'wworldcup': 'soccer/fifa.w.world',
+  'wsl': 'soccer/eng.w.1', 'cricket': 'cricket/icc.champions'
 };
-function getRaceImage(ev) {
-  if (!ev) return '';
-  const haystack = ((ev.name||'') + ' ' + (ev.venue||'') + ' ' + (ev.location||'')).toLowerCase();
-  const sorted = Object.keys(RACE_IMAGES).sort((a,b)=>b.length-a.length);
-  for (const key of sorted) {
-    if (haystack.includes(key)) return RACE_IMAGES[key];
-  }
-  const lid = ev.league?.id || '';
-  if (lid === 'f1')       return RACE_IMAGES['formula 1'];
-  if (lid === 'motogp')   return RACE_IMAGES['motogp'];
-  if (lid === 'nascar')   return RACE_IMAGES['nascar'];
-  if (lid === 'indycar')  return RACE_IMAGES['indycar'];
-  if (lid === 'pga')      return RACE_IMAGES['pga'];
-  if (lid === 'cycling')  return RACE_IMAGES['tour de france'];
-  return '';
-}
 
-// ═══════════════════════════════════════════════════════════
-// EXTENDED LEAGUES (all major competitions)
-// ═══════════════════════════════════════════════════════════
-const LEAGUES = [
-  // Men's Football – Club
-  { id:'ucl', name:'Champions League', sport:'soccer', slug:'uefa.champions', icon:'🏆', type:'match' },
-  { id:'uel', name:'Europa League', sport:'soccer', slug:'uefa.europa', icon:'🟠', type:'match' },
-  { id:'uecl', name:'Conference League', sport:'soccer', slug:'uefa.europa.conf', icon:'🔵', type:'match' },
-  { id:'epl', name:'Premier League', sport:'soccer', slug:'eng.1', icon:'🦁', type:'match' },
-  { id:'laliga', name:'La Liga', sport:'soccer', slug:'esp.1', icon:'🇪🇸', type:'match' },
-  { id:'seriea', name:'Serie A', sport:'soccer', slug:'ita.1', icon:'🇮🇹', type:'match' },
-  { id:'bundesliga', name:'Bundesliga', sport:'soccer', slug:'ger.1', icon:'🦅', type:'match' },
-  { id:'ligue1', name:'Ligue 1', sport:'soccer', slug:'fra.1', icon:'🐓', type:'match' },
-  { id:'ligamx', name:'Liga MX', sport:'soccer', slug:'mex.1', icon:'🇲🇽', type:'match' },
-  { id:'brasileirao', name:'Brasileirao', sport:'soccer', slug:'bra.1', icon:'🇧🇷', type:'match' },
-  { id:'eredivisie', name:'Eredivisie', sport:'soccer', slug:'ned.1', icon:'🇳🇱', type:'match' },
-  { id:'scottish', name:'Scottish Premiership', sport:'soccer', slug:'sco.1', icon:'🏴󠁧󠁢󠁳󠁣󠁴󠁿', type:'match' },
-  { id:'primeiraliga', name:'Primeira Liga', sport:'soccer', slug:'por.1', icon:'🇵🇹', type:'match' },
-  { id:'mls', name:'MLS', sport:'soccer', slug:'usa.1', icon:'🇺🇸', type:'match' },
-  // Men's International
-  { id:'worldcup', name:'FIFA World Cup', sport:'soccer', slug:'fifa.world', icon:'🌍', type:'match' },
-  { id:'euro', name:'UEFA Euro', sport:'soccer', slug:'uefa.euro', icon:'🇪🇺', type:'match' },
-  { id:'copaamerica', name:'Copa America', sport:'soccer', slug:'conmebol.america', icon:'🌎', type:'match' },
-  { id:'afcon', name:'AFCON', sport:'soccer', slug:'caf.nations', icon:'🌍', type:'match' },
-  { id:'goldcup', name:'CONCACAF Gold Cup', sport:'soccer', slug:'concacaf.gold', icon:'🏅', type:'match' },
-  { id:'afc', name:'AFC Asian Cup', sport:'soccer', slug:'afc.asian.qual', icon:'🌏', type:'match' },
-  { id:'natleague', name:'UEFA Nations League', sport:'soccer', slug:'uefa.nations', icon:'🏳️', type:'match' },
-  { id:'intlfriendly', name:'International Friendlies', sport:'soccer', slug:'fifa.friendly', icon:'🤝', type:'match' },
-  // Women's Football
-  { id:'wwc', name:'FIFA Women\'s World Cup', sport:'soccer', slug:'fifa.wwc', icon:'🌍', type:'match' },
-  { id:'uclwomen', name:'Women\'s Champions League', sport:'soccer', slug:'uefa.wchampions', icon:'🏆', type:'match' },
-  { id:'wsl', name:'Women\'s Super League', sport:'soccer', slug:'eng.1.w', icon:'🦁', type:'match' },
-  // Basketball
-  { id:'nba', name:'NBA', sport:'basketball', slug:'nba', icon:'🏀', type:'match' },
-  { id:'euroleague', name:'EuroLeague', sport:'basketball', slug:null, tsdbId:4480, icon:'🏀', type:'match', source:'tsdb' },
-  // American Football
-  { id:'nfl', name:'NFL', sport:'football', slug:'nfl', icon:'🏈', type:'match' },
-  // Ice Hockey
-  { id:'nhl', name:'NHL', sport:'hockey', slug:'nhl', icon:'🏒', type:'match' },
-  // Motorsport
-  { id:'f1', name:'Formula 1', sport:'racing', slug:'f1', icon:'🏎️', type:'race' },
-  { id:'motogp', name:'MotoGP', sport:'racing', slug:'motogp', icon:'🏍️', type:'race' },
-  { id:'nascar', name:'NASCAR Cup', sport:'racing', slug:'nascar-cup-series', icon:'🚗', type:'race' },
-  { id:'indycar', name:'IndyCar', sport:'racing', slug:'indycar', icon:'🏁', type:'race' },
-  // Golf
-  { id:'pga', name:'PGA Tour', sport:'golf', slug:'pga', icon:'⛳', type:'race' },
-  // Cycling
-  { id:'cycling', name:'Pro Cycling', sport:'cycling', slug:null, tsdbId:4471, icon:'🚴', type:'race', source:'tsdb' },
-  // Combat Sports
-  { id:'ufc', name:'UFC / MMA', sport:'mma', slug:'ufc', icon:'🥊', type:'match' },
-  { id:'boxing', name:'Boxing', sport:'boxing', slug:null, tsdbId:4443, icon:'🥋', type:'match', source:'tsdb' },
-  // Tennis
-  { id:'atp', name:'ATP Tennis', sport:'tennis', slug:'atp', icon:'🎾', type:'match' },
-  { id:'wta', name:'WTA Tennis', sport:'tennis', slug:'wta', icon:'🎾', type:'match' },
-  // Cricket
-  { id:'cricket', name:'Cricket (ICC)', sport:'cricket', slug:'icc', icon:'🏏', type:'match' },
-  // Rugby
-  { id:'rugbyunion', name:'Rugby Union', sport:'rugby', slug:'internationalrugby', icon:'🏉', type:'match' },
-  { id:'rugbyleague', name:'Rugby League', sport:'rugby', slug:'rugbyleague', icon:'🏉', type:'match' },
-  // Snooker & Darts
-  { id:'snooker', name:'Snooker (WST)', sport:'snooker', slug:null, tsdbId:4508, icon:'🎱', type:'match', source:'tsdb' },
-  { id:'darts', name:'Darts (PDC)', sport:'darts', slug:null, tsdbId:4501, icon:'🎯', type:'match', source:'tsdb' },
-  // Entertainment
-  { id:'wwe', name:'WWE', sport:'entertainment', slug:null, tsdbId:4478, icon:'💪', type:'match', source:'tsdb' },
-];
-
-// ═══════════════════════════════════════════════════════════
-// DEFAULT CHANNELS (unchanged)
-// ═══════════════════════════════════════════════════════════
-const DEFAULT_CHANNELS = [
-  { id:'ch1',  name:'ESPN',            sport:'nba,nfl,ufc', region:'US', url:'' },
-  { id:'ch2',  name:'Sky Sports',      sport:'epl,ucl,f1',  region:'UK', url:'' },
-  { id:'ch3',  name:'DAZN',            sport:'boxing,ufc,f1', region:'Global', url:'' },
-  { id:'ch4',  name:'TNT Sports',      sport:'epl,ucl,uel', region:'UK', url:'' },
-  { id:'ch5',  name:'beIN Sports',     sport:'laliga,seriea,ucl', region:'MENA', url:'' },
-  { id:'ch6',  name:'Canal+',          sport:'ligue1,ucl',  region:'FR', url:'' },
-  { id:'ch7',  name:'SuperSport',      sport:'epl,ucl,cricket', region:'Africa', url:'' },
-];
-
-// ═══════════════════════════════════════════════════════════
-// AI PHRASE BANKS (simplified but complete)
-// ═══════════════════════════════════════════════════════════
-const PHRASES = {
-  match_open: [
-    'All eyes across the globe will be firmly fixed on',
-    'Football fans worldwide are in for an unmissable treat as',
-    'The stage is brilliantly set for a high-stakes encounter between',
-    'Supporters from every corner of the planet will be watching with bated breath as',
-    'In what promises to be an absolutely blockbuster showdown,',
-    'The football world braces itself for a potential classic involving',
-  ],
-  match_context: [
-    'Both clubs arrive at this fixture in contrasting form, adding a fascinating dimension to the contest.',
-    'The head-to-head history between these two sides makes for compelling reading.',
-    'Managerial decisions in the final third of the pitch could well prove decisive.',
-    'Key individual battles in midfield will likely dictate the rhythm and flow of the game.',
-    'The stakes could not be higher, with both sets of fans desperate for three points.',
-    'Squad depth will be tested, as the physical demands of a packed schedule have taken their toll.',
-  ],
-  match_body: [
-    'Both sides are operating at the peak of their powers heading into this pivotal fixture.',
-    'This clash carries enormous implications for the table standings.',
-    'Neither side will want to leave without the three points — the margins are razor thin.',
-    'Expect a fiercely contested tactical battle from the opening whistle.',
-    'The atmosphere promises to be absolutely electric.',
-    'Recent form suggests this could go either way.',
-  ],
-  match_preview: [
-    'The home side will be looking to use their crowd advantage to build early momentum.',
-    'The away team have shown remarkable resilience on the road this season.',
-    'Fans should watch the flanks closely — the wide areas are expected to be heavily contested.',
-  ],
-  race_open: [
-    'The engines are revving and the entire motorsport world is focused on what promises to be a spectacular race weekend.',
-    'All competitors have their eyes on the prize as the grid lines up for another unmissable round of action.',
-    'Drama, speed, and relentless competition converge once again as the racing world descends upon',
-    'Wheels, horsepower, and pure adrenaline — the weekend is set to deliver everything motorsport fans could ask for at',
-  ],
-  race_context: [
-    'The championship standings remain tight, meaning every single point scored this weekend could be decisive.',
-    'Strategy will play an enormous role, with tyre management, pit stop timing, and safety car deployment all key.',
-    'Weather forecasts add an extra layer of uncertainty — rain could be a great equaliser.',
-    'The circuit itself presents unique technical challenges that will demand precision and bravery.',
-  ],
-  race_body: [
-    'Strategy will play a key and potentially decisive role on this circuit.',
-    'Weather conditions could prove a defining and unpredictable factor.',
-    'Expect close, wheel-to-wheel battles throughout the entire field.',
-    'This round has historically produced some of the most dramatic results in the sport\'s history.',
-  ],
-  watch_cta: [
-    'Watch it all LIVE on Sports 803 — your number one destination for free live sports streaming. Don\'t miss a single moment of the action!',
-    'Stream every second LIVE on Sports 803 — free, fast, and available from any device worldwide. No sign-up required.',
-    'Stay locked in to Sports 803 for the full live coverage. We\'ve got you covered from pre-match build-up to the final whistle.',
-    'Catch every goal, tackle, sprint, and drama live on Sports 803 — the ultimate free streaming destination for sports fans.',
-  ],
-  highlights_open: [
-    'It was a night that will not be forgotten any time soon — here is a full breakdown of all the action from',
-    'The final whistle has sounded — here is a comprehensive look back at the highlights from',
-    'The full-time result is in, and Sports 803 has everything you need to catch up on the drama from',
-  ],
-  highlights_body: [
-    'Individual brilliance, team structure, and moments of controversy all played their part in shaping the outcome.',
-    'The winning side showed tremendous character, but were pushed every step of the way.',
-    'Full match highlights and extended clips are available to stream below via Sports 803.',
-  ],
-};
-const pick = arr => arr[Math.floor(Math.random() * arr.length)];
-const picks = (arr, n) => { const r=[]; for(let i=0;i<n;i++) r.push(pick(arr)); return r; };
-
-// ═══════════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════════
+const LOGO_CACHE_KEY = 's803_logo_cache_v5';
 let CFG = {
-  blogId:'', clientId:'', imgbbKey:'c8cd5657bfdfc6c298c9366deebfa7a7',
-  highlightsUrl: '',
-  playerBase: PLAYER_BASE_DEFAULT,
-  globalLabels: ['sports 803','live stream'],
-  activeLeagues: ['ucl','epl','laliga','seriea','bundesliga','f1','nba','ufc','atp','worldcup','wwc','cricket','boxing','nfl'],
-  schedulerEnabled: false, schedTiming: 60, schedStatus: 'DRAFT',
-  autoHighlights: false,
+  blogId: '', clientId: '', imgbbKey: 'c8cd5657bfdfc6c298c9366deebfa7a7',
+  activeLeagues: Object.keys(LEAGUE_MAP), postTiming: 60
 };
-let allEvents = [], channels = [], accessToken = null;
-let editingChannelId = null, schedulerInterval = null;
-let activeLeagueFilter = 'all';
-let postLog = {};
+
+let accessToken = null;
+let allEvents = [];
+let channels = [];
+let schedulerInterval = null;
 
 // ═══════════════════════════════════════════════════════════
-// INIT (unchanged)
+// LOGO RESOLUTION SYSTEM
 // ═══════════════════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
-  loadStorage();
-  renderLeagueFilterPills();
-  renderLeagueToggles();
-  renderChannels();
-  renderGlobalLabels();
-  updateStatBar();
-  document.getElementById('new-label-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') { addGlobalLabel(e.target.value.trim()); e.target.value = ''; }
-  });
-  document.getElementById('stream-sources-list').addEventListener('input', () => updateIframePreviewBox());
-  document.getElementById('player-base').addEventListener('input', () => updateIframePreviewBox());
-  let thumbDebounce;
-  const thumbInputIds = ['tb-home','tb-away','tb-league','tb-datetime','tb-home-logo','tb-away-logo','tb-banner','tb-bg1','tb-bg2'];
-  thumbInputIds.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('input', () => {
-      clearTimeout(thumbDebounce);
-      thumbDebounce = setTimeout(buildThumbnail, 600);
+
+function normalizeTeamName(name) {
+  if (!name) return "";
+  let n = name.toLowerCase();
+  if (n.includes('man utd')) return 'manchester united';
+  if (n.includes('man city')) return 'manchester city';
+  if (n === 'psg') return 'paris saint-germain';
+  if (n === 'spurs') return 'tottenham hotspur';
+  return name;
+}
+
+function proxyUrl(url) {
+  if (!url || url.includes('data:')) return url;
+  // Using weserv as proxy for CORS and resizing
+  return `https://images.weserv.nl/?url=${encodeURIComponent(url.replace(/^https?:\/\//, ''))}&w=120&fit=contain&errorredirect=https://via.placeholder.com/100`;
+}
+
+async function fetchTheSportsDB(teamName) {
+  try {
+    const query = normalizeTeamName(teamName);
+    const res = await fetch(`https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    return data.teams?.[0]?.strTeamBadge || null;
+  } catch (e) { return null; }
+}
+
+async function fetchFighterImage(name) {
+  try {
+    const res = await fetch(`https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${encodeURIComponent(name)}`);
+    const data = await res.json();
+    return data.players?.[0]?.strThumb || null;
+  } catch (e) { return null; }
+}
+
+function fetchCricketLogo(teamName) {
+  // Simple mapping for common nations to FlagCDN
+  const maps = { 'india':'in', 'australia':'au', 'england':'gb-eng', 'pakistan':'pk', 'south africa':'za' };
+  const code = maps[teamName.toLowerCase()];
+  return code ? `https://flagcdn.com/w160/${code}.png` : null;
+}
+
+async function resolveLogo(espnUrl, teamName, leagueId) {
+  const norm = teamName.toLowerCase();
+  
+  // 1. Manual Override
+  if (MANUAL_LOGOS[norm]) return proxyUrl(MANUAL_LOGOS[norm]);
+
+  // 2. Cache Check
+  const cache = getLogoCache();
+  if (cache[norm]) return proxyUrl(cache[norm]);
+
+  console.log(`[LogoSystem] Resolving: ${teamName} (${leagueId})`);
+
+  let result = null;
+  
+  // 3. ESPN Source (if it's a real logo and not a generic placeholder)
+  if (espnUrl && !espnUrl.includes('default')) {
+     result = espnUrl;
+  } 
+  // 4. Fighter Image (UFC)
+  else if (leagueId === 'ufc') {
+     result = await fetchFighterImage(teamName);
+  }
+  // 5. Cricket
+  else if (leagueId === 'cricket') {
+     result = fetchCricketLogo(teamName);
+  }
+
+  // 6. TheSportsDB Fallback
+  if (!result) {
+    result = await fetchTheSportsDB(teamName);
+  }
+
+  if (result) {
+    setCachedLogo(norm, result);
+    return proxyUrl(result);
+  }
+
+  return ""; // Default to first-letter avatar in UI
+}
+
+// ═══════════════════════════════════════════════════════════
+// CACHE HELPERS
+// ═══════════════════════════════════════════════════════════
+function getLogoCache() {
+  try { return JSON.parse(localStorage.getItem(LOGO_CACHE_KEY)) || {}; } 
+  catch(e) { return {}; }
+}
+function setCachedLogo(name, url) {
+  const cache = getLogoCache();
+  cache[name.toLowerCase()] = url;
+  localStorage.setItem(LOGO_CACHE_KEY, JSON.stringify(cache));
+}
+
+// ═══════════════════════════════════════════════════════════
+// CORE FETCH LOGIC
+// ═══════════════════════════════════════════════════════════
+
+async function fetchEventsForLeague(lid) {
+  const slug = LEAGUE_MAP[lid];
+  if (!slug) return [];
+  try {
+    const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${slug}/scoreboard`);
+    const data = await res.json();
+    return (data.events || []).map(ev => {
+      const comp = ev.competitions[0];
+      return {
+        id: ev.id,
+        leagueId: lid,
+        title: ev.name,
+        time: new Date(ev.date),
+        status: ev.status.type.shortDetail,
+        homeTeam: comp.competitors[0].team.displayName,
+        awayTeam: comp.competitors[1].team.displayName,
+        homeLogoRaw: comp.competitors[0].team.logo,
+        awayLogoRaw: comp.competitors[1].team.logo,
+        homeLogo: '', 
+        awayLogo: ''
+      };
     });
+  } catch(e) { console.error(`Failed ${lid}:`, e); return []; }
+}
+
+async function fetchAllEvents() {
+  const btn = document.getElementById('fetch-btn');
+  btn.disabled = true;
+  btn.textContent = '🔄 Fetching...';
+  
+  allEvents = [];
+  const pool = CFG.activeLeagues.map(l => fetchEventsForLeague(l));
+  const results = await Promise.allSettled(pool);
+  
+  results.forEach(r => { if(r.status==='fulfilled') allEvents.push(...r.value); });
+  allEvents.sort((a,b) => a.time - b.time);
+  
+  renderEvents();
+  
+  // Async logo enrichment
+  await enrichEventLogos(allEvents);
+  
+  btn.disabled = false;
+  btn.textContent = '📥 Fetch Events';
+}
+
+async function enrichEventLogos(events) {
+  console.log("[LogoSystem] Enriching event logos...");
+  const promises = events.map(async (ev) => {
+    ev.homeLogo = await resolveLogo(ev.homeLogoRaw, ev.homeTeam, ev.leagueId);
+    ev.awayLogo = await resolveLogo(ev.awayLogoRaw, ev.awayTeam, ev.leagueId);
   });
-});
+  
+  await Promise.allSettled(promises);
+  localStorage.setItem('s803_events_v5', JSON.stringify(events));
+  renderEvents();
+}
 
-// ═══════════════════════════════════════════════════════════
-// STORAGE (unchanged)
-// ═══════════════════════════════════════════════════════════
-function saveStorage() {
-  localStorage.setItem(STORAGE_KEY_CFG, JSON.stringify({ data: CFG, ts: Date.now() }));
-  localStorage.setItem(STORAGE_KEY_CHANNELS, JSON.stringify({ data: channels, ts: Date.now() }));
-  localStorage.setItem(STORAGE_KEY_POSTS, JSON.stringify({ data: postLog, ts: Date.now() }));
-}
-function loadStorage() {
-  try { const p = JSON.parse(localStorage.getItem(STORAGE_KEY_CFG)||'{}'); if(p.data && Date.now()-p.ts < STORAGE_TTL_MS) CFG={...CFG,...p.data}; } catch(e){}
-  try { const p = JSON.parse(localStorage.getItem(STORAGE_KEY_CHANNELS)||'{}'); if(p.data && p.data.length && Date.now()-p.ts < STORAGE_TTL_MS) channels=p.data; else channels=[...DEFAULT_CHANNELS]; } catch(e){ channels=[...DEFAULT_CHANNELS]; }
-  try { const p = JSON.parse(localStorage.getItem(STORAGE_KEY_POSTS)||'{}'); if(p.data && Date.now()-p.ts < STORAGE_TTL_MS) postLog=p.data; } catch(e){}
-  document.getElementById('cfg-blogid').value   = CFG.blogId   || '';
-  document.getElementById('cfg-clientid').value = CFG.clientId || '';
-  document.getElementById('cfg-imgbb').value    = CFG.imgbbKey || '';
-  document.getElementById('cfg-highlights-url').value = CFG.highlightsUrl || '';
-  document.getElementById('player-base').value  = CFG.playerBase || PLAYER_BASE_DEFAULT;
-  document.getElementById('post-labels').value  = (CFG.globalLabels||[]).join(', ');
-  document.getElementById('sched-timing').value = CFG.schedTiming || 60;
-  document.getElementById('sched-status').value = CFG.schedStatus || 'DRAFT';
-  document.getElementById('sched-enabled').checked  = CFG.schedulerEnabled || false;
-  document.getElementById('auto-highlights').checked = CFG.autoHighlights || false;
-  document.getElementById('sb-blogid').textContent = CFG.blogId || '(not set)';
-  document.getElementById('stat-channels').textContent = channels.length;
-  document.getElementById('stat-leagues').textContent  = CFG.activeLeagues.length;
-  const hlCount = Object.values(postLog).filter(p=>p.hasHighlights).length;
-  document.getElementById('stat-highlights').textContent = hlCount;
-}
-function saveConfig() {
-  CFG.blogId    = document.getElementById('cfg-blogid').value.trim();
-  CFG.clientId  = document.getElementById('cfg-clientid').value.trim();
-  CFG.imgbbKey  = document.getElementById('cfg-imgbb').value.trim();
-  CFG.highlightsUrl = document.getElementById('cfg-highlights-url').value.trim();
-  CFG.playerBase= document.getElementById('player-base').value.trim() || PLAYER_BASE_DEFAULT;
-  saveStorage();
-  document.getElementById('sb-blogid').textContent = CFG.blogId || '(not set)';
-  toast('Config saved ✓','success');
-}
-function clearStorage() {
-  if (!confirm('Clear all stored data?')) return;
-  [STORAGE_KEY_CFG, STORAGE_KEY_CHANNELS, STORAGE_KEY_POSTS].forEach(k => localStorage.removeItem(k));
-  location.reload();
-}
-function exportConfig() {
-  const a = document.createElement('a');
-  a.href = 'data:application/json,' + encodeURIComponent(JSON.stringify({cfg:CFG,channels,postLog},null,2));
-  a.download = 'sports803-config.json'; a.click();
-}
-function importConfig() {
-  const inp = document.createElement('input'); inp.type='file'; inp.accept='.json';
-  inp.onchange = e => {
-    const r = new FileReader();
-    r.onload = ev => { try { const d=JSON.parse(ev.target.result); if(d.cfg) CFG={...CFG,...d.cfg}; if(d.channels) channels=d.channels; if(d.postLog) postLog=d.postLog; saveStorage(); loadStorage(); renderChannels(); toast('Config imported ✓','success'); } catch{ toast('Invalid file','error'); } };
-    r.readAsText(e.target.files[0]);
-  };
-  inp.click();
+function renderEvents() {
+  const container = document.getElementById('events-container');
+  container.innerHTML = allEvents.map(ev => `
+    <div class="event-card">
+      <div class="event-meta">
+        <span>${ev.leagueId.toUpperCase()}</span>
+        <span>${ev.time.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+      </div>
+      <div class="teams-area">
+        <div class="team-slot">
+          ${ev.homeLogo ? `<img class="team-logo" src="${ev.homeLogo}">` : `<div class="team-logo" style="display:flex;align-items:center;justify-content:center;background:var(--accent)">${ev.homeTeam[0]}</div>`}
+          <span class="team-name">${ev.homeTeam}</span>
+        </div>
+        <div class="vs">VS</div>
+        <div class="team-slot">
+          ${ev.awayLogo ? `<img class="team-logo" src="${ev.awayLogo}">` : `<div class="team-logo" style="display:flex;align-items:center;justify-content:center;background:var(--blue)">${ev.awayTeam[0]}</div>`}
+          <span class="team-name">${ev.awayTeam}</span>
+        </div>
+      </div>
+      <div style="margin-top:15px;display:flex;gap:5px">
+        <button class="btn-primary" style="flex:1" onclick="quickPost('${ev.id}')">Quick Post</button>
+        <button class="btn-outline" onclick="openEditor('${ev.id}')">✏️</button>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('stat-events').textContent = allEvents.length;
 }
 
 // ═══════════════════════════════════════════════════════════
-// NAV & FILTERS (unchanged)
+// UI & UTILS
 // ═══════════════════════════════════════════════════════════
 function openPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-  const page = document.getElementById('page-'+id);
-  if (page) page.classList.add('active');
-  const link = document.querySelector(`.sidebar-nav a[onclick*="'${id}'"]`);
-  if (link) link.classList.add('active');
+  document.getElementById('page-'+id).classList.add('active');
 }
 
-function renderLeagueFilterPills() {
-  const c = document.getElementById('league-filter-pills');
-  const active = LEAGUES.filter(l => CFG.activeLeagues.includes(l.id));
-  c.innerHTML = `<div class="league-pill ${activeLeagueFilter==='all'?'active':''}" onclick="setLeagueFilter('all',this)">All</div>`
-    + active.map(l => `<div class="league-pill ${activeLeagueFilter===l.id?'active':''}" onclick="setLeagueFilter('${l.id}',this)">${l.icon} ${l.name}</div>`).join('');
-}
-function setLeagueFilter(id, el) {
-  activeLeagueFilter = id;
-  document.querySelectorAll('.league-pill').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  renderEventCards(allEvents);
-}
-function filterEvents() {
-  const q = document.getElementById('event-search').value.toLowerCase();
-  renderEventCards(allEvents.filter(ev => {
-    const txt = ev.type==='race' ? (ev.name+' '+ev.league.name) : (ev.home.name+' '+ev.away.name+' '+ev.league.name);
-    return txt.toLowerCase().includes(q);
-  }));
+function toast(msg, type='info') {
+  const c = document.getElementById('toast-container');
+  const div = document.createElement('div');
+  div.className = `toast ${type}`;
+  div.textContent = msg;
+  c.appendChild(div);
+  setTimeout(() => div.remove(), 4000);
 }
 
-// ═══════════════════════════════════════════════════════════
-// FETCH EVENTS (unchanged)
-// ═══════════════════════════════════════════════════════════
-async function fetchAllEvents() {
-  const spinner = document.getElementById('fetch-spinner');
-  spinner.style.display = 'inline-block';
-  allEvents = [];
-  const active = LEAGUES.filter(l => CFG.activeLeagues.includes(l.id));
-  const results = await Promise.allSettled(active.map(l => fetchLeagueEvents(l)));
-  results.forEach(r => { if (r.status==='fulfilled') allEvents.push(...r.value); });
-  spinner.style.display = 'none';
-  toast('Resolving team logos…', 'info');
-  await enrichEventLogos(allEvents);
-  renderLeagueFilterPills();
-  renderEventCards(allEvents);
-  document.getElementById('stat-events').textContent = allEvents.length;
-  toast(`Loaded ${allEvents.length} events`, 'success');
-  updateSchedQueue();
-  populateHighlightsEventSelect();
+function saveConfig() {
+    CFG.blogId = document.getElementById('cfg-blogid').value;
+    CFG.clientId = document.getElementById('cfg-clientid').value;
+    CFG.imgbbKey = document.getElementById('cfg-imgbb').value;
+    localStorage.setItem('s803_cfg', JSON.stringify(CFG));
+    toast('Settings Saved', 'success');
 }
 
-async function fetchLeagueEvents(league) {
-  if (league.source === 'tsdb') return fetchTSDBEvents(league);
-  try {
-    const res = await fetch(`${ESPN_BASE}/${league.sport}/${league.slug}/scoreboard`);
-    if (!res.ok) throw new Error('HTTP '+res.status);
-    const data = await res.json();
-    return (data.events||[]).map(ev => parseESPNEvent(ev, league));
-  } catch(e) { console.warn(`[${league.name}] ESPN failed:`, e.message); return []; }
-}
-
-function parseESPNEvent(ev, league) {
-  const comp  = ev.competitions?.[0] || {};
-  const comps = comp.competitors || [];
-  const status    = ev.status?.type?.description || 'Scheduled';
-  const startTime = ev.date ? new Date(ev.date) : null;
-
-  if (league.type === 'race') {
-    return {
-      id: ev.id, league, type:'race',
-      name:     ev.name || ev.shortName || league.name+' Race',
-      venue:    comp.venue?.fullName || '',
-      location: comp.venue?.address?.city || '',
-      entries:  comps.slice(0,5).map(c => ({
-        name:   c.athlete?.displayName || c.team?.displayName || '—',
-        number: c.athlete?.jersey || c.jersey || '',
-        logo:   c.athlete?.flag?.href || c.team?.logos?.[0]?.href || ''
-      })),
-      status, startTime, raw: ev
-    };
-  }
-
-  const home = comps.find(c=>c.homeAway==='home') || comps[0] || {};
-  const away = comps.find(c=>c.homeAway==='away') || comps[1] || {};
-  
-  const getESPNLogo = (comp) => {
-    const logos = comp.team?.logos || [];
-    const best = logos.find(l=>l.href&&l.width>=40) || logos[0];
-    return best?.href || comp.athlete?.flag?.href || '';
-  };
-  
-  return {
-    id: ev.id, league, type:'match',
-    home:{ name: home.team?.displayName||home.athlete?.displayName||'TBD', logo: getESPNLogo(home), score: home.score??'' },
-    away:{ name: away.team?.displayName||away.athlete?.displayName||'TBD', logo: getESPNLogo(away), score: away.score??'' },
-    status, startTime, raw: ev
-  };
-}
-
-async function fetchTSDBEvents(league) {
-  try {
-    const res  = await fetch(`${TSDB_BASE}/eventsseason.php?id=${league.tsdbId}`);
-    const data = await res.json();
-    const now  = new Date();
-    return (data.events||[])
-      .filter(ev => { if(!ev.strTimestamp) return false; const d=new Date(ev.strTimestamp); return d>=new Date(now-86400000)&&d<=new Date(now.getTime()+7*86400000); })
-      .map(ev => ({
-        id: ev.idEvent, league, type: league.type || 'match',
-        name: ev.strEvent || '',
-        venue: ev.strVenue || '',
-        location: ev.strCountry || '',
-        home:{ name:ev.strHomeTeam||'TBD', logo:ev.strHomeTeamBadge||'', score:ev.intHomeScore??'' },
-        away:{ name:ev.strAwayTeam||'TBD', logo:ev.strAwayTeamBadge||'', score:ev.intAwayScore??'' },
-        status: ev.strStatus||'Scheduled',
-        startTime: ev.strTimestamp ? new Date(ev.strTimestamp) : null, raw: ev
-      }));
-  } catch(e) { console.warn(`[${league.name}] TSDB failed:`, e.message); return []; }
-}
-
-// ═══════════════════════════════════════════════════════════
-// EVENT KEY + POST LOG (unchanged)
-// ═══════════════════════════════════════════════════════════
-function getEventKey(ev) {
-  return `${ev.league.id}|${(ev.home?.name||ev.name||'').replace(/\s/g,'_')}|${(ev.away?.name||'').replace(/\s/g,'_')}|${ev.startTime?.toDateString()||''}`;
-}
-function getPostLog(ev)       { return postLog[getEventKey(ev)] || null; }
-function setPostLog(ev, data) { postLog[getEventKey(ev)] = {...(postLog[getEventKey(ev)]||{}), ...data}; saveStorage(); }
-
-// ═══════════════════════════════════════════════════════════
-// RENDER CARDS (logoImg updated)
-// ═══════════════════════════════════════════════════════════
-function logoImg(url, teamName, cls='ec-team-logo') {
-  if (!url) {
-    const initial = teamName ? teamName[0].toUpperCase() : '?';
-    return `<div class="ec-team-placeholder" style="width:40px;height:40px;background:var(--bg3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--muted)">${initial}</div>`;
-  }
-  return `<img class="${cls}" src="${url}" onerror="this.onerror=null; this.outerHTML='<div class=\"ec-team-placeholder\" style=\"width:40px;height:40px;background:var(--bg3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--muted)\">${teamName?teamName[0].toUpperCase():'?'}</div>';" alt="${teamName||''}" style="width:40px;height:40px;object-fit:contain" loading="lazy">`;
-}
-
-function renderMatchCard(ev) {
-  const ts = ev.startTime ? ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : 'TBD';
-  const sc = ev.status==='In Progress'?'live':ev.status==='Final'?'final':'';
-  const pl = getPostLog(ev);
-  const badge = pl ? `<span class="post-badge ${pl.hasHighlights?'highlights':((pl.status||'draft').toLowerCase())}">${pl.hasHighlights?'🎬 HL':pl.status}</span>` : '';
-  const sid = encodeURIComponent(String(ev.id));
-  const isFinished = ev.status === 'Final' || ev.status === 'FT' || ev.status === 'Completed';
-  return `<div class="event-card ${pl?.hasHighlights?'has-highlights':''}" data-id="${ev.id}">
-    <div class="ec-league">
-      <span class="ec-league-name">${ev.league.icon} ${ev.league.name}</span>
-      <div style="display:flex;align-items:center;gap:5px">${badge}<span class="ec-status ${sc}">${ev.status}</span></div>
-    </div>
-    <div class="ec-match">
-      <div class="ec-team">
-        ${logoImg(ev.home.logo, ev.home.name)}
-        <div style="font-size:.75rem;margin-top:2px;text-align:center;font-weight:600">${ev.home.name}</div>
-      </div>
-      <div class="ec-score">${ev.home.score!==''?ev.home.score+' – '+ev.away.score:'vs'}</div>
-      <div class="ec-team">
-        ${logoImg(ev.away.logo, ev.away.name)}
-        <div style="font-size:.75rem;margin-top:2px;text-align:center;font-weight:600">${ev.away.name}</div>
-      </div>
-    </div>
-    <div class="ec-time">${ts}</div>
-    ${pl?.postUrl ? `<div style="font-size:.68rem;color:var(--muted)">📝 <a href="${pl.postUrl}" target="_blank">View post</a></div>` : ''}
-    <div class="ec-actions">
-      <button class="btn btn-sm" onclick="generateAndFill('${sid}')">✍️ Generate</button>
-      <button class="btn-blue btn-sm" onclick="quickPost('${sid}')">📤 Post</button>
-      ${isFinished ? `<button class="btn-orange btn-sm" onclick="openHighlightsForEvent('${sid}')">🎬 HL</button>` : ''}
-      <button class="btn-ghost btn-sm" onclick="buildThumbFromEvent('${sid}')">🖼️</button>
-    </div>
-  </div>`;
-}
-
-function renderRaceCard(ev) {
-  const ts = ev.startTime ? ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : 'TBD';
-  const sc = ev.status==='In Progress'?'live':ev.status==='Final'?'final':'';
-  const pl = getPostLog(ev);
-  const badge = pl ? `<span class="post-badge ${pl.hasHighlights?'highlights':((pl.status||'draft').toLowerCase())}">${pl.hasHighlights?'🎬 HL':pl.status}</span>` : '';
-  const sid = encodeURIComponent(String(ev.id));
-  const isFinished = ev.status === 'Final' || ev.status === 'Official' || ev.status === 'Completed';
-  const raceImg = getRaceImage(ev);
-  const entriesHtml = ev.entries?.length
-    ? ev.entries.map((e,i)=>`<div class="ec-race-entry">
-        <span class="ec-race-pos">P${i+1}</span>
-        ${e.logo ? `<img src="${proxyUrl(e.logo,36)}" onerror="this.style.display='none'" style="width:18px;height:18px;object-fit:contain" alt="">` : ''}
-        <span>${e.name}${e.number?` <span style="color:var(--muted)">#${e.number}</span>`:''}</span>
-      </div>`).join('')
-    : '<div style="color:var(--muted);font-size:.74rem;font-style:italic">Grid TBA</div>';
-  return `<div class="event-card ${pl?.hasHighlights?'has-highlights':''}" data-id="${ev.id}">
-    <div class="ec-league">
-      <span class="ec-league-name">${ev.league.icon} ${ev.league.name}</span>
-      <div style="display:flex;align-items:center;gap:5px">${badge}<span class="ec-status ${sc}">${ev.status}</span></div>
-    </div>
-    ${raceImg ? `<img src="${proxyUrl(raceImg,800)}" class="ec-event-img" onerror="this.src='${raceImg}'" alt="${ev.name}" loading="lazy">` : ''}
-    <div>
-      <div class="ec-race-title">${ev.name}</div>
-      ${ev.venue?`<div class="ec-race-venue">🏟 ${ev.venue}${ev.location?', '+ev.location:''}</div>`:''}
-      <div class="ec-race-venue">🕐 ${ts}</div>
-    </div>
-    <div class="ec-race-entries">${entriesHtml}</div>
-    ${pl?.postUrl ? `<div style="font-size:.68rem;color:var(--muted)">📝 <a href="${pl.postUrl}" target="_blank">View post</a></div>` : ''}
-    <div class="ec-actions">
-      <button class="btn btn-sm" onclick="generateAndFill('${sid}')">✍️ Generate</button>
-      <button class="btn-blue btn-sm" onclick="quickPost('${sid}')">📤 Post</button>
-      ${isFinished ? `<button class="btn-orange btn-sm" onclick="openHighlightsForEvent('${sid}')">🎬 HL</button>` : ''}
-    </div>
-  </div>`;
-}
-function proxyUrl(url, size=200) {
-  if (!url) return '';
-  if (url.startsWith('data:') || url.startsWith('blob:')) return url;
-  return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${size}&h=${size}&fit=contain&n=-1`;
-}
-
-function renderEventCards(events) {
-  const grid = document.getElementById('events-grid');
-  const filtered = activeLeagueFilter==='all' ? events : events.filter(e=>e.league.id===activeLeagueFilter);
-  if (!filtered.length) { grid.innerHTML='<div style="color:var(--muted);grid-column:1/-1;padding:40px;text-align:center">No events found.</div>'; return; }
-  grid.innerHTML = filtered.map(ev => ev.type==='race' ? renderRaceCard(ev) : renderMatchCard(ev)).join('');
-}
-
-// ═══════════════════════════════════════════════════════════
-// GENERATE & POST (simplified but functional – all features preserved)
-// ═══════════════════════════════════════════════════════════
-function generateAIContent() {
-  const title = document.getElementById('post-title').value;
-  if (!title) { toast('Enter a title first','info'); return; }
-  document.getElementById('post-body').value = buildArticle(title, null);
-  toast('AI content generated ✓','success');
-}
-
-function buildArticle(title, ev) {
-  const player = CFG.playerBase || PLAYER_BASE_DEFAULT;
-  const home = ev ? ev.home.name : 'Home Team';
-  const away = ev ? ev.away.name : 'Away Team';
-  const league = ev ? ev.league.name : "today's fixture";
-  const ts = ev?.startTime ? ev.startTime.toLocaleString() : 'today';
-  const chs = ev ? findChannelsForLeague(ev.league.id) : [];
-  const chList = chs.length ? chs.map(c=>c.name).join(', ') : 'Sports 803';
-  if (ev && ev.type === 'race') {
-    return `${pick(PHRASES.race_open)} ${ev.name}.\n\n${pick(PHRASES.race_context)}\n\n${picks(PHRASES.race_body,2).join(' ')}\n\n📅 Event: ${ev.name}\n📍 Venue: ${ev.venue||'TBC'}\n🕐 Start: ${ts}\n\n📺 Watch Live on ${chList} or on Sports 803: ${player}\n\n${pick(PHRASES.watch_cta)}`;
-  }
-  return `${pick(PHRASES.match_open)} ${home} vs ${away} in the ${league}.\n\n${pick(PHRASES.match_context)}\n\n${pick(PHRASES.match_body)}\n\n📅 Date & Time: ${ts}\n🏆 Competition: ${league}\n\n📺 Watch Live on ${chList} or on Sports 803: ${player}\n\n${pick(PHRASES.watch_cta)}`;
-}
-
-function generateAndFill(sid) {
-  const ev = findEvent(sid); if(!ev) return;
-  const title = ev.type==='race' ? `${ev.name} – Race Preview` : `${ev.home.name} vs ${ev.away.name} – ${ev.league.name} Preview`;
-  document.getElementById('post-title').value = title;
-  document.getElementById('post-body').value = buildArticle(title, ev);
-  openPage('compose');
-  toast('Content generated!','success');
-}
-function findEvent(sid) { return allEvents.find(e => String(e.id) === String(decodeURIComponent(sid))); }
-
-// IFRAME STREAM BUILDER (unchanged)
-function addStreamSource() {
-  const list = document.getElementById('stream-sources-list');
-  const row = document.createElement('div');
-  row.className='stream-source-row';
-  row.innerHTML=`<input type="text" placeholder="https://stream-source.com/…" class="mora-input"><button class="btn-ghost btn-sm" onclick="removeStreamSource(this)">✕</button>`;
-  list.appendChild(row);
-  updateIframePreviewBox();
-}
-function removeStreamSource(btn) {
-  const list = document.getElementById('stream-sources-list');
-  if (list.children.length<=1){btn.previousElementSibling.value='';return;}
-  btn.parentElement.remove();
-  updateIframePreviewBox();
-}
-function getMoraUrls() { return Array.from(document.querySelectorAll('.mora-input')).map(i=>i.value.trim()).filter(Boolean); }
-function buildIframeHtml(moraUrls) {
-  const base = (document.getElementById('player-base')?.value||CFG.playerBase||PLAYER_BASE_DEFAULT).trim();
-  const params = moraUrls.map(u=>`mora=${encodeURIComponent(u)}`).join('&');
-  const src = params ? `${base}?${params}` : base;
-  return `<div style="margin:18px 0;"><iframe loading="lazy" width="100%" height="500" src="${src}" frameborder="0" scrolling="no" allowfullscreen></iframe></div>`;
-}
-function updateIframePreviewBox() {
-  const urls=getMoraUrls();
-  const box=document.getElementById('iframe-preview-box');
-  if (!urls.length){box.textContent='Add a stream URL above to preview…';return;}
-  box.textContent=buildIframeHtml(urls);
-}
-function buildAndInsertIframe() {
-  const urls=getMoraUrls();
-  if (!urls.length){toast('Add at least one stream URL','info');return;}
-  const code=buildIframeHtml(urls);
-  const body=document.getElementById('post-body');
-  body.value+=(body.value?'\n\n':'')+code;
-  toast('iframe inserted ✓','success');
-}
-function previewIframe() {
-  const urls=getMoraUrls();
-  if (!urls.length){toast('Add at least one stream URL','info');return;}
-  document.getElementById('iframe-preview-render').innerHTML=buildIframeHtml(urls);
-  openModal('modal-iframe-preview');
-}
-
-// HIGHLIGHTS (unchanged)
-function populateHighlightsEventSelect() {
-  const sel = document.getElementById('hl-event-select');
-  sel.innerHTML = '<option value="">— choose event —</option>' + allEvents.map((ev,i) => `<option value="${i}">${ev.league.icon} ${ev.type==='race'?ev.name:`${ev.home.name} vs ${ev.away.name}`}</option>`).join('');
-}
-function openHighlightsModal() {
-  populateHighlightsEventSelect();
-  document.getElementById('hl-body').value='';
-  document.getElementById('hl-video-url').value='';
-  document.getElementById('hl-existing-post').style.display='none';
-  openModal('modal-highlights');
-}
-function openHighlightsForEvent(sid) {
-  populateHighlightsEventSelect();
-  const idx = allEvents.findIndex(e => String(e.id) === String(decodeURIComponent(sid)));
-  if (idx > -1) document.getElementById('hl-event-select').value = idx;
-  document.getElementById('hl-body').value='';
-  document.getElementById('hl-video-url').value='';
-  onHighlightEventChange();
-  openModal('modal-highlights');
-}
-function onHighlightEventChange() {
-  const idx = parseInt(document.getElementById('hl-event-select').value);
-  if (isNaN(idx)||idx<0) { document.getElementById('hl-existing-post').style.display='none'; return; }
-  const ev = allEvents[idx]; if(!ev) return;
-  const pl = getPostLog(ev);
-  const exDiv = document.getElementById('hl-existing-post');
-  if (pl?.postId) { exDiv.style.display='flex'; document.getElementById('hl-post-link').href=pl.postUrl||'#'; }
-  else exDiv.style.display='none';
-}
-function generateHighlightsText() {
-  const idx = parseInt(document.getElementById('hl-event-select').value);
-  if (isNaN(idx)) { toast('Select an event first','info'); return; }
-  const ev = allEvents[idx]; if(!ev) return;
-  const hlVideo = document.getElementById('hl-video-url').value.trim();
-  const iframeCode = hlVideo ? buildIframeHtml([hlVideo]) : '<p>🎬 Highlights loading — check back shortly.</p>';
-  const label = ev.type==='race' ? ev.name : `${ev.home.name} vs ${ev.away.name}`;
-  const score  = (ev.type!=='race'&&ev.home.score!=='') ? `Final Score: ${ev.home.name} ${ev.home.score} – ${ev.away.score} ${ev.away.name}` : '';
-  const ts = ev.startTime ? ev.startTime.toLocaleString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'}) : 'recently';
-  const text = `${pick(PHRASES.highlights_open)} ${label}.\n\n${score?score+'\n\n':''}${pick(PHRASES.highlights_body)}\n\n${picks(PHRASES.highlights_body,2).join('\n\n')}\n\n🎬 HIGHLIGHTS:\n\n${iframeCode}\n\n📅 Date Played: ${ts}\n🏆 Competition: ${ev.league.name}\n\n${pick(PHRASES.watch_cta)}`;
-  document.getElementById('hl-body').value = text;
-  toast('Highlights text generated ✓','success');
-}
-async function postHighlights() {
-  const idx = parseInt(document.getElementById('hl-event-select').value);
-  if (isNaN(idx)) { toast('Select an event','info'); return; }
-  const ev = allEvents[idx]; if(!ev) return;
-  const hlBody = document.getElementById('hl-body').value.trim();
-  const hlVideo = document.getElementById('hl-video-url').value.trim();
-  if (!hlBody) { toast('Generate or write highlights text first','info'); return; }
-  if (!accessToken) { toast('Sign in first','error'); return; }
-  if (!CFG.blogId) { toast('Enter Blog ID in Settings','error'); return; }
-  const title = `${ev.type==='race'?ev.name:`${ev.home.name} vs ${ev.away.name}`} – Highlights & Full Match Replay | Sports 803`;
-  const pl = getPostLog(ev);
-  const iframeHtml = hlVideo ? buildIframeHtml([hlVideo]) : '';
-  const htmlBody = (hlBody + (iframeHtml ? '\n\n'+iframeHtml : '')).replace(/\n/g,'<br>');
-  const autoLabels = ['highlights','sports 803', ev.league.name.replace(/\s/g,'')];
-  if (pl?.postId) {
-    try {
-      const res = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${CFG.blogId}/posts/${pl.postId}`,{method:'PUT',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({kind:'blogger#post',id:pl.postId,blog:{id:CFG.blogId},title,content:htmlBody,labels:autoLabels})});
-      if(!res.ok) throw new Error(`Update ${res.status}`);
-      const post = await res.json();
-      setPostLog(ev,{postId:post.id,postUrl:post.url,status:post.status,title,hasHighlights:true});
-      toast('Post updated with highlights ✓','success');
-      closeModal('modal-highlights'); renderEventCards(allEvents); updateHighlightsStat();
-    } catch(e){toast('Update failed: '+e.message,'error');}
-  } else {
-    const post = await postToBloggerRaw(title, htmlBody, 'LIVE', autoLabels);
-    if (post) {
-      setPostLog(ev,{postId:post.id,postUrl:post.url,status:'LIVE',title,hasHighlights:true});
-      toast('Highlights posted ✓','success');
-      closeModal('modal-highlights'); renderEventCards(allEvents); updateHighlightsStat();
+window.onload = () => {
+    const saved = localStorage.getItem('s803_cfg');
+    if(saved) {
+        CFG = JSON.parse(saved);
+        document.getElementById('cfg-blogid').value = CFG.blogId;
+        document.getElementById('cfg-clientid').value = CFG.clientId;
+        document.getElementById('cfg-imgbb').value = CFG.imgbbKey;
     }
-  }
-}
-async function checkHighlights() {
-  const toHL = allEvents.filter(ev => {
-    const fin = ev.status==='Final'||ev.status==='FT'||ev.status==='Completed';
-    const pl = getPostLog(ev);
-    return fin&&pl?.postId&&!pl.hasHighlights;
-  });
-  if (!toHL.length) { toast('No finished events pending highlights','info'); return; }
-  toast(`${toHL.length} event(s) ready for highlights…`,'info');
-  populateHighlightsEventSelect();
-  const firstIdx = allEvents.findIndex(ev=>ev.id===toHL[0].id);
-  if (firstIdx>-1) document.getElementById('hl-event-select').value=firstIdx;
-  onHighlightEventChange();
-  openModal('modal-highlights');
-}
-function updateHighlightsStat() {
-  document.getElementById('stat-highlights').textContent = Object.values(postLog).filter(p=>p.hasHighlights).length;
-}
-
-// OAUTH + BLOGGER (unchanged)
-function handleAuth() {
-  if (accessToken) { signOut(); return; }
-  if (!CFG.clientId) { toast('Enter OAuth Client ID in Settings first','error'); return; }
-  const client = google.accounts.oauth2.initTokenClient({
-    client_id: CFG.clientId,
-    scope: 'https://www.googleapis.com/auth/blogger',
-    callback: resp => {
-      if (resp.error) { toast('Auth error: '+resp.error,'error'); return; }
-      accessToken = resp.access_token;
-      document.getElementById('auth-status').textContent='🟢 Signed in';
-      document.getElementById('auth-btn').textContent='Sign out';
-      toast('Signed in ✓','success');
-    }
-  });
-  client.requestAccessToken();
-}
-function signOut() {
-  if (accessToken) google.accounts.oauth2.revoke(accessToken,()=>{});
-  accessToken=null;
-  document.getElementById('auth-status').textContent='⚪ Not signed in';
-  document.getElementById('auth-btn').textContent='Sign in with Google';
-  toast('Signed out','info');
-}
-async function postToBlogger() {
-  if (!accessToken){toast('Sign in first','error');return null;}
-  if (!CFG.blogId) {toast('Enter Blog ID in Settings','error');return null;}
-  const t = document.getElementById('post-title').value.trim();
-  const b = document.getElementById('post-body').value.trim();
-  const st = document.getElementById('post-status').value;
-  const labelsRaw = document.getElementById('post-labels').value;
-  const labels = labelsRaw.split(',').map(s=>s.trim()).filter(Boolean);
-  if (!t||!b){toast('Title and body required','error');return null;}
-  const thumbUrl = document.getElementById('thumb-url').value.trim();
-  const html = (thumbUrl?`<div><img src="${thumbUrl}" style="max-width:100%"></div>\n`:'') + b.replace(/\n/g,'<br>');
-  return postToBloggerRaw(t, html, st, labels);
-}
-async function postToBloggerRaw(title, htmlBody, status, labels) {
-  let url = `https://www.googleapis.com/blogger/v3/blogs/${CFG.blogId}/posts/`;
-  if (status==='DRAFT'||status==='SCHEDULED') url+='?isDraft=true';
-  const payload = {kind:'blogger#post',blog:{id:CFG.blogId},title,content:htmlBody,labels:labels||['sports 803','live stream']};
-  if (status==='SCHEDULED') {
-    const schedTime = document.getElementById('post-schedule-time')?.value;
-    if (schedTime) payload.published = new Date(schedTime).toISOString();
-  }
-  try {
-    const res = await fetch(url,{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    if (!res.ok) throw new Error(`Blogger ${res.status}`);
-    const post = await res.json();
-    toast(`Posted: "${title}" (${status}) ✓`,'success');
-    addRecentPost(title, post.url, status);
-    return post;
-  } catch(e){toast('Post failed: '+e.message,'error');return null;}
-}
-async function quickPost(sid) {
-  const ev = findEvent(sid); if(!ev) return;
-  const title = ev.type==='race' ? `${ev.name} – Race Preview` : `${ev.home.name} vs ${ev.away.name} – Preview`;
-  const body = buildArticle(title, ev);
-  const html = body.replace(/\n/g,'<br>');
-  const post = await postToBloggerRaw(title, html, CFG.schedStatus||'DRAFT', ['sports 803','live stream']);
-  if (post) {
-    setPostLog(ev,{postId:post.id,postUrl:post.url,status:post.status||'DRAFT',title});
-    renderEventCards(allEvents);
-    document.getElementById('stat-posted').textContent=parseInt(document.getElementById('stat-posted').textContent||0)+1;
-  }
-}
-async function bulkPostAll() {
-  if (!accessToken){toast('Sign in first','error');return;}
-  const toPost=allEvents.filter(ev=>!getPostLog(ev));
-  if (!toPost.length){toast('All events already posted','info');return;}
-  toast(`Bulk posting ${toPost.length} events…`,'info');
-  let n=0;
-  for (const ev of toPost){await quickPost(encodeURIComponent(String(ev.id)));n++;await new Promise(r=>setTimeout(r,800));}
-  toast(`Done: ${n} posts made`,'success');
-}
-function addRecentPost(title, url, status) {
-  const list=document.getElementById('recent-posts-list');
-  if(list.textContent.includes('No posts'))list.innerHTML='';
-  const div=document.createElement('div');
-  div.style.cssText='padding:7px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px';
-  div.innerHTML=`<span class="post-badge ${(status||'').toLowerCase()}">${status}</span><span style="flex:1;font-size:.82rem">${title}</span>${url?`<a href="${url}" target="_blank" style="font-size:.72rem">View</a>`:''}`;
-  list.prepend(div);
-  document.getElementById('stat-posted').textContent=parseInt(document.getElementById('stat-posted').textContent||0)+1;
-}
-function previewPost() {
-  document.getElementById('preview-title').textContent=document.getElementById('post-title').value;
-  document.getElementById('preview-body').innerHTML=document.getElementById('post-body').value.replace(/\n/g,'<br>');
-  openModal('modal-preview');
-}
-
-// CHANNELS (unchanged)
-function renderChannels(filter='') {
-  const tbody=document.getElementById('channels-tbody');
-  const list=channels.filter(c=>!filter||[c.name,c.sport,c.region].some(f=>f.toLowerCase().includes(filter)));
-  tbody.innerHTML=list.map(c=>`
-       <tr><td><strong>${c.name}</strong></td><td>${c.sport}</td><td>${c.url?`<a href="${c.url}" target="_blank">${c.url.substring(0,38)}…</a>`:'—'}</td><td>${c.region}</td><td><button class="btn-ghost btn-sm" onclick="editChannel('${c.id}')">✏️</button><button class="btn btn-sm" style="background:#3d0c0c" onclick="deleteChannel('${c.id}')">✕</button></td></tr>
-    `).join('') || '<tr><td colspan="5" style="text-align:center">No channels.</td></tr>';
-  document.getElementById('stat-channels').textContent=channels.length;
-}
-function filterChannels(){renderChannels(document.getElementById('ch-search').value.toLowerCase());}
-function openAddChannel(){editingChannelId=null;document.getElementById('modal-channel-title').textContent='Add Channel';['ch-name','ch-region','ch-sport','ch-url'].forEach(id=>document.getElementById(id).value='');openModal('modal-channel');}
-function editChannel(id){
-  const ch=channels.find(c=>c.id===id);if(!ch)return;
-  editingChannelId=id;document.getElementById('modal-channel-title').textContent='Edit Channel';
-  document.getElementById('ch-name').value=ch.name;document.getElementById('ch-region').value=ch.region;
-  document.getElementById('ch-sport').value=ch.sport;document.getElementById('ch-url').value=ch.url;
-  openModal('modal-channel');
-}
-function saveChannel(){
-  const name=document.getElementById('ch-name').value.trim();
-  if(!name){toast('Name required','error');return;}
-  const obj={name,region:document.getElementById('ch-region').value.trim(),sport:document.getElementById('ch-sport').value.trim(),url:document.getElementById('ch-url').value.trim()};
-  if(editingChannelId){const i=channels.findIndex(c=>c.id===editingChannelId);if(i>-1)channels[i]={...channels[i],...obj};}
-  else channels.push({id:'ch'+Date.now(),...obj});
-  saveStorage();renderChannels();closeModal('modal-channel');toast('Channel saved ✓','success');
-}
-function deleteChannel(id){if(!confirm('Delete?'))return;channels=channels.filter(c=>c.id!==id);saveStorage();renderChannels();toast('Deleted','info');}
-function findChannelsForLeague(leagueId){return channels.filter(c=>c.sport.split(',').map(s=>s.trim()).some(s=>s===leagueId||leagueId.includes(s)||s.includes(leagueId)));}
-
-// SCHEDULER (unchanged)
-function toggleScheduler(){
-  CFG.schedulerEnabled=document.getElementById('sched-enabled').checked;
-  CFG.schedTiming=parseInt(document.getElementById('sched-timing').value);
-  CFG.schedStatus=document.getElementById('sched-status').value;
-  CFG.autoHighlights=document.getElementById('auto-highlights').checked;
-  saveStorage();
-  if(CFG.schedulerEnabled){runScheduler();toast('Scheduler enabled ✓','success');}
-  else{clearInterval(schedulerInterval);toast('Scheduler disabled','info');}
-}
-function runScheduler(){
-  clearInterval(schedulerInterval);
-  schedulerInterval=setInterval(async()=>{
-    const now=Date.now(),offset=(CFG.schedTiming||60)*60000;
-    for(const ev of allEvents){
-      if(!ev.startTime)continue;
-      const pl=getPostLog(ev);
-      const diff=ev.startTime.getTime()-now;
-      if(!pl?.postId&&diff>0&&diff<=offset){await quickPost(encodeURIComponent(String(ev.id)));await new Promise(r=>setTimeout(r,1000));}
-    }
-    updateSchedQueue();
-  },60000);
-  updateSchedQueue();
-}
-function updateSchedQueue(){
-  const c=document.getElementById('sched-queue'),now=Date.now(),offset=(CFG.schedTiming||60)*60000*24;
-  const pending=allEvents.filter(ev=>ev.startTime&&!getPostLog(ev)?.postId&&ev.startTime.getTime()-now>0&&ev.startTime.getTime()-now<=offset);
-  if(!pending.length){c.innerHTML='<span style="color:var(--muted)">No events in scheduling window.</span>';return;}
-  c.innerHTML=pending.map(ev=>`<div>${ev.league.icon} ${ev.type==='race'?ev.name:`${ev.home.name} vs ${ev.away.name}`} — ${ev.startTime.toLocaleString()}</div>`).join('');
-  document.getElementById('stat-scheduled').textContent=pending.length;
-}
-
-// LEAGUE TOGGLES
-function renderLeagueToggles(){
-  const c=document.getElementById('league-toggles');
-  c.innerHTML=LEAGUES.map(l=>`<label class="toggle"><input type="checkbox" ${CFG.activeLeagues.includes(l.id)?'checked':''} onchange="toggleActiveLeague('${l.id}',this.checked)"><div class="toggle-slider"></div><span>${l.icon} ${l.name}</span></label>`).join('');
-}
-function toggleActiveLeague(id,on){
-  if(on){if(!CFG.activeLeagues.includes(id))CFG.activeLeagues.push(id);}
-  else CFG.activeLeagues=CFG.activeLeagues.filter(x=>x!==id);
-  saveStorage();renderLeagueFilterPills();
-  document.getElementById('stat-leagues').textContent=CFG.activeLeagues.length;
-}
-
-// GLOBAL LABELS
-function renderGlobalLabels(){
-  const c=document.getElementById('global-labels-tags');
-  c.innerHTML=(CFG.globalLabels||[]).map((l,i)=>`<div class="tag">${l}<span class="remove" onclick="removeLabel(${i})">✕</span></div>`).join('');
-}
-function addGlobalLabel(l){if(!l||CFG.globalLabels.includes(l))return;CFG.globalLabels.push(l);document.getElementById('post-labels').value=CFG.globalLabels.join(', ');renderGlobalLabels();}
-function removeLabel(i){CFG.globalLabels.splice(i,1);renderGlobalLabels();}
-
-// THUMBNAIL FUNCTIONS (simplified but functional)
-async function drawMatchThumb(cv, opts) {
-  const {home,away,hLogo,aLogo,league,datetime,bg1,bg2} = opts;
-  const ctx=cv.getContext('2d');
-  const W=cv.width,H=cv.height,cx=W/2,cy=H/2;
-  ctx.fillStyle=bg1; ctx.fillRect(0,0,cx,H);
-  ctx.fillStyle=bg2; ctx.fillRect(cx,0,cx,H);
-  ctx.fillStyle='#000'; ctx.globalAlpha=0.5;
-  ctx.beginPath(); ctx.moveTo(cx-14,0); ctx.lineTo(cx+14,0); ctx.lineTo(cx-14,H); ctx.lineTo(cx-38,H); ctx.fill();
-  ctx.globalAlpha=1;
-  const crestR=110; const hCx=W*0.26, aCx=W*0.74, crestCy=H*0.44;
-  async function drawCrest(url, cx, cy, r) {
-    const img = await loadImg(url, 200);
-    ctx.save(); ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.clip();
-    if(img) ctx.drawImage(img,cx-r,cy-r,r*2,r*2);
-    else { ctx.fillStyle='rgba(255,255,255,0.07)'; ctx.fill(); ctx.fillStyle='#fff'; ctx.font='bold 40px sans-serif'; ctx.fillText('?',cx,cy); }
-    ctx.restore();
-  }
-  await Promise.all([drawCrest(hLogo, hCx, crestCy, crestR), drawCrest(aLogo, aCx, crestCy, crestR)]);
-  ctx.fillStyle='#e63946'; ctx.beginPath(); ctx.arc(cx,cy*0.96,30,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle='#fff'; ctx.font='900 16px sans-serif'; ctx.fillText('VS',cx,cy*0.96);
-  ctx.fillStyle='#fff'; ctx.font='800 22px sans-serif'; ctx.fillText(home, hCx, crestCy+crestR+20);
-  ctx.fillText(away, aCx, crestCy+crestR+20);
-  if(datetime){ ctx.font='600 13px sans-serif'; ctx.fillStyle='rgba(255,255,255,0.65)'; ctx.fillText(datetime, cx, H-16); }
-}
-async function drawRaceThumb(cv, opts) {
-  const {name,league,datetime,venue,bg1,bg2,bannerUrl} = opts;
-  const ctx=cv.getContext('2d');
-  const W=cv.width,H=cv.height;
-  ctx.fillStyle=bg1; ctx.fillRect(0,0,W,H);
-  const bgImg = await loadImg(bannerUrl, 800);
-  if(bgImg){ ctx.drawImage(bgImg, W*0.35, 0, W*0.65, H); ctx.fillStyle='rgba(10,14,26,0.5)'; ctx.fillRect(0,0,W,H); }
-  ctx.fillStyle='#e63946'; ctx.fillRect(32, H*0.12, 6, H*0.76);
-  ctx.fillStyle='#fff'; ctx.font='800 30px sans-serif'; ctx.fillText(name, 48, H*0.28);
-  if(datetime){ ctx.font='700 15px sans-serif'; ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.fillText(datetime, 48, H*0.72); }
-}
-function buildThumbnail(){
-  const home=document.getElementById('tb-home').value||'Event';
-  const away=document.getElementById('tb-away').value||'';
-  const lg=document.getElementById('tb-league').value||'';
-  const dt=document.getElementById('tb-datetime').value||'';
-  const bg1=document.getElementById('tb-bg1').value;
-  const bg2=document.getElementById('tb-bg2').value;
-  const banner=document.getElementById('tb-banner').value.trim();
-  const hLogo=document.getElementById('tb-home-logo').value.trim();
-  const aLogo=document.getElementById('tb-away-logo').value.trim();
-  const cv=document.getElementById('thumb-canvas-big');
-  if(away){
-    drawMatchThumb(cv,{home,away,hLogo,aLogo,league:lg,datetime:dt,bg1,bg2});
-  } else {
-    drawRaceThumb(cv,{name:home,league:lg,datetime:dt,venue:'',bg1,bg2,bannerUrl:banner});
-  }
-}
-async function generateThumbnail(){
-  const title=document.getElementById('post-title').value;
-  const cv=document.getElementById('thumb-canvas');
-  const parts=title.split(/\s+vs\s+/i);
-  if(parts.length>=2){
-    await drawMatchThumb(cv,{home:parts[0],away:parts[1].split('–')[0],hLogo:'',aLogo:'',league:'',datetime:'',bg1:'#0d1b2a',bg2:'#1a0020'});
-  } else {
-    await drawRaceThumb(cv,{name:title,league:'',datetime:'',venue:'',bg1:'#0a0e1a',bg2:'#1a0010',bannerUrl:''});
-  }
-}
-async function buildThumbFromEvent(sid){
-  const ev=findEvent(sid);if(!ev)return;
-  const dt=ev.startTime?ev.startTime.toLocaleString():'';
-  if(ev.type==='race'){
-    document.getElementById('tb-home').value=ev.name;
-    document.getElementById('tb-away').value='';
-    document.getElementById('tb-league').value=ev.league.name;
-    document.getElementById('tb-home-logo').value='';
-    document.getElementById('tb-away-logo').value='';
-    document.getElementById('tb-banner').value=getRaceImage(ev);
-    document.getElementById('tb-datetime').value=dt;
-    openPage('thumbnail');
-    await drawRaceThumb(document.getElementById('thumb-canvas-big'),{
-      name:ev.name,league:ev.league.name,datetime:dt,venue:ev.venue||'',bg1:'#0a0e1a',bg2:'#1a0a00',bannerUrl:getRaceImage(ev)
-    });
-  } else {
-    document.getElementById('tb-home').value=ev.home.name;
-    document.getElementById('tb-away').value=ev.away.name;
-    document.getElementById('tb-league').value=ev.league.name;
-    document.getElementById('tb-home-logo').value=ev.home.logo;
-    document.getElementById('tb-away-logo').value=ev.away.logo;
-    document.getElementById('tb-banner').value='';
-    document.getElementById('tb-datetime').value=dt;
-    openPage('thumbnail');
-    await drawMatchThumb(document.getElementById('thumb-canvas-big'),{
-      home:ev.home.name,away:ev.away.name,
-      hLogo:ev.home.logo,aLogo:ev.away.logo,
-      league:ev.league.name,datetime:dt,
-      bg1:'#0d1b2a',bg2:'#1a0020'
-    });
-  }
-}
-async function uploadToImgbb(){await doImgbbUpload('thumb-canvas','thumb-url');}
-async function uploadThumbFromBuilder(){await doImgbbUpload('thumb-canvas-big','tb-imgbb-url');}
-async function doImgbbUpload(cvId,outId){
-  const key=CFG.imgbbKey;if(!key){toast('imgbb key missing','error');return;}
-  const base64=document.getElementById(cvId).toDataURL('image/jpeg',.92).split(',')[1];
-  try{
-    const fd=new FormData();fd.append('key',key);fd.append('image',base64);
-    const res=await fetch('https://api.imgbb.com/1/upload',{method:'POST',body:fd});
-    const d=await res.json();
-    if(d.success){document.getElementById(outId).value=d.data.url;toast('Uploaded ✓','success');}
-    else throw new Error(d.error?.message);
-  }catch(e){toast('imgbb error: '+e.message,'error');}
-}
-function downloadThumb(){
-  const a=document.createElement('a');a.download='sports803-thumb.jpg';
-  a.href=document.getElementById('thumb-canvas-big').toDataURL('image/jpeg',.92);a.click();
-}
-
-function updateStatBar(){
-  document.getElementById('stat-leagues').textContent=CFG.activeLeagues.length;
-  document.getElementById('stat-channels').textContent=channels.length;
-}
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
-function toast(msg,type='info'){
-  const t=document.createElement('div');t.className=`toast ${type}`;t.textContent=msg;
-  document.getElementById('toast-container').appendChild(t);
-  setTimeout(()=>t.remove(),3500);
-}
+    document.getElementById('stat-leagues').textContent = CFG.activeLeagues.length;
+};
 </script>
 </body>
 </html>
