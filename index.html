@@ -267,7 +267,7 @@ label{display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-b
 <th>Channel</th><th>Sport/League</th><th>Stream URL</th><th>Region</th><th>Actions</th>
 </thead>
       <tbody id="channels-tbody"></tbody>
-    ~
+    </div>
   </div>
 </div>
 
@@ -1588,7 +1588,8 @@ function renderChannels(filter='') {
   const tbody=document.getElementById('channels-tbody');
   const list=channels.filter(c=>!filter||[c.name,c.sport,c.region].some(f=>f.toLowerCase().includes(filter)));
   tbody.innerHTML=list.map(c=>`
-      <tr><td><strong>${c.name}</strong></td><td>${c.sport}</td><td>${c.url?`<a href="${c.url}" target="_blank">${c.url.substring(0,38)}…</a>`:'—'}</td><td>${c.region}</td><td><button class="btn-ghost btn-sm" onclick="editChannel('${c.id}')">✏️</button><button class="btn btn-sm" style="background:#3d0c0c" onclick="deleteChannel('${c.id}')">✕</button></td></tr>`).join('') || '<tr><td colspan="5" style="text-align:center">No channels.</td></tr>';
+       <tr><td><strong>${c.name}</strong></td><td>${c.sport}</td><td>${c.url?`<a href="${c.url}" target="_blank">${c.url.substring(0,38)}…</a>`:'—'}</td><td>${c.region}</td><td><button class="btn-ghost btn-sm" onclick="editChannel('${c.id}')">✏️</button><button class="btn btn-sm" style="background:#3d0c0c" onclick="deleteChannel('${c.id}')">✕</button></td></tr>
+    `).join('') || '<tr><td colspan="5" style="text-align:center">No channels.</td></tr>';
   document.getElementById('stat-channels').textContent=channels.length;
 }
 function filterChannels(){renderChannels(document.getElementById('ch-search').value.toLowerCase());}
