@@ -927,16 +927,38 @@ function updateLogoStatus(resolved, total) {
 // Build img tag with full 5-tier fallback chain
 function logoImg(url, teamName) {
   const uid = 'lg_' + Math.random().toString(36).slice(2, 8);
-  const initial = teamName ? teamName[0].toUpperCase() : '?';
-  const fallbackHtml = `<div class="logo-fallback" id="${uid}_f">${initial}</div>`;
-
   const override = LOGO_OVERRIDES[(teamName || '').toLowerCase().trim()];
   if (override) {
-    return `<div class="logo-wrap">
-      <img id="${uid}" src="${override}" onerror="this.style.display='none';document.getElementById('${uid}_f').style.display='flex'" alt="${teamName||''}" loading="lazy">
-      ${fallbackHtml}
-    </div>`;
+    return `<div class="logo-wrap"><img id="${uid}" src="${override}" onerror="this.style.display='none'" alt="${teamName||''}" loading="lazy" style="width:44px;height:44px;object-fit:contain;border-radius:6px"></div>`;
   }
+
+  const cached = getCachedLogo(teamName || '');
+  const startUrl = cached || (url ? rewriteESPNLogo(url) || url : '');
+
+  if (!startUrl) {
+    // No URL known – reserve an empty spot, then try to fetch later
+    const placeholderId = `logo_placeholder_${uid}`;
+    setTimeout(async () => {
+      const el = document.getElementById(placeholderId);
+      if (!el) return;
+      const resolved = await fetchLogoFromTSDB(teamName);
+      if (resolved) {
+        el.outerHTML = `<div class="logo-wrap"><img src="${resolved}" style="width:44px;height:44px;object-fit:contain;border-radius:6px" alt="${teamName}" loading="lazy"></div>`;
+      } else {
+        el.innerHTML = ''; // keep empty if no logo found
+      }
+    }, 50);
+    return `<div id="${placeholderId}" class="logo-wrap"></div>`;
+  }
+
+  const wsr = weservProxy(startUrl, 200);
+  const escapedName = (teamName || '').replace(/'/g, "\\'");
+  const errorChain = wsr !== startUrl
+    ? `this.src='${startUrl}';this.onerror=function(){fetchLogoFromTSDB('${escapedName}').then(u=>{if(u){this.src=u;this.onerror=null;}});};`
+    : `fetchLogoFromTSDB('${escapedName}').then(u=>{if(u){this.src=u;this.onerror=null;}});`;
+
+  return `<div class="logo-wrap"><img id="${uid}" src="${wsr}" onerror="${errorChain}" alt="${teamName||''}" loading="lazy" style="width:44px;height:44px;object-fit:contain;border-radius:6px"></div>`;
+}
 
   const cached = getCachedLogo(teamName || '');
   const startUrl = cached || (url ? rewriteESPNLogo(url) || url : '');
