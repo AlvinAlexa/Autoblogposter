@@ -856,12 +856,16 @@ function loadLogoCache() {
   } catch(e) {}
 }
 function getCachedLogo(key) { return LOGO_CACHE_MEM[key.toLowerCase().trim()] || null; }
-function setCachedLogo(key, url) {
+function setCachedLogoWithExpiry(key, url, ttl = LOGO_TTL_MS) {
+  // For negative results, store with a shorter TTL (e.g., 1 hour)
+  const effectiveTtl = url ? ttl : 60 * 60 * 1000; // 1 hour for failures
   LOGO_CACHE_MEM[key.toLowerCase().trim()] = url;
-  // Debounced persist
-  clearTimeout(logoPersistTimer);
-  logoPersistTimer = setTimeout(persistLogoCache, 2000);
-}
+  // You'd need to store the timestamp separately, but for simplicity we can just not store empty results.
+  // Better: don't store empty results at all.
+  if (!url) return;
+  // else store normally
+  persistLogoCache();
+} 
 let logoPersistTimer;
 
 // ═══════════════════════════════════════════════════════════
@@ -887,24 +891,42 @@ function rewriteESPNLogo(url) {
 const TSDB_FETCH_IN_PROGRESS = new Set();
 async function fetchLogoFromWikimedia(teamName) {
   if (!teamName) return '';
-  // Try multiple search terms to increase chance of finding a logo
   const searchTerms = [
     `${teamName} logo svg`,
     `${teamName} crest svg`,
-    `${teamName} badge svg`,
-    `${teamName} escudo svg`  // for Spanish teams
+    `${teamName} badge svg`
   ];
   for (const term of searchTerms) {
-    const encodedTerm = encodeURIComponent(term);
-    const url = `https://commons.wikimedia.org/w/api.php?action=query&list=search&srsearch=${encodedTerm}&srlimit=1&format=json&origin=*`;
+    const url = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(term)}&gsrlimit=3&prop=imageinfo&iiprop=url&iiurlwidth=500&format=json&origin=*`;
     try {
       const response = await fetch(url);
       const data = await response.json();
-      const title = data.query?.search?.[0]?.title;
-      if (title) {
-        // Return the direct file URL (SVG preferred)
-        const fileUrl = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(title)}`;
-        return fileUrl;
+      const pages = data.query?.pages;
+      if (pages) {
+        // Find first page that has an image URL (prefer SVG)
+        for (const pageId in pages) {
+          const page = pages[pageId];
+          const title = page.title;
+          // Try to get a direct image URL if available
+          let imgUrl = page.imageinfo?.[0]?.url;
+          if (!imgUrl) {
+            // fallback: use Special:FilePath
+            imgUrl = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(title)}`;
+          }
+          // Prefer SVG files
+          if (imgUrl && (imgUrl.endsWith('.svg') || title.toLowerCase().includes('.svg'))) {
+            return imgUrl;
+          }
+        }
+        // If no SVG, return the first found
+        for (const pageId in pages) {
+          const page = pages[pageId];
+          let imgUrl = page.imageinfo?.[0]?.url;
+          if (!imgUrl) {
+            imgUrl = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(page.title)}`;
+          }
+          if (imgUrl) return imgUrl;
+        }
       }
     } catch (err) {
       console.warn('Wikimedia fetch failed for', term, err);
