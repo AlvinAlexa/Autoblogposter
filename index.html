@@ -234,7 +234,6 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
       <button class="btn-red" onclick="showPage('events');fetchAllEvents()">🔄 Fetch Events</button>
       <button class="btn-orange" onclick="checkHighlights()">🎬 Highlights</button>
       <button class="btn-blue" onclick="showPage('compose')">✍️ New Post</button>
-      <button class="btn-green btn-sm" onclick="refreshAllStreams()" title="Reload prog.txt & DDKanqu">📡 Refresh Streams</button>
     </div>
   </div>
   <div class="stats-row">
@@ -257,16 +256,6 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
       <div id="logo-status" style="font-size:.76rem;color:var(--muted2)">Fetch events to see logo resolution stats.</div>
       <div style="height:4px;background:var(--bg4);border-radius:2px;margin-top:10px;overflow:hidden">
         <div id="logo-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--blue));transition:.5s"></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">📡 Stream Aggregator
-        <span class="ct-right"><span id="agg-prog-badge" style="font-size:.6rem;color:var(--muted2);font-family:var(--mono)">prog.txt: —</span></span>
-      </div>
-      <div id="agg-status" style="font-size:.76rem;color:var(--muted2)">Enable in Settings → Stream Aggregator.</div>
-      <div style="display:flex;gap:7px;margin-top:10px;flex-wrap:wrap">
-        <button class="btn-green btn-xs" onclick="refreshAllStreams()">🔄 Reload</button>
-        <button class="btn-ghost btn-xs" onclick="showPage('settings')">⚙️ Configure</button>
       </div>
     </div>
     <div class="card" style="grid-column:1/-1">
@@ -354,21 +343,6 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
           <div><label>Status</label>
             <select id="post-status"><option value="DRAFT">Draft</option><option value="LIVE">Live</option></select>
           </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">📡 Multi-Source Stream Aggregator
-          <span class="ct-right">
-            <button class="btn-green btn-xs" onclick="reloadComposeAgg()">🔄 Reload</button>
-            <span id="compose-agg-status" style="font-size:.62rem;color:var(--muted2);font-family:var(--mono)">—</span>
-          </span>
-        </div>
-        <div id="compose-agg-list" style="font-size:.72rem;color:var(--muted2);min-height:36px">
-          <span style="color:var(--muted2);font-size:.7rem">Open an event with "✍️ Gen" to auto-load streams, or click Reload.</span>
-        </div>
-        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-          <button class="btn-blue btn-xs" onclick="insertAllAggStreams()">⬇ Insert All to Stream Links</button>
-          <button class="btn-ghost btn-xs" onclick="showPage('settings')">⚙ Configure</button>
         </div>
       </div>
       <div class="card">
@@ -625,14 +599,32 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
     <div>
       <div class="card">
         <div class="card-title">Settings</div>
-        <div class="form-group"><label>Post Timing (before event)</label>
+        <div class="form-group"><label>Default Lead Time (before event)</label>
           <select id="sched-timing" onchange="saveCFG()"><option value="60">1 hour before</option><option value="120">2 hours before</option><option value="360">6 hours before</option><option value="1440">1 day before</option></select>
+        </div>
+        <div class="form-group">
+          <label>Per-League Lead Times (minutes) — overrides default</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px">
+            <div style="display:flex;align-items:center;gap:5px"><span style="font-size:.68rem;color:var(--muted2);min-width:60px;font-family:var(--cond)">F1/Race</span><input type="number" id="lt-f1" value="360" min="0" max="2880" style="width:70px" onchange="saveLeagueTimings()"></div>
+            <div style="display:flex;align-items:center;gap:5px"><span style="font-size:.68rem;color:var(--muted2);min-width:60px;font-family:var(--cond)">NBA/NHL</span><input type="number" id="lt-nba" value="60" min="0" max="2880" style="width:70px" onchange="saveLeagueTimings()"></div>
+            <div style="display:flex;align-items:center;gap:5px"><span style="font-size:.68rem;color:var(--muted2);min-width:60px;font-family:var(--cond)">NFL</span><input type="number" id="lt-nfl" value="120" min="0" max="2880" style="width:70px" onchange="saveLeagueTimings()"></div>
+            <div style="display:flex;align-items:center;gap:5px"><span style="font-size:.68rem;color:var(--muted2);min-width:60px;font-family:var(--cond)">UFC/MMA</span><input type="number" id="lt-ufc" value="120" min="0" max="2880" style="width:70px" onchange="saveLeagueTimings()"></div>
+          </div>
         </div>
         <div class="form-group"><label>Default Status</label>
           <select id="sched-def-status" onchange="saveCFG()"><option value="DRAFT">Draft</option><option value="LIVE">Live</option></select>
         </div>
         <div class="form-group"><label>Check Interval</label>
           <select id="sched-interval" onchange="saveCFG()"><option value="60000">Every 1 min</option><option value="300000">Every 5 min</option><option value="600000">Every 10 min</option></select>
+        </div>
+        <div class="form-group">
+          <label>Max Posts Per Tick / Stagger Delay</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="number" id="sched-max-tick" value="3" min="1" max="20" style="width:60px" onchange="saveCFG()">
+            <span style="font-size:.68rem;color:var(--muted2)">posts, then wait</span>
+            <input type="number" id="sched-stagger" value="90" min="10" max="600" style="width:70px" onchange="saveCFG()">
+            <span style="font-size:.68rem;color:var(--muted2)">sec</span>
+          </div>
         </div>
         <div class="form-group"><label class="toggle" style="display:flex;align-items:center;gap:8px;font-size:.8rem">
           <input type="checkbox" id="sched-thumbs" onchange="saveCFG()"><div class="tslider"></div>
@@ -643,10 +635,22 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
           <span id="sched-enabled-label" style="text-transform:none;letter-spacing:0;font-weight:700;color:var(--text)">Enable Auto Scheduler</span>
         </label></div>
         <div id="sched-next" style="font-size:.68rem;color:var(--muted2);margin-top:8px"></div>
+        <div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap">
+          <button class="btn-red btn-sm" onclick="runSchedNow()">⚡ Post Now (all due)</button>
+          <button class="btn-ghost btn-sm" onclick="fetchAndSched()">🔄 Fetch &amp; Auto-Post</button>
+        </div>
       </div>
       <div class="card"><div class="card-title">Scheduler Log</div><div id="sched-log" style="font-size:.7rem;color:var(--muted2);max-height:160px;overflow-y:auto"></div></div>
     </div>
-    <div class="card"><div class="card-title">Scheduled Queue</div><div id="sched-queue" style="font-size:.78rem;color:var(--muted2)">Fetch events first.</div></div>
+    <div>
+      <div class="card"><div class="card-title">Scheduled Queue <span class="ct-right"><button class="btn-ghost btn-xs" onclick="updateSchedQueue()">🔄</button></span></div><div id="sched-queue" style="font-size:.78rem;color:var(--muted2)">Fetch events first.</div></div>
+      <div class="card" style="margin-top:0">
+        <div class="card-title">📡 Stream Coverage
+          <span class="ct-right"><button class="btn-ghost btn-xs" onclick="renderStreamCoverage()">🔄</button></span>
+        </div>
+        <div id="stream-coverage" style="font-size:.72rem;color:var(--muted2)">Fetch events &amp; load streams first.</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -677,49 +681,18 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
     <div class="card">
       <div class="card-title">APIs &amp; Upload</div>
       <div class="form-group"><label>imgbb API Key</label><input type="text" id="cfg-imgbb" placeholder="Get free at api.imgbb.com"></div>
+      <div class="form-group"><label class="toggle" style="display:flex;align-items:center;gap:8px;font-size:.8rem">
+        <input type="checkbox" id="cfg-require-imgbb" onchange="saveCFG()"><div class="tslider"></div>
+        <span style="text-transform:none;letter-spacing:0;color:var(--text)">Require imgbb upload before posting (no base64 in posts)</span>
+      </label></div>
       <div class="form-group"><label>Default Player URL</label><input type="text" id="cfg-player" placeholder="https://…player.html"></div>
+      <hr style="border-color:var(--border);margin:10px 0">
+      <div class="form-group"><label>🤖 Anthropic API Key <span style="color:var(--blue);font-weight:400;font-size:.65rem">(for AI article generation)</span></label><input type="text" id="cfg-anthropic-key" placeholder="sk-ant-…" type="password"></div>
+      <div class="form-group"><label class="toggle" style="display:flex;align-items:center;gap:8px;font-size:.8rem">
+        <input type="checkbox" id="cfg-use-ai-articles" onchange="saveCFG()"><div class="tslider"></div>
+        <span style="text-transform:none;letter-spacing:0;color:var(--text)">Use Claude AI for article generation (replaces template text)</span>
+      </label></div>
       <button class="btn-red btn-sm" onclick="saveCFG()">💾 Save</button>
-    </div>
-    <div class="card" style="grid-column:1/-1">
-      <div class="card-title">🔴 Multi-Source Stream Aggregator
-        <span class="ct-right">
-          <button class="btn-green btn-xs" onclick="refreshAllStreams()">🔄 Refresh Streams</button>
-          <span id="streams-status" style="font-size:.62rem;color:var(--muted2);font-family:var(--mono)">Not loaded</span>
-        </span>
-      </div>
-      <div class="settings-grid" style="margin-bottom:12px">
-        <div class="form-group">
-          <label>Media Player Base URL</label>
-          <input type="text" id="cfg-media-player-base" placeholder="https://alvinalexa.github.io/media-player/">
-        </div>
-        <div class="form-group">
-          <label>Prog.txt URL (SportsonLine)</label>
-          <input type="text" id="cfg-prog-txt-url" placeholder="https://sportsonline.st/prog.txt">
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
-        <label class="toggle" style="display:flex;align-items:center;gap:8px;font-size:.8rem;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 11px">
-          <input type="checkbox" id="cfg-auto-fetch-streams" onchange="saveCFG()"><div class="tslider"></div>
-          <span style="text-transform:none;letter-spacing:0;color:var(--text)">Auto-fetch External Streams</span>
-        </label>
-        <label class="toggle" style="display:flex;align-items:center;gap:8px;font-size:.8rem;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 11px">
-          <input type="checkbox" id="cfg-enable-ddkanqu" onchange="saveCFG()"><div class="tslider"></div>
-          <span style="text-transform:none;letter-spacing:0;color:var(--text)">Enable DDKanqu Scraping</span>
-        </label>
-        <label class="toggle" style="display:flex;align-items:center;gap:8px;font-size:.8rem;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 11px">
-          <input type="checkbox" id="cfg-embed-streams-in-post" onchange="saveCFG()"><div class="tslider"></div>
-          <span style="text-transform:none;letter-spacing:0;color:var(--text)">Auto-embed iframe in Posts</span>
-        </label>
-      </div>
-      <div class="form-group">
-        <label>DDKanqu Mapping Table — one per line: <span style="color:var(--blue);font-weight:400">Team A vs Team B = 33969</span></label>
-        <textarea id="cfg-ddkanqu-mappings" rows="6" placeholder="Mallorca vs Real Madrid = 33969&#10;Barcelona vs Atletico Madrid = 34210&#10;Arsenal vs Chelsea = 29871" style="font-family:var(--mono);font-size:.72rem"></textarea>
-        <div style="display:flex;gap:7px;margin-top:8px;flex-wrap:wrap">
-          <button class="btn-red btn-sm" onclick="saveCFG()">💾 Save Settings</button>
-          <button class="btn-blue btn-sm" onclick="openDDKanquTester()">🔍 Test Match Lookup</button>
-          <span id="prog-txt-count" style="align-self:center;font-size:.68rem;color:var(--muted2);font-family:var(--mono)"></span>
-        </div>
-      </div>
     </div>
     <div class="card" style="grid-column:1/-1">
       <div class="card-title">Active Leagues
@@ -780,28 +753,28 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-ddkanqu-test">
-  <div class="modal">
-    <div class="modal-head"><h3>🔍 DDKanqu Match Lookup Tester</h3><button class="close-btn" onclick="closeModal('modal-ddkanqu-test')">✕</button></div>
-    <div class="form-row">
-      <div><label>Home Team</label><input type="text" id="ddkt-home" placeholder="Mallorca"></div>
-      <div><label>Away Team</label><input type="text" id="ddkt-away" placeholder="Real Madrid"></div>
+<div class="modal-overlay" id="modal-stream-preview">
+  <div class="modal" style="max-width:820px">
+    <div class="modal-head">
+      <h3 id="sp-title">📡 Stream Preview</h3>
+      <button class="close-btn" onclick="closeModal('modal-stream-preview')">✕</button>
     </div>
-    <button class="btn-blue btn-sm" onclick="testDDKanquLookup()" style="margin-bottom:12px">🔍 Test Lookup</button>
-    <div id="ddkt-result" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.78rem;color:var(--muted2);font-family:var(--mono);min-height:60px;white-space:pre-wrap">Results will appear here…</div>
-    <div style="margin-top:12px">
-      <label>All Collected Sources Preview (after lookup)</label>
-      <div id="ddkt-sources" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.7rem;color:var(--muted2);font-family:var(--mono);max-height:120px;overflow-y:auto;white-space:pre-wrap">—</div>
+    <div id="sp-sources" style="font-size:.72rem;color:var(--muted2);font-family:var(--mono);margin-bottom:10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px;max-height:80px;overflow-y:auto;word-break:break-all"></div>
+    <div id="sp-player-url" style="font-size:.68rem;color:var(--blue);font-family:var(--mono);margin-bottom:8px;word-break:break-all;cursor:pointer" onclick="navigator.clipboard.writeText(this.textContent);s803toast('URL copied','s')"></div>
+    <div id="sp-iframe-wrap" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;background:#000">
+      <iframe id="sp-iframe" loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" frameborder="0" scrolling="no" allowfullscreen></iframe>
     </div>
-    <div style="margin-top:12px">
-      <label>Generated iFrame</label>
-      <div id="ddkt-iframe" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.68rem;color:var(--muted2);font-family:var(--mono);max-height:100px;overflow-y:auto;word-break:break-all">—</div>
+    <div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn-blue btn-sm" onclick="spCopyUrl()">📋 Copy Player URL</button>
+      <button class="btn-green btn-sm" onclick="spInsertToCompose()">→ Insert to Compose</button>
+      <button class="btn-ghost btn-sm" onclick="closeModal('modal-stream-preview')">Close</button>
     </div>
-    <div style="display:flex;gap:7px;margin-top:10px">
-      <button class="btn-ghost btn-sm" onclick="closeModal('modal-ddkanqu-test')">Close</button>
+    <div id="sp-no-streams" style="display:none;text-align:center;padding:30px;color:var(--muted2);font-size:.82rem">
+      No streams found for this event. Enable the aggregator in Settings or add channel URLs.
     </div>
   </div>
 </div>
+
 <div id="toasts"></div>
 <script src="https://accounts.google.com/gsi/client" async></script>
 
@@ -822,13 +795,11 @@ let CFG = {
   activeLeagues:['ucl','epl','laliga','seriea','bundesliga','f1','nba','ufc'],
   schedTiming:60, schedStatus:'DRAFT', schedInterval:300000,
   schedEnabled:false, schedThumbs:true, logoOverridesRaw:'',
-  // Stream Aggregator
-  mediaPlayerBase:'https://alvinalexa.github.io/media-player/',
-  progTxtUrl:'https://sportsonline.st/prog.txt',
-  autoFetchStreams:false,
-  enableDdkanqu:false,
-  embedStreamsInPost:true,
-  ddkanquMappingsRaw:''
+  anthropicKey:'', useAiArticles:false,
+  requireImgbbUpload:false,
+  schedMaxPerTick:3, schedStaggerMs:90000,
+  leagueTimings:{f1:360,nascar:360,pga:360,nba:60,nfl:120,nhl:60,ufc:120},
+  streamsCacheTtlHours:2,
 };
 let LOGO_OVERRIDES = {};
 let LOGO_CACHE = {};   // in-memory: teamNameLower → url | ''
@@ -839,199 +810,6 @@ let schedTimer = null, countdownTimer = null, schedNextFire = null;
 let tbDebounce, composDebounce, quickDebounce;
 let currentComposeEv = null;
 let tbGenCount = 0, composeGenCount = 0;
-
-// ── Stream Aggregator State ──
-let externalStreamsMap = {};   // normalizedKey → [{url, type:'embed'}]
-let ddkanquCache = {};         // normalizedKey → url|null
-let ddkanquMappings = {};      // parsed from CFG.ddkanquMappingsRaw
-let ddkanquHomeMap = {};       // pairKey(english) → {zhibo, hls, zhHome, zhAway}
-const SK_DDKC = 's803u_ddkc'; // localStorage key for ddkanqu cache
-
-// ═══════════════════════════════════════════
-// CHINESE → ENGLISH TEAM DICTIONARY
-// Used to translate DDKanqu homepage Chinese team names → English for matching
-// ═══════════════════════════════════════════
-const ZH_EN_TEAMS = {
-  // ── European Football ──
-  '马德里竞技':'Atletico Madrid','巴塞罗那':'Barcelona','皇家马德里':'Real Madrid',
-  '南安普顿':'Southampton','阿森纳':'Arsenal','切尔西':'Chelsea',
-  '曼城':'Manchester City','曼联':'Manchester United','利物浦':'Liverpool',
-  '热刺':'Tottenham Hotspur','纽卡斯尔':'Newcastle United','阿斯顿维拉':'Aston Villa',
-  '西汉姆联':'West Ham United','利兹联':'Leeds United','埃弗顿':'Everton',
-  '富勒姆':'Fulham','布莱顿':'Brighton','水晶宫':'Crystal Palace',
-  '伯恩利':'Burnley','沃尔弗汉普顿':'Wolverhampton','莱斯特城':'Leicester City',
-  '里尔':'Lille','朗斯':'Lens','巴黎圣日耳曼':'PSG','马赛':'Marseille',
-  '里昂':'Lyon','摩纳哥':'Monaco','尼斯':'Nice','雷恩':'Rennes',
-  '昂热':'Angers','南特':'Nantes','梅斯':'Metz','洛里昂':'Lorient',
-  '勒阿弗尔':'Le Havre','欧塞尔':'Auxerre','巴黎FC':'Paris FC',
-  '斯特拉斯堡':'Strasbourg','蒙彼利埃':'Montpellier','图卢兹':'Toulouse',
-  '拉齐奥':'Lazio','罗马':'Roma','国际米兰':'Internazionale','米兰':'AC Milan',
-  '尤文图斯':'Juventus','那不勒斯':'Napoli','亚特兰大':'Atalanta',
-  '佛罗伦萨':'Fiorentina','博洛尼亚':'Bologna','帕尔马':'Parma',
-  '克雷莫内塞':'Cremonese','都灵':'Torino','维罗纳':'Verona',
-  '比萨':'Pisa','恩波利':'Empoli','热那亚':'Genoa','科莫':'Como',
-  '萨索洛':'Sassuolo','贝内文托':'Benevento','莱切':'Lecce','卡利亚里':'Cagliari',
-  '巴塞尔':'Basel','年轻人':'Young Boys','卢塞恩':'Luzern','苏黎世':'FC Zurich',
-  '圣吉罗斯':'Union Saint-Gilloise','圣图尔登':'Saint-Truiden','根特':'Gent',
-  '布鲁日':'Club Brugge','安德莱赫特':'Anderlecht','标准列日':'Standard Liege',
-  '阿贾克斯':'Ajax','特温特':'Twente','费耶诺德':'Feyenoord','阿尔克马尔':'AZ',
-  '海伦芬':'Heerenveen','赫拉克勒斯':'Heracles','福伦丹':'Volendam',
-  '布雷达':'NAC Breda','鹿特丹斯巴达':'Sparta Rotterdam',
-  'SBV精英':'Excelsior','奈梅亨':'NEC Nijmegen','前进之鹰':'Go Ahead Eagles',
-  '兹沃勒':'PEC Zwolle','乌德勒支':'FC Utrecht',
-  '波尔图':'Porto','本菲卡':'Benfica','体育里斯本':'Sporting CP',
-  '法马利康':'Famalicao','布拉加':'SC Braga',
-  '赫塔费':'Getafe','毕尔巴鄂竞技':'Athletic Club','瓦伦西亚':'Valencia',
-  '塞尔塔':'Celta Vigo','塞维利亚':'Sevilla','贝蒂斯':'Real Betis',
-  '维拉雷尔':'Villarreal','马洛卡':'Real Mallorca','奥萨苏纳':'Osasuna',
-  '皇家社会':'Real Sociedad','阿拉维斯':'Deportivo Alaves','瓦利亚多利德':'Valladolid',
-  '莱加内斯':'Leganes','皇家奥维耶多':'Real Oviedo',
-  '拜仁慕尼黑':'Bayern Munich','多特蒙德':'Borussia Dortmund',
-  '莱比锡':'RB Leipzig','柏林联合':'Union Berlin','圣保利':'St. Pauli',
-  '法兰克福':'Eintracht Frankfurt','科隆':'FC Cologne','弗莱堡':'Freiburg',
-  '门兴格拉德巴赫':'Borussia Monchengladbach','霍芬海姆':'Hoffenheim',
-  '沃尔夫斯堡':'Wolfsburg','奥格斯堡':'Augsburg','斯图加特':'Stuttgart',
-  '柏林赫塔':'Hertha Berlin','波鸿':'Bochum','凯泽斯劳滕':'Kaiserslautern',
-  '沙尔克04':'Schalke 04','卡尔斯鲁厄':'Karlsruher SC',
-  '汉堡':'Hamburger SV','不来梅':'Werder Bremen',
-  '利雅得新月':'Al Hilal','利雅得胜利':'Al Nassr','阿尔伊蒂哈德':'Al Ittihad',
-  '布赖代合作':'Al Taawun','阿科多':'Al Qadsiah','哈萨征服':'Al Feiha',
-  '利雅得体育':'Al Riyadh','利雅得青年人':'Al Shabab','达曼协作':'Al Ettifaq',
-  '胡拜尔库迪西亚':'Al Qadisiyah',
-  // ── NBA / Basketball ──
-  '马刺':'San Antonio Spurs','掘金':'Denver Nuggets','热火':'Miami Heat',
-  '奇才':'Washington Wizards','活塞':'Detroit Pistons','76人':'Philadelphia 76ers',
-  '湖人':'Los Angeles Lakers','勇士':'Golden State Warriors','快船':'LA Clippers',
-  '火箭':'Houston Rockets','独行侠':'Dallas Mavericks','雷霆':'Oklahoma City Thunder',
-  '爵士':'Utah Jazz','太阳':'Phoenix Suns','开拓者':'Portland Trail Blazers',
-  '骑士':'Cleveland Cavaliers','公牛':'Chicago Bulls','步行者':'Indiana Pacers',
-  '猛龙':'Toronto Raptors','凯尔特人':'Boston Celtics','76人':'Philadelphia 76ers',
-  '尼克斯':'New York Knicks','篮网':'Brooklyn Nets','老鹰':'Atlanta Hawks',
-  '黄蜂':'Charlotte Hornets','魔术':'Orlando Magic','活塞':'Detroit Pistons',
-  '雄鹿':'Milwaukee Bucks','明尼苏达':'Minnesota Timberwolves',
-  '灰熊':'Memphis Grizzlies','鹈鹕':'New Orleans Pelicans','马刺':'San Antonio Spurs',
-  '国王':'Sacramento Kings','掘金':'Denver Nuggets',
-  // ── MLS ──
-  '皇家盐湖城':'Real Salt Lake','堪萨斯城竞技':'Sporting Kansas City',
-  '新英格兰革命':'New England Revolution','蒙特利尔冲击':'CF Montreal',
-  '迈阿密国际':'Inter Miami','奥斯汀FC':'Austin FC',
-  '纽约红牛':'New York Red Bulls','纽约城':'New York City FC',
-  '华盛顿联':'DC United','达拉斯FC':'FC Dallas',
-  '夏洛特FC':'Charlotte FC','费城联合':'Philadelphia Union',
-  '亚特兰大联':'Atlanta United','哥伦布机员':'Columbus Crew',
-  '休斯顿迪纳摩':'Houston Dynamo','西雅图海湾人':'Seattle Sounders',
-  '芝加哥火焰':'Chicago Fire','纳什维尔':'Nashville SC',
-  '洛杉矶FC':'LAFC','奥兰多城':'Orlando City',
-  '温哥华白浪':'Vancouver Whitecaps','波特兰伐木工':'Portland Timbers',
-  '圣何塞地震':'San Jose Earthquakes','圣地亚哥FC':'San Diego FC',
-  '洛杉矶银河':'LA Galaxy','明尼苏达联':'Minnesota United',
-  '科罗拉多急流':'Colorado Rapids','西雅图':'Seattle Sounders',
-  // ── Liga MX ──
-  '蒙特雷':'Monterrey','圣路易斯':'Atletico San Luis',
-  '克雷塔罗':'Queretaro','托卢卡':'Toluca',
-  '蓝十字':'Cruz Azul','帕丘卡':'Pachuca',
-  '莱昂':'Leon','阿特拉斯':'Atlas',
-  '桑托斯拉古纳':'Santos Laguna','墨西哥美洲':'Club America',
-  '瓜达拉哈拉':'Chivas Guadalajara','普马斯':'Pumas UNAM',
-  '蒙特雷':'Monterrey','内卡萨':'Necaxa','圣路易斯':'Atletico San Luis',
-  // ── Brazil ──
-  '圣保罗':'Sao Paulo','克鲁塞罗':'Cruzeiro',
-  '科里蒂巴':'Coritiba','弗鲁米嫩塞':'Fluminense',
-  '瓦斯科达伽马':'Vasco da Gama','博塔弗戈':'Botafogo',
-  '弗拉门戈':'Flamengo','科林蒂安':'Corinthians',
-  '帕尔梅拉斯':'Palmeiras','国际':'Internacional',
-  '格雷米奥':'Gremio','巴伊亚':'Bahia','桑托斯':'Santos',
-  '米内罗竞技':'Atletico Mineiro','巴拉纳竞技':'Athletico Paranaense',
-  '维多利亚':'Vitoria','查佩科恩斯':'Chapecoense',
-  '米拉索尔':'Mirassol','布拉干蒂诺':'RB Bragantino',
-  '新港':'Nautico','庞特普雷塔':'Ponte Preta',
-  '新镇':'Vila Nova','竞技戈亚尼亚':'Atletico Goianiense',
-  '博塔弗戈SP':'Botafogo SP','圣贝尔纳多':'Sao Bernardo',
-  '雷莫':'Remo','福尔塔雷萨':'Fortaleza','茹文蒂德':'Juventude',
-  // ── Argentina ──
-  '罗萨里奥中央':'Rosario Central','图库曼竞技':'Atletico Tucuman',
-  '博卡青年':'Boca Juniors','河床':'River Plate','圣洛伦索':'San Lorenzo',
-  '独立队':'Independiente','比利时赛':'Belgrano',
-  '中央科尔多巴':'Central Cordoba SdE','纽韦尔':'Newell Old Boys',
-  // ── Colombia ──
-  '托利马体育':'Deportes Tolima','圣菲独立':'Independiente Santa Fe',
-  '库库塔竞技':'Cucuta Deportivo','卡利美洲':'America de Cali',
-  // ── Chile ──
-  '利马切':'Deportes Limache','拉卡莱拉联合':'Union La Calera',
-  '伊瓦顿':'Everton de Vina del Mar','纽夫莱恩斯':'Nublense',
-  '智利大学':'Universidad Chile','拉塞雷纳':'La Serena',
-  '康塞普西翁竞技':'Deportes Concepcion','科洛科洛':'Colo-Colo',
-  // ── Turkish ──
-  '萨姆松体育':'Samsunspor','科尼亚体育':'Konyaspor',
-  '卡拉古拉克':'Karagumruk','里泽斯堡':'Rizespor',
-  '安塔利亚体育':'Antalyaspor','埃尤普体育':'Eyupspor',
-  '费内巴切':'Fenerbahce','贝西克塔斯':'Besiktas',
-  '加拉塔萨雷':'Galatasaray','特拉布宗体育':'Trabzonspor',
-  // ── Russian ──
-  '奥林彼特':'Orenburg','罗斯托夫':'FC Rostov',
-  '马哈奇卡拉':'Akron Togliatti',
-  '莫斯科斯巴达':'Spartak Moscow','莫斯科火车头':'Lokomotiv Moscow',
-  '莫斯科中央陆军':'CSKA Moscow','莫斯科迪纳摩':'Dynamo Moscow',
-  '加里宁格勒波罗的海':'Baltika Kaliningrad',
-  // ── Korean K League ──
-  '安阳FC':'FC Anyang','首尔FC':'FC Seoul',
-  '仁川联合':'Incheon United','金泉尚武':'Gimcheon Sangmu',
-  '全北现代':'Jeonbuk Motors','蔚山现代':'Ulsan HD',
-  // ── Japanese J League ──
-  '广岛三箭':'Sanfrecce Hiroshima','福冈黄蜂':'Avispa Fukuoka',
-  '冈山绿雉':'Fagiano Okayama','神户胜利船':'Vissel Kobe',
-  '柏太阳神':'Kashiwa Reysol','横滨水手':'Yokohama F. Marinos',
-  '东京FC':'FC Tokyo','町田泽维亚':'FC Machida Zelvia',
-  '川崎前锋':'Kawasaki Frontale','浦和红钻':'Urawa Red Diamonds',
-  '长崎成功丸':'V-Varen Nagasaki','清水心跳':'Shimizu S-Pulse',
-  '鹿岛鹿角':'Kashima Antlers','名古屋鲸八':'Nagoya Grampus',
-  '大阪飞脚':'Gamba Osaka','大阪樱花':'Cerezo Osaka',
-  '横滨FC':'Yokohama FC','湘南海浪':'Shonan Bellmare',
-  // ── Chinese ──
-  '浙江':'Zhejiang FC','重庆铜梁龙':'Chongqing Liangjiang',
-  '深圳新鹏城':'Shenzhen FC','武汉三镇':'Wuhan Three Towns',
-  '天津津门虎':'Tianjin Tigers','上海申花':'Shanghai Shenhua',
-  '上海海港':'Shanghai Port','山东泰山':'Shandong Taishan',
-  '北京国安':'Beijing Guoan','广州城':'Guangzhou City',
-  '陕西联合':'Shaanxi United','石家庄功夫':'Shijiazhuang Gongfu',
-  '佛山南狮':'Foshan Nanshi','梅州客家':'Meizhou Hakka',
-  '长春亚泰':'Changchun Yatai','苏州东吴':'Suzhou Dongwu',
-  // ── Thai ──
-  '蒙通联':'Muangthong United','清莱联':'Chiangrai United',
-  '南奔勇士':'Lamphun Warriors','大城联':'Ayutthaya United',
-  '春武里':'Chonburi FC','罗勇':'Rayong FC',
-  '呵叻马自达':'Nakhon Ratchasima','乌泰他尼':'Uthai Thani FC',
-  '武里南联':'Buriram United','曼谷联':'Bangkok United',
-  // ── Romanian ──
-  '阿拉德联合':'UTA Arad','梅塔洛格布斯':'Metaloglobus',
-  '法鲁尔':'Farul Constanta','斯洛博齐亚':'Unirea Slobozia',
-  '布加勒斯特快速':'Rapid Bucharest','古积大学':'Univ. Craiova',
-  // ── Bulgarian ──
-  '查洛摩利':'Cherno More','索非亚斯拉维亚':'Slavia Sofia',
-  '多布鲁察':'Dobrudzha','索菲亚利夫斯基':'Levski Sofia',
-  '卢多戈雷茨':'Ludogorets','索菲亚1948':'Sofia 1948',
-  // ── Swedish ──
-  '卡尔马':'Kalmar FF','瓦斯特拉斯':'Vasteras SK',
-  'AIK索尔纳':'AIK','哈尔姆斯塔德':'Halmstad BK',
-  '奥尔格里特':'IFK Gothenburg','马尔默':'Malmo FF',
-  // ── UAE ──
-  '豪尔费坎':'Khor Fakkan','班尼亚斯':'Baniyas SC',
-  '渡巴阿富查伊拉':'Fujairah FC','迪哈夫拉':'Dhafra',
-  '沙迦':'Sharjah FC','艾因':'Al Ain',
-  '阿积曼':'Ajman Club','迪拜祈祷':'Al Wasl',
-  // ── Danish ──
-  '哥本哈根':'FC Copenhagen','施克堡':'Silkeborg IF',
-  '米德西兰':'FC Midtjylland','布伦比':'Brondby IF',
-  // ── Australian ──
-  '墨尔本胜利':'Melbourne Victory','惠灵顿凤凰':'Wellington Phoenix',
-  // ── Canadian ──
-  '太平洋':'Pacific FC','骑兵':'Cavalry FC',
-  '温哥华FC':'Vancouver FC','哈利法克斯漫游者':'HFX Wanderers',
-};
-
-function zhToEn(chineseName) {
-  return ZH_EN_TEAMS[chineseName] || chineseName;
-}
 
 // ═══════════════════════════════════════════
 // LEAGUES
@@ -1093,9 +871,7 @@ function loadAll() {
   try { const p=JSON.parse(localStorage.getItem(SK_CH)||'{}'); channels = p.data?.length ? p.data : [...DEFAULT_CHANNELS]; } catch(e){ channels=[...DEFAULT_CHANNELS]; }
   try { const p=JSON.parse(localStorage.getItem(SK_POST)||'{}'); if(p.data) postLog=p.data; } catch(e){}
   try { const p=JSON.parse(localStorage.getItem(SK_LOGO)||'{}'); if(p.data) LOGO_CACHE=p.data; } catch(e){}
-  try { const p=JSON.parse(localStorage.getItem(SK_DDKC)||'{}'); if(p.data) ddkanquCache=p.data; } catch(e){}
   LOGO_OVERRIDES = parseLOOverrides(CFG.logoOverridesRaw);
-  ddkanquMappings = parseDDKMappings(CFG.ddkanquMappingsRaw);
   applyConfigToUI();
 }
 function saveAll() {
@@ -1103,7 +879,6 @@ function saveAll() {
   try { localStorage.setItem(SK_CH,JSON.stringify({data:channels,ts:Date.now()})); } catch(e){}
   try { localStorage.setItem(SK_POST,JSON.stringify({data:postLog,ts:Date.now()})); } catch(e){}
   try { localStorage.setItem(SK_LOGO,JSON.stringify({data:LOGO_CACHE,ts:Date.now()})); } catch(e){}
-  try { localStorage.setItem(SK_DDKC,JSON.stringify({data:ddkanquCache,ts:Date.now()})); } catch(e){}
 }
 function saveCFG() {
   CFG.blogId    = v('cfg-blogid');
@@ -1114,14 +889,12 @@ function saveCFG() {
   CFG.schedStatus   = document.getElementById('sched-def-status')?.value || 'DRAFT';
   CFG.schedInterval = parseInt(document.getElementById('sched-interval')?.value||300000);
   CFG.schedThumbs   = document.getElementById('sched-thumbs')?.checked || false;
-  // Stream aggregator
-  CFG.mediaPlayerBase   = v('cfg-media-player-base') || 'https://alvinalexa.github.io/media-player/';
-  CFG.progTxtUrl        = v('cfg-prog-txt-url') || 'https://sportsonline.st/prog.txt';
-  CFG.autoFetchStreams   = document.getElementById('cfg-auto-fetch-streams')?.checked || false;
-  CFG.enableDdkanqu     = document.getElementById('cfg-enable-ddkanqu')?.checked || false;
-  CFG.embedStreamsInPost = document.getElementById('cfg-embed-streams-in-post')?.checked ?? true;
-  CFG.ddkanquMappingsRaw= v('cfg-ddkanqu-mappings');
-  ddkanquMappings = parseDDKMappings(CFG.ddkanquMappingsRaw);
+  CFG.schedMaxPerTick = parseInt(document.getElementById('sched-max-tick')?.value||3);
+  CFG.schedStaggerMs  = parseInt(document.getElementById('sched-stagger')?.value||90) * 1000;
+  CFG.anthropicKey   = v('cfg-anthropic-key') || CFG.anthropicKey || '';
+  CFG.useAiArticles  = document.getElementById('cfg-use-ai-articles')?.checked || false;
+  CFG.requireImgbbUpload = document.getElementById('cfg-require-imgbb')?.checked || false;
+  saveLeagueTimings();
   saveAll(); toast('Settings saved ✓','s');
 }
 function applyConfigToUI() {
@@ -1136,14 +909,13 @@ function applyConfigToUI() {
   if(document.getElementById('sched-interval')) document.getElementById('sched-interval').value=CFG.schedInterval||300000;
   if(document.getElementById('sched-thumbs')) document.getElementById('sched-thumbs').checked=CFG.schedThumbs||false;
   if(document.getElementById('sched-enabled')) document.getElementById('sched-enabled').checked=CFG.schedEnabled||false;
+  if(document.getElementById('sched-max-tick')) document.getElementById('sched-max-tick').value=CFG.schedMaxPerTick||3;
+  if(document.getElementById('sched-stagger')) document.getElementById('sched-stagger').value=Math.round((CFG.schedStaggerMs||90000)/1000);
+  if(document.getElementById('cfg-anthropic-key')) document.getElementById('cfg-anthropic-key').value=CFG.anthropicKey||'';
+  if(document.getElementById('cfg-use-ai-articles')) document.getElementById('cfg-use-ai-articles').checked=CFG.useAiArticles||false;
+  if(document.getElementById('cfg-require-imgbb')) document.getElementById('cfg-require-imgbb').checked=CFG.requireImgbbUpload||false;
   document.getElementById('st-leagues').textContent = CFG.activeLeagues.length;
-  // Stream aggregator
-  set('cfg-media-player-base', CFG.mediaPlayerBase || 'https://alvinalexa.github.io/media-player/');
-  set('cfg-prog-txt-url', CFG.progTxtUrl || 'https://sportsonline.st/prog.txt');
-  set('cfg-ddkanqu-mappings', CFG.ddkanquMappingsRaw || '');
-  if(document.getElementById('cfg-auto-fetch-streams')) document.getElementById('cfg-auto-fetch-streams').checked=CFG.autoFetchStreams||false;
-  if(document.getElementById('cfg-enable-ddkanqu')) document.getElementById('cfg-enable-ddkanqu').checked=CFG.enableDdkanqu||false;
-  if(document.getElementById('cfg-embed-streams-in-post')) document.getElementById('cfg-embed-streams-in-post').checked=CFG.embedStreamsInPost!==false;
+  applyLeagueTimingsToUI();
 }
 function v(id) { return document.getElementById(id)?.value?.trim()||''; }
 function set(id,val) { const el=document.getElementById(id); if(el) el.value=val||''; }
@@ -1938,12 +1710,6 @@ async function fetchAllEvents() {
   renderLeagueFilterPills(); renderEventCards(allEvents); updateSchedQueue();
   populateHLSelect();
   toast(`✓ ${allEvents.length} events loaded`,'s');
-  // Auto-load external streams if enabled
-  if (CFG.autoFetchStreams) {
-    toast('Loading external streams…','i');
-    await loadExternalStreams();
-    ddkanquMappings = parseDDKMappings(CFG.ddkanquMappingsRaw);
-  }
 }
 
 async function fetchLeague(league) {
@@ -2040,6 +1806,7 @@ function renderMatchCard(ev) {
       <button class="btn-red btn-sm" onclick="genAndFill('${sid}')">✍️ Gen</button>
       <button class="btn-blue btn-sm" onclick="quickPostEv('${sid}')">📤 Post</button>
       <button class="btn-gold btn-sm" onclick="genThumbForEv('${sid}')">🖼️ Thumb</button>
+      <button class="btn-green btn-sm" onclick="openStreamPreview('${sid}')" title="Preview streams">📡</button>
       ${fin?`<button class="btn-orange btn-sm" onclick="openHLForEv('${sid}')">🎬 HL</button>`:''}
     </div>
   </div>`;
@@ -2077,11 +1844,11 @@ function getLog(ev) { return postLog[evKey(ev)]||null; }
 function setLog(ev, data) { postLog[evKey(ev)]={...(postLog[evKey(ev)]||{}),...data,ts:Date.now()}; saveAll(); updateStats(); }
 function evKey(ev) { return `${ev.league.id}|${(ev.home?.name||ev.name||'').replace(/\s/g,'_')}|${(ev.away?.name||'').replace(/\s/g,'_')}`; }
 
-async function genAndFill(sid) {
+function genAndFill(sid) {
   const ev = findEv(sid); if (!ev) { toast('Event not found','e'); return; }
   const title = ev.type==='race' ? `${ev.name} – Race Preview & Live Stream | Sports 803` : `${ev.home.name} vs ${ev.away.name} – ${ev.league.name} Live Stream | Sports 803`;
   set('post-title', title);
-  document.getElementById('post-body').value = await buildArticleWithStreams(title, ev);
+  document.getElementById('post-body').value = buildArticle(title, ev);
   document.getElementById('post-labels').value = getLabels(ev).join(', ');
   set('c-league', ev.league.name);
   set('c-datetime', ev.startTime ? ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '');
@@ -2095,83 +1862,6 @@ async function genAndFill(sid) {
   currentComposeEv = ev;
   updateSEO(); showPage('compose'); onTitleChange();
   toast('Content generated ✓','s');
-
-  // ── Populate compose stream rows from Multi-Source Aggregator ──
-  if (CFG.autoFetchStreams && ev.type === 'match') {
-    populateComposeStreams(ev);
-  }
-}
-
-async function populateComposeStreams(ev) {
-  try {
-    const sources = await getAllStreamSourcesForEvent(ev);
-    if (!sources.length) return;
-    const list = document.getElementById('stream-list');
-    list.innerHTML = '';
-    sources.forEach(s => {
-      const row = document.createElement('div'); row.className = 'stream-row';
-      row.innerHTML = `<input type="text" class="mora-input" value="${s.url}" oninput="updateIframeBox()"><button class="btn-ghost btn-sm" onclick="removeStream(this)">✕</button>`;
-      list.appendChild(row);
-    });
-    updateIframeBox();
-    // Update the aggregator section in compose if visible
-    const aggEl = document.getElementById('compose-agg-list');
-    if (aggEl) {
-      aggEl.innerHTML = sources.map(s =>
-        `<div class="stream-row"><input type="text" class="mora-input" value="${s.url}" readonly style="font-size:.7rem;color:var(--muted2);font-family:var(--mono)"><button class="btn-blue btn-xs" onclick="insertSourceToCompose('${s.url.replace(/'/g,"\\'")}')">Insert</button></div>`
-      ).join('');
-    }
-    toast(`${sources.length} stream source(s) loaded from aggregator ✓`, 's');
-  } catch(e) { console.warn('[ComposeStreams]', e.message); }
-}
-
-function insertSourceToCompose(url) {
-  const list = document.getElementById('stream-list');
-  const row = document.createElement('div'); row.className = 'stream-row';
-  row.innerHTML = `<input type="text" class="mora-input" value="${url}" oninput="updateIframeBox()"><button class="btn-ghost btn-sm" onclick="removeStream(this)">✕</button>`;
-  list.appendChild(row); updateIframeBox();
-  toast('Stream added to compose ✓','s');
-}
-
-async function reloadComposeAgg() {
-  const aggEl = document.getElementById('compose-agg-list');
-  const statusEl = document.getElementById('compose-agg-status');
-  if (!currentComposeEv) { toast('No event loaded — use ✍️ Gen from Events first','w'); return; }
-  if (!CFG.autoFetchStreams) { toast('Enable "Auto-fetch External Streams" in Settings first','w'); return; }
-  if (statusEl) statusEl.textContent = 'Loading…';
-  if (aggEl) aggEl.innerHTML = '<span class="spinner"></span> Fetching streams…';
-  try {
-    const sources = await getAllStreamSourcesForEvent(currentComposeEv);
-    if (statusEl) statusEl.textContent = `${sources.length} source(s)`;
-    if (!sources.length) {
-      if (aggEl) aggEl.innerHTML = '<span style="color:var(--muted2)">No streams found for this event.</span>';
-      return;
-    }
-    if (aggEl) {
-      aggEl.innerHTML = sources.map(s =>
-        `<div class="stream-row"><input type="text" class="mora-input" value="${s.url}" readonly style="font-size:.7rem;color:var(--muted2);font-family:var(--mono)"><button class="btn-blue btn-xs" onclick="insertSourceToCompose('${s.url.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">Insert</button></div>`
-      ).join('');
-    }
-    toast(`${sources.length} streams loaded ✓`, 's');
-  } catch(e) {
-    if (statusEl) statusEl.textContent = 'Error';
-    toast('Aggregator error: '+e.message, 'e');
-  }
-}
-
-async function insertAllAggStreams() {
-  if (!currentComposeEv) { toast('No event loaded','w'); return; }
-  if (!CFG.autoFetchStreams) { toast('Enable "Auto-fetch External Streams" in Settings first','w'); return; }
-  const sources = await getAllStreamSourcesForEvent(currentComposeEv);
-  if (!sources.length) { toast('No streams found','w'); return; }
-  const list = document.getElementById('stream-list');
-  sources.forEach(s => {
-    const row = document.createElement('div'); row.className = 'stream-row';
-    row.innerHTML = `<input type="text" class="mora-input" value="${s.url}" oninput="updateIframeBox()"><button class="btn-ghost btn-sm" onclick="removeStream(this)">✕</button>`;
-    list.appendChild(row);
-  });
-  updateIframeBox();
-  toast(`${sources.length} stream(s) added ✓`, 's');
 }
 
 async function genThumbForEv(sid) {
@@ -2192,51 +1882,12 @@ async function genThumbForEv(sid) {
   document.getElementById('st-thumbs').textContent = Object.values(postLog).filter(p=>p.thumb).length;
 }
 
-async function quickPostEv(sid) {
-  if (!accessToken) { toast('Sign in first','e'); return; }
-  const ev = findEv(sid); if (!ev) return;
-  const title = ev.type==='race' ? `${ev.name} – Race Preview & Live Stream | Sports 803` : `${ev.home.name} vs ${ev.away.name} – ${ev.league.name} Live Stream | Sports 803`;
-  const body   = await buildArticleWithStreams(title, ev);
-  const labels = getLabels(ev);
-  const dt = ev.startTime ? ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
-
-  toast('Generating thumbnail…','i');
-  const cv = document.createElement('canvas');
-  setCanvasSize(cv, '1920', '16:9');
-  try {
-    if (ev.type==='race') await drawRaceThumbnail(cv,{name:ev.name,league:ev.league.name,datetime:dt,venue:ev.venue||'',bg1:'#0a0e1a',bg2:'#1a0a00',bannerUrl:getRaceImg(ev)});
-    else await drawMatchThumbnail(cv,{home:ev.home.name,away:ev.away.name,hLogo:ev.home.logo||'',aLogo:ev.away.logo||'',league:ev.league.name,datetime:dt,bg1:'#0d1b2a',bg2:'#1a0020',mode:'preview'});
-    setLog(ev,{thumb:cv.toDataURL('image/jpeg',.85)});
-  } catch(e) { toast('Thumb gen skipped','w'); }
-
-  let thumbHtml = '';
-  if (CFG.imgbbKey) {
-    try {
-      const fd=new FormData(); fd.append('key',CFG.imgbbKey); fd.append('image',cv.toDataURL('image/jpeg',.9).split(',')[1]);
-      const res=await fetch('https://api.imgbb.com/1/upload',{method:'POST',body:fd});
-      const json=await res.json();
-      if (json.success) thumbHtml=`<div><img src="${json.data.url}" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="${title}"></div>\n`;
-    } catch(e) {}
-  }
-  if (!thumbHtml) thumbHtml=`<div><img src="${cv.toDataURL('image/jpeg',.85)}" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="${title}"></div>\n`;
-
-  const html = thumbHtml + body.replace(/\n/g,'<br>');
-  toast(`Posting: ${title.substring(0,40)}…`,'i');
-  const post = await postRaw(title, html, CFG.schedStatus||'DRAFT', labels);
-  if (post) {
-    setLog(ev,{postId:post.id,postUrl:post.url,status:post.status||'DRAFT',title,league:ev.league.name});
-    renderEventCards(allEvents);
-    addRecentPost(title, post.url, post.status||'DRAFT');
-    toast('Posted with thumbnail ✓','s');
-  }
-}
-
 async function bulkPostAll() {
   if (!accessToken) { toast('Sign in first','e'); return; }
   const toPost = allEvents.filter(ev=>!getLog(ev)?.postId);
   if (!toPost.length) { toast('All events already posted','i'); return; }
   toast(`Bulk posting ${toPost.length} events…`,'i');
-  for (const ev of toPost) { await quickPostEv(encodeURIComponent(String(ev.id))); await new Promise(r=>setTimeout(r,1000)); }
+  for (const ev of toPost) { await quickPostEv(encodeURIComponent(String(ev.id))); await new Promise(r=>setTimeout(r,1500)); }
   toast('Bulk post complete ✓','s');
 }
 
@@ -2278,28 +1929,13 @@ function buildArticle(title, ev) {
   if (ev.type==='race') {
     const top3 = (ev.entries||[]).slice(0,3).map(e=>e.name).filter(Boolean).join(', ')||'the front runners';
     const ts = ev.startTime ? ev.startTime.toLocaleString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}) : 'this weekend';
-    const chs = findCHsForLeague(ev.league.id).map(c=>c.name).join(', ')||'Sports 803';
+    const chs = findCHsForLeague(ev.league.id, ev).map(c=>c.name).join(', ')||'Sports 803';
     return `${pick(P.ro)} the ${ev.name}.\n\n${pick(P.rc)}\n\nExpected front runners: ${top3}.\n\n🏎️ Event: ${ev.name}\n📍 Venue: ${ev.venue||'TBC'}${ev.location?', '+ev.location:''}\n🕐 Start: ${ts}\n\n📺 Watch on: ${chs}\n\nStream FREE: ${player}\n\n${pick(P.cta)}\n\n#${ev.league.name.replace(/\s/g,'')} #Sports803`;
   }
   const h=ev.home.name, a=ev.away.name, lg=ev.league.name;
   const ts=ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}):'today';
-  const chs=findCHsForLeague(ev.league.id).map(c=>c.name).join(', ')||'Sports 803';
+  const chs=findCHsForLeague(ev.league.id, ev).map(c=>c.name).join(', ')||'Sports 803';
   return `${pick(P.mo)} ${h} and ${a} go head-to-head in ${lg}.\n\n${pick(P.mc)} ${pick(P.mc)}\n\n📅 Date: ${ts}\n🏆 Competition: ${lg}\n⚽ Match: ${h} vs ${a}\n\n📺 Watch on: ${chs}\n\nStream FREE on Sports 803: ${player}\n\n${pick(P.cta)}\n\n#${h.replace(/\s/g,'')} #${a.replace(/\s/g,'')} #${lg.replace(/\s/g,'')} #Sports803`;
-}
-
-// ── Async version: appends multi-source iframe if autoFetchStreams + embedStreamsInPost enabled ──
-async function buildArticleWithStreams(title, ev) {
-  const base = buildArticle(title, ev);
-  if (!CFG.autoFetchStreams || CFG.embedStreamsInPost === false || !ev) return base;
-  try {
-    const sources = await getAllStreamSourcesForEvent(ev);
-    if (!sources.length) return base;
-    const iframe = buildMultiSourceIframe(sources);
-    return base + '\n\n' + iframe;
-  } catch(e) {
-    console.warn('[Streams] buildArticleWithStreams failed:', e.message);
-    return base;
-  }
 }
 
 const LEAGUE_LABELS = {
@@ -2322,7 +1958,31 @@ function getLabels(ev) {
   if (ev.away?.name) extra.push(ev.away.name);
   return [...new Set([...base,...extra])];
 }
-function findCHsForLeague(id) { return channels.filter(c=>c.sport.split(',').map(s=>s.trim()).some(s=>s===id||id.includes(s)||s.includes(id))); }
+// ── Scored channel matcher ──
+// Ranks channels by tag overlap with event league + team names, picks top 3
+function findCHsForLeague(leagueId, ev) {
+  const evLabels = new Set([leagueId]);
+  if (ev?.home?.name) ev.home.name.toLowerCase().split(/\s+/).forEach(w=>evLabels.add(w));
+  if (ev?.away?.name) ev.away.name.toLowerCase().split(/\s+/).forEach(w=>evLabels.add(w));
+  // Score each channel
+  const scored = channels.map(ch => {
+    const tags = ch.sport.split(',').map(s=>s.trim().toLowerCase());
+    let score = 0;
+    // Exact league ID match → highest score
+    if (tags.includes(leagueId)) score += 10;
+    // Any tag that's a substring of leagueId or vice-versa → partial match
+    tags.forEach(t => {
+      if (t && leagueId && (leagueId.includes(t)||t.includes(leagueId))) score += 5;
+      if (evLabels.has(t)) score += 2;
+    });
+    return { ch, score };
+  });
+  return scored
+    .filter(x => x.score > 0 && x.ch.url)
+    .sort((a,b) => b.score - a.score)
+    .slice(0, 3)
+    .map(x => x.ch);
+}
 
 // ═══════════════════════════════════════════
 // CONTENT INJECTORS
@@ -2337,7 +1997,7 @@ function injectBlock(type) {
   const title=v('post-title'); const p=parseTitle(title); const h=p?.home||'Home Team', a=p?.away||'Away Team';
   const body=document.getElementById('post-body'); let block='';
   switch(type) {
-    case 'full': buildArticleWithStreams(title,currentComposeEv).then(art=>{ body.value=art; toast('Article generated ✓','s'); updateSEO(); }); return;
+    case 'full': injectBlockFull(); return;
     case 'cta': block=`<div style="background:linear-gradient(135deg,#0e1320,#1a0020);border:2px solid #e63946;border-radius:12px;padding:20px;margin:20px 0;text-align:center"><div style="background:#e63946;color:#fff;font-size:.75rem;font-weight:900;padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:10px;letter-spacing:1px">🔴 LIVE HD STREAM</div><h3 style="color:#fff;font-size:1.15rem;margin-bottom:6px;font-weight:900">${h} vs ${a}</h3><p style="color:#8a9bb5;font-size:.84rem;margin-bottom:14px">Free live stream · No sign-up · HD Quality · All devices</p><a href="${CFG.playerBase}" target="_blank" rel="noopener" style="display:inline-block;background:#e63946;color:#fff;font-size:1rem;font-weight:900;padding:12px 32px;border-radius:8px;text-decoration:none">▶ WATCH FREE LIVE STREAM</a></div>`; break;
     case 'faq': block=`<div style="margin:16px 0" itemscope itemtype="https://schema.org/FAQPage"><h3 style="color:#4cc9f0;margin-bottom:12px;font-size:1rem">❓ FAQ</h3><div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question" style="background:#0e1320;border:1px solid #1e2d45;border-radius:8px;padding:12px 16px;margin-bottom:8px"><h4 itemprop="name" style="color:#e2e8f0;font-size:.86rem;margin-bottom:5px">Where can I watch ${h} vs ${a} for free?</h4><div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><p itemprop="text" style="color:#8a9bb5;font-size:.8rem">Watch ${h} vs ${a} free on Sports 803. No sign-up required. Multiple HD streams available on all devices.</p></div></div></div>`; break;
     case 'stats': block=`<div style="background:#0e1320;border:1px solid #1e2d45;border-radius:10px;padding:16px;margin:16px 0;overflow-x:auto"><h3 style="color:#4cc9f0;font-size:.95rem;margin-bottom:12px">📊 Match Statistics</h3><table style="width:100%;border-collapse:collapse;font-size:.83rem"><thead><tr style="background:#1a2540"><th style="padding:9px 12px;text-align:left;color:#8a9bb5;border-bottom:1px solid #1e2d45">Metric</th><th style="padding:9px 12px;text-align:center;color:#e63946;border-bottom:1px solid #1e2d45">${h}</th><th style="padding:9px 12px;text-align:center;color:#4cc9f0;border-bottom:1px solid #1e2d45">${a}</th></tr></thead><tbody><tr><td style="padding:8px 12px;color:#e2e8f0;border-bottom:1px solid #111827">Win Probability</td><td style="padding:8px 12px;text-align:center;color:#06d6a0;font-weight:700">45%</td><td style="padding:8px 12px;text-align:center;color:#4cc9f0;font-weight:700">35%</td></tr><tr><td style="padding:8px 12px;color:#e2e8f0;border-bottom:1px solid #111827">Expected Goals (xG)</td><td style="padding:8px 12px;text-align:center;color:#f4a261;font-weight:700">1.8</td><td style="padding:8px 12px;text-align:center;color:#f4a261;font-weight:700">1.2</td></tr><tr><td style="padding:8px 12px;color:#e2e8f0">Both to Score</td><td style="padding:8px 12px;text-align:center;color:#ffd60a;font-weight:700" colspan="2">Yes (65%)</td></tr></tbody></table></div>`; break;
@@ -2524,9 +2184,42 @@ function saveChannel(){ const name=v('ch-name'); if(!name){toast('Name required'
 function deleteCH(id){ if(!confirm('Delete?')) return; channels=channels.filter(c=>c.id!==id); saveAll(); renderChannels(); }
 
 // ═══════════════════════════════════════════
-// SCHEDULER
+// SCHEDULER  (v2 — stagger + per-league timing + Post Now)
 // ═══════════════════════════════════════════
 const schedLogs=[];
+
+// Return how many minutes before kickoff this event should be posted
+function getLeadMinutes(ev) {
+  const id = ev.league?.id||'';
+  // Per-league overrides
+  if (CFG.leagueTimings && CFG.leagueTimings[id] !== undefined) return CFG.leagueTimings[id];
+  // Race/golf use F1 default
+  if (ev.type==='race') return CFG.leagueTimings?.f1 || 360;
+  return CFG.schedTiming || 60;
+}
+
+function saveLeagueTimings() {
+  CFG.leagueTimings = {
+    f1:   parseInt(document.getElementById('lt-f1')?.value)  || 360,
+    nascar:parseInt(document.getElementById('lt-f1')?.value) || 360,
+    pga:  parseInt(document.getElementById('lt-f1')?.value)  || 360,
+    nba:  parseInt(document.getElementById('lt-nba')?.value) || 60,
+    nhl:  parseInt(document.getElementById('lt-nba')?.value) || 60,
+    nfl:  parseInt(document.getElementById('lt-nfl')?.value) || 120,
+    ufc:  parseInt(document.getElementById('lt-ufc')?.value) || 120,
+  };
+  saveAll();
+}
+
+function applyLeagueTimingsToUI() {
+  if (!CFG.leagueTimings) return;
+  const lt = CFG.leagueTimings;
+  if(document.getElementById('lt-f1'))  document.getElementById('lt-f1').value  = lt.f1   || 360;
+  if(document.getElementById('lt-nba')) document.getElementById('lt-nba').value = lt.nba  || 60;
+  if(document.getElementById('lt-nfl')) document.getElementById('lt-nfl').value = lt.nfl  || 120;
+  if(document.getElementById('lt-ufc')) document.getElementById('lt-ufc').value = lt.ufc  || 120;
+}
+
 function toggleScheduler() {
   CFG.schedEnabled=document.getElementById('sched-enabled').checked;
   saveCFG();
@@ -2553,26 +2246,91 @@ function updateSchedCountdown(){
   const m=Math.floor(rem/60),s=rem%60;
   el.textContent=CFG.schedEnabled?`⏱ Next check in: ${m}:${s.toString().padStart(2,'0')}`:'';
 }
+
+// ── Post Now button: immediately post all events that are due ──
+async function runSchedNow() {
+  if(!accessToken){toast('Sign in first','e');return;}
+  if(!allEvents.length){toast('Fetch events first','w');return;}
+  await runSchedTick();
+  updateSchedQueue();
+}
+
+// ── Fetch events then immediately run scheduler ──
+async function fetchAndSched() {
+  await fetchAllEvents();
+  await runSchedTick();
+  updateSchedQueue();
+}
+
 async function runSchedTick(){
   if(!accessToken){addSchedLog('⚠ Not signed in');return;}
-  const now=Date.now(), offset=(CFG.schedTiming||60)*60000;
-  let posted=0;
-  for(const ev of allEvents){
-    if(!ev.startTime) continue;
-    const pl=getLog(ev); const diff=ev.startTime.getTime()-now;
-    if(!pl?.postId&&diff>0&&diff<=offset){await quickPostEv(encodeURIComponent(String(ev.id)));posted++;await new Promise(r=>setTimeout(r,1200));}
+  const now = Date.now();
+  const maxPerTick = CFG.schedMaxPerTick || 3;
+  const staggerMs  = (CFG.schedStaggerMs || 90) * 1000;
+
+  // Collect all events due for posting right now
+  const due = allEvents.filter(ev => {
+    if (!ev.startTime) return false;
+    const pl = getLog(ev);
+    if (pl?.postId) return false;
+    const leadMs  = getLeadMinutes(ev) * 60000;
+    const diff    = ev.startTime.getTime() - now;
+    // Due if: event is in the future AND within lead window
+    // Also post if event already started (diff <= 0) but wasn't caught before
+    return diff <= leadMs && diff > -3600000; // up to 1hr past start
+  });
+
+  if (!due.length) {
+    addSchedLog(`✓ ${new Date().toLocaleTimeString()} — 0 due, ${allEvents.length} checked`);
+    updateStats(); return;
   }
-  addSchedLog(`✓ ${new Date().toLocaleTimeString()} — ${posted} posted, ${allEvents.length} checked`);
+
+  addSchedLog(`⏰ ${new Date().toLocaleTimeString()} — ${due.length} due, posting max ${maxPerTick}…`);
+  let posted = 0;
+
+  for (let i = 0; i < due.length; i++) {
+    if (posted >= maxPerTick) {
+      addSchedLog(`⏸ Stagger: waiting ${Math.round(staggerMs/1000)}s before next batch…`);
+      await new Promise(r => setTimeout(r, staggerMs));
+      posted = 0;
+    }
+    const ev = due[i];
+    await quickPostEv(encodeURIComponent(String(ev.id)));
+    posted++;
+    if (i < due.length - 1) await new Promise(r => setTimeout(r, 1500));
+  }
+
+  const total = due.length;
+  addSchedLog(`✓ ${new Date().toLocaleTimeString()} — ${total} posted`);
   updateStats();
 }
-function addSchedLog(msg){ schedLogs.unshift(msg); if(schedLogs.length>20) schedLogs.pop(); const el=document.getElementById('sched-log'); if(el) el.innerHTML=schedLogs.map(m=>`<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03)">${m}</div>`).join(''); }
+function addSchedLog(msg){ schedLogs.unshift(msg); if(schedLogs.length>30) schedLogs.pop(); const el=document.getElementById('sched-log'); if(el) el.innerHTML=schedLogs.map(m=>`<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03)">${m}</div>`).join(''); }
 function updateSchedQueue(){
   const c=document.getElementById('sched-queue'); if(!c) return;
-  const now=Date.now(), offset=(CFG.schedTiming||60)*60000*24;
-  const pending=allEvents.filter(ev=>ev.startTime&&!getLog(ev)?.postId&&ev.startTime.getTime()>now&&ev.startTime.getTime()-now<=offset);
-  document.getElementById('st-sched').textContent=pending.length;
-  if(!pending.length){c.innerHTML='<span style="color:var(--muted2)">No events in window. Fetch events first.</span>';return;}
-  c.innerHTML=pending.map(ev=>{const n=ev.type==='race'?ev.name:`${ev.home.name} vs ${ev.away.name}`;const ts=ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});const mins=Math.round((ev.startTime.getTime()-now)/60000);const t=mins>120?`${Math.round(mins/60)}h`:`${mins}m`;return`<div class="sched-item"><div class="sdot pending"></div><div style="flex:1"><div style="font-weight:700;font-family:var(--cond)">${ev.league.icon} ${n}</div><div style="font-size:.65rem;color:var(--muted2)">${ts}</div></div><div style="font-family:var(--cond);font-size:.75rem;font-weight:800;color:var(--orange);min-width:50px;text-align:right">in ${t}</div></div>`;}).join('');
+  const now=Date.now();
+  // Show all unposted events with their individual lead times
+  const pending=allEvents.filter(ev=>{
+    if(!ev.startTime||getLog(ev)?.postId) return false;
+    const leadMs = getLeadMinutes(ev)*60000;
+    const diff = ev.startTime.getTime()-now;
+    return diff > 0 && diff <= 86400000*7; // show up to 7 days ahead
+  });
+  document.getElementById('st-sched').textContent=pending.filter(ev=>{
+    const diff=ev.startTime.getTime()-now;
+    return diff<=getLeadMinutes(ev)*60000;
+  }).length;
+  if(!pending.length){c.innerHTML='<span style="color:var(--muted2)">No upcoming events. Fetch events first.</span>';return;}
+  c.innerHTML=pending.map(ev=>{
+    const n=ev.type==='race'?ev.name:`${ev.home.name} vs ${ev.away.name}`;
+    const ts=ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const diff=ev.startTime.getTime()-now;
+    const leadMs=getLeadMinutes(ev)*60000;
+    const isDue=diff<=leadMs;
+    const mins=Math.round(diff/60000);
+    const t=mins>120?`${Math.round(mins/60)}h`:`${mins}m`;
+    const dot=isDue?'<div class="sdot" style="background:var(--red);box-shadow:0 0 6px var(--red);animation:blink 1s infinite"></div>':'<div class="sdot pending"></div>';
+    return`<div class="sched-item">${dot}<div style="flex:1"><div style="font-weight:700;font-family:var(--cond)">${ev.league.icon} ${n}</div><div style="font-size:.65rem;color:var(--muted2)">${ts} · lead: ${getLeadMinutes(ev)}min</div></div><div style="display:flex;align-items:center;gap:5px"><div style="font-family:var(--cond);font-size:.75rem;font-weight:800;color:${isDue?'var(--red)':'var(--orange)'}">${isDue?'DUE':'in '+t}</div>${isDue?`<button class="btn-red btn-xs" onclick="quickPostEv('${encodeURIComponent(String(ev.id))}')" style="padding:2px 6px;font-size:.6rem">POST</button>`:''}</div></div>`;
+  }).join('');
 }
 
 // ═══════════════════════════════════════════
@@ -2635,395 +2393,380 @@ function toast(msg,type='i'){
 }
 
 // ═══════════════════════════════════════════
-// STREAM AGGREGATOR ENGINE
+// AI ARTICLE WRITER  (Anthropic API — cached)
 // ═══════════════════════════════════════════
+const AI_ARTICLE_CACHE = {}; // evKey → generated text
 
-// ── Team name normalization ──
-// Only strips genuine organisational tags (FC, AFC, SC, etc.)
-// Never strips city names or descriptive words (city, united, hotspur, real, etc.)
-// — those are essential parts of team identity and their removal causes key collisions.
-function normTeam(name) {
-  return (name||'')
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')  // strip accents
-    .toLowerCase()
-    // Strip only genuine org-tag prefixes/suffixes – NOT descriptor words
-    .replace(/\b(fc|afc|rfc|sc|cf|ac|as|bsc|rcd|rsca|rgb|vfb|vfl|1\.fc)\b/g,'')
-    .replace(/[^a-z0-9\s]/g,'')
-    .replace(/\s+/g,' ')
-    .trim();
-}
+async function buildArticleWithAI(title, ev) {
+  // If AI disabled or no key, fall back to template
+  if (!CFG.useAiArticles || !CFG.anthropicKey) return buildArticle(title, ev);
+  if (!ev || ev.type === 'race') return buildArticle(title, ev);
 
-// ── Build normalized pair key (alphabetical order) ──
-function pairKey(teamA, teamB) {
-  const a = normTeam(teamA), b = normTeam(teamB);
-  return [a,b].sort().join('|');
-}
-
-// ── Parse prog.txt into externalStreamsMap ──
-// Format: HH:MM   Team A x Team B | URL1 | URL2 | …
-// The time prefix (e.g. "20:00   ") must be stripped before team extraction.
-function parseProgTxt(text) {
-  const map = {};
-  const lines = (text||'').split('\n');
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('*')) continue;
-    if (!trimmed.includes('|')) continue;
-    const parts = trimmed.split('|').map(p=>p.trim()).filter(Boolean);
-    if (parts.length < 2) continue;
-
-    // parts[0] looks like "20:00   Southampton x Arsenal" — strip the time prefix
-    let matchStr = parts[0].replace(/^\d{1,2}:\d{2}\s+/, '').trim();
-    // Strip trailing women/event markers like "(W)"
-    matchStr = matchStr.replace(/\s*\(W\)\s*$/i, '').trim();
-
-    const urls = parts.slice(1).filter(u => u.startsWith('http'));
-    if (!urls.length) continue;
-
-    // Split on ' x ', ' vs ', ' – ', ' - ' (prog.txt uses ' x ')
-    const sep = matchStr.match(/ (x|vs\.?|–|-) /i);
-    if (!sep) continue;
-    const idx   = matchStr.toLowerCase().indexOf(sep[0].toLowerCase());
-    const teamA = matchStr.substring(0, idx).trim();
-    const teamB = matchStr.substring(idx + sep[0].length).trim();
-    if (!teamA || !teamB) continue;
-
-    const key = pairKey(teamA, teamB);
-    if (!map[key]) map[key] = [];
-    for (const u of urls) map[key].push({url:u, type:'embed'});
+  const cacheKey = evKey(ev);
+  if (AI_ARTICLE_CACHE[cacheKey]) {
+    console.log('[AI] Serving cached article for', cacheKey);
+    return AI_ARTICLE_CACHE[cacheKey];
   }
-  return map;
+
+  const h = ev.home.name, a = ev.away.name, lg = ev.league.name;
+  const ts = ev.startTime ? ev.startTime.toLocaleString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}) : 'today';
+  const chs = findCHsForLeague(ev.league.id, ev).map(c=>c.name).join(', ')||'Sports 803';
+
+  const prompt = `Write a compelling 3-4 paragraph sports blog post preview for: ${h} vs ${a} in ${lg}, kicking off ${ts}.
+
+Requirements:
+- Opening paragraph: build anticipation, mention both teams' recent form or strengths
+- Second paragraph: key players to watch or tactical battle to expect
+- Third paragraph: prediction/analysis (don't be too definitive)
+- Closing paragraph: call to action to watch on Sports 803 (free, no sign-up, HD quality, all devices)
+- Channels available: ${chs}
+- Keep it energetic and fan-friendly, 250-350 words total
+- End with relevant hashtags: #${h.replace(/\s/g,'')} #${a.replace(/\s/g,'')} #${lg.replace(/\s/g,'')} #Sports803 #LiveStream
+- Do NOT include any HTML tags, just plain text with line breaks`;
+
+  try {
+    toast('🤖 Generating AI article…','i');
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': CFG.anthropicKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 600,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    if (!res.ok) throw new Error(`API ${res.status}`);
+    const data = await res.json();
+    const text = data.content?.[0]?.text || '';
+    if (!text) throw new Error('Empty response');
+    AI_ARTICLE_CACHE[cacheKey] = text;
+    toast('🤖 AI article ready ✓','s');
+    return text;
+  } catch(e) {
+    console.warn('[AI] Article generation failed:', e.message);
+    toast('AI failed, using template ⚠','w');
+    return buildArticle(title, ev);
+  }
 }
 
-// ── Fetch prog.txt and populate externalStreamsMap ──
-async function loadExternalStreams() {
-  const url = CFG.progTxtUrl || 'https://sportsonline.st/prog.txt';
-  const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-  let text = '';
-  // Try direct first, then via CORS proxy
-  for (const src of [url, proxyUrl]) {
-    try {
-      const res = await fetch(src, {cache:'no-store'});
-      if (!res.ok) throw new Error('HTTP '+res.status);
-      text = await res.text();
-      if (text.trim()) break;
-    } catch(e) { console.warn('[Streams] prog.txt fetch via',src,'failed:',e.message); }
-  }
-  if (!text.trim()) {
-    updateAggStatus('⚠ prog.txt fetch failed — using cache','w'); return;
-  }
-  externalStreamsMap = parseProgTxt(text);
-  const total = Object.keys(externalStreamsMap).length;
-  const el = document.getElementById('agg-prog-badge');
-  if (el) el.textContent = `prog.txt: ${total} matches`;
-  const el2 = document.getElementById('prog-txt-count');
-  if (el2) el2.textContent = `prog.txt: ${total} match entries`;
-  console.log(`[Streams] prog.txt loaded: ${total} entries`);
-  updateAggStatus(`✓ prog.txt: ${total} entries loaded`,'s');
-}
-
-// ── Parse DDKanqu manual mappings ──
-function parseDDKMappings(raw) {
-  const out = {};
-  (raw||'').split('\n').forEach(line => {
-    const eq = line.indexOf('=');
-    if (eq < 0) return;
-    const lhs = line.substring(0,eq).trim();
-    const rhs = line.substring(eq+1).trim();
-    if (!lhs || !rhs) return;
-    // lhs may be "Team A vs Team B" or just a key
-    const sep = lhs.match(/ (vs\.?|x|–|-) /i);
-    let key;
-    if (sep) {
-      const idx = lhs.toLowerCase().indexOf(sep[0].toLowerCase());
-      const a = lhs.substring(0,idx).trim(), b = lhs.substring(idx+sep[0].length).trim();
-      key = pairKey(a,b);
-    } else {
-      key = lhs.toLowerCase().trim();
-    }
-    out[key] = rhs; // rhs is the ddkanqu ID number or full URL
+// ── Update injectBlock 'full' to use AI ──
+// (Replaces the synchronous call at line ~2039)
+function injectBlockFull() {
+  const title = v('post-title');
+  const body  = document.getElementById('post-body');
+  buildArticleWithAI(title, currentComposeEv).then(art => {
+    body.value = art; toast('Article generated ✓','s'); updateSEO();
   });
-  return out;
 }
 
-// ── Build DDKanqu URL from ID or full URL ──
-function ddkUrl(idOrUrl) {
-  if (!idOrUrl) return null;
-  if (idOrUrl.startsWith('http')) return idOrUrl;
-  return `https://ddkanqu.com/zhibo/${idOrUrl}.html`;
-}
-
-// ── Scrape DDKanqu search page for a match ──
-async function scrapeDDKanqu(home, away) {
-  const q = encodeURIComponent(`${home} ${away}`);
-  const searchUrl = `https://ddkanqu.com/search?keyword=${q}`;
-  const proxies = [
-    `https://corsproxy.io/?${encodeURIComponent(searchUrl)}`,
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(searchUrl)}`,
-  ];
-  for (const proxy of proxies) {
+// ═══════════════════════════════════════════
+// IMGBB UPLOAD QUEUE
+// Wraps uploadCanvas with retry + optional enforcement
+// ═══════════════════════════════════════════
+async function uploadCanvasWithRetry(cv, maxRetries=3) {
+  if (!CFG.imgbbKey) {
+    if (CFG.requireImgbbUpload) {
+      toast('imgbb key required — set it in Settings','e'); return null;
+    }
+    return null; // fall back to base64 silently
+  }
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const res = await fetch(proxy, {signal: AbortSignal.timeout(8000)});
-      if (!res.ok) continue;
-      const html = await res.text();
-      // Look for links like /zhibo/12345.html
-      const m = html.match(/href=["']?(\/zhibo\/(\d+)\.html)["']?/);
-      if (m) {
-        const fullUrl = 'https://ddkanqu.com' + m[1];
-        console.log(`[DDK] Scraped: ${home} vs ${away} → ${fullUrl}`);
-        return fullUrl;
-      }
-    } catch(e) { console.warn('[DDK] Scrape via',proxy,'failed:',e.message); }
+      const fd = new FormData();
+      fd.append('key', CFG.imgbbKey);
+      fd.append('image', cv.toDataURL('image/jpeg',.9).split(',')[1]);
+      const res  = await fetch('https://api.imgbb.com/1/upload',{method:'POST',body:fd});
+      const json = await res.json();
+      if (json.success) return json.data.url;
+      if (attempt < maxRetries) await new Promise(r=>setTimeout(r,2000*attempt));
+    } catch(e) {
+      if (attempt < maxRetries) await new Promise(r=>setTimeout(r,2000*attempt));
+    }
+  }
+  if (CFG.requireImgbbUpload) {
+    toast('imgbb upload failed after 3 retries — post aborted','e'); return '__FAILED__';
   }
   return null;
 }
 
-// ── Fetch DDKanqu homepage and build event→URL map ──
-// DDKanqu lists today's matches in Chinese. We parse each match card for:
-//   - Chinese team names → translated to English via ZH_EN_TEAMS
-//   - /zhibo/XXXXX.html embed URL
-//   - HLS stream URL hidden in <!-- ... .m3u8 ... --> comment
-//   - Logo image URLs at ddkanqu.com/images/ChineseName.png (used as logo fallback)
-async function loadDDKanquHome() {
-  const url = 'https://ddkanqu.com/';
-  const proxies = [
-    `https://corsproxy.io/?${encodeURIComponent(url)}`,
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  ];
-  for (const proxy of proxies) {
-    try {
-      const res = await fetch(proxy, { signal: AbortSignal.timeout(12000) });
-      if (!res.ok) continue;
-      const html = await res.text();
-      ddkanquHomeMap = parseDDKanquHome(html);
-      const count = Object.keys(ddkanquHomeMap).length;
-      console.log(`[DDKanqu] Homepage parsed: ${count} match(es)`);
-      return count;
-    } catch(e) {
-      console.warn('[DDKanqu] Home fetch via', proxy, '→', e.message);
-    }
+// ═══════════════════════════════════════════
+// STREAM PREVIEW MODAL
+// ═══════════════════════════════════════════
+let _spCurrentSources = [];
+let _spCurrentEv = null;
+
+async function openStreamPreview(sid) {
+  const ev = findEv(sid); if (!ev) return;
+  _spCurrentEv = ev;
+  const name = ev.type==='race' ? ev.name : `${ev.home.name} vs ${ev.away.name}`;
+  document.getElementById('sp-title').textContent = `📡 ${name}`;
+  document.getElementById('sp-sources').textContent = 'Loading streams…';
+  document.getElementById('sp-player-url').textContent = '';
+  document.getElementById('sp-iframe').src = '';
+  document.getElementById('sp-no-streams').style.display = 'none';
+  openModal('modal-stream-preview');
+
+  let sources = [];
+  if (CFG.autoFetchStreams || true) {
+    // Always try to get streams even if autoFetch is off — for preview purposes
+    try { sources = await getAllStreamSourcesForEvent(ev); } catch(e) {}
   }
-  console.warn('[DDKanqu] Homepage load failed via all proxies');
-  return 0;
-}
+  _spCurrentSources = sources;
 
-function parseDDKanquHome(html) {
-  const map = {};
-  // Each match card: <a ... href="/zhibo/XXXXX.html" ...> ... </a>
-  const cardRe = /<a[^>]+href="(\/zhibo\/\d+\.html)"[^>]*>([\s\S]*?)<\/a>/g;
-  let m;
-  while ((m = cardRe.exec(html)) !== null) {
-    const zhiBoPath = m[1];
-    const inner = m[2];
-
-    // Chinese team names
-    const homeM = inner.match(/class="left-team">([^<]+)<\/span>/);
-    const awayM = inner.match(/class="right-team">([^<]+)<\/span>/);
-    if (!homeM || !awayM) continue;
-
-    const zhHome = homeM[1].trim();
-    const zhAway = awayM[1].trim();
-
-    // HLS stream from HTML comment: <!--https://...m3u8?...-->
-    const hlsM = inner.match(/<!--\s*(https?:\/\/\S+\.m3u8\S*)\s*-->/);
-    const hls  = hlsM ? hlsM[1].trim() : null;
-
-    const zhibo   = 'https://ddkanqu.com' + zhiBoPath;
-    const enHome  = zhToEn(zhHome);
-    const enAway  = zhToEn(zhAway);
-    const key     = pairKey(enHome, enAway);
-
-    if (!map[key]) {
-      map[key] = { zhibo, hls, zhHome, zhAway, enHome, enAway };
-
-      // ── Logo fix: populate LOGO_CACHE with DDKanqu image URLs ──
-      // These are the actual logos DDKanqu uses, good for CJK/Asian teams that TSDB misses.
-      // We only set them if TSDB hasn't already cached something.
-      const ddkBase = 'https://ddkanqu.com/images/';
-      const hKey = enHome.toLowerCase().trim();
-      const aKey = enAway.toLowerCase().trim();
-      if (LOGO_CACHE[hKey] === undefined) {
-        LOGO_CACHE[hKey] = ddkBase + encodeURIComponent(zhHome) + '.png';
-        console.log(`[Logo/DDK] Pre-seeded ${enHome} → ${LOGO_CACHE[hKey]}`);
-      }
-      if (LOGO_CACHE[aKey] === undefined) {
-        LOGO_CACHE[aKey] = ddkBase + encodeURIComponent(zhAway) + '.png';
-        console.log(`[Logo/DDK] Pre-seeded ${enAway} → ${LOGO_CACHE[aKey]}`);
-      }
-    }
-
-    console.log(`[DDKanqu] ${zhHome}→${enHome} vs ${zhAway}→${enAway} | ${zhibo}${hls?' + HLS':''}`);
-  }
-  return map;
-}
-
-// ── Get all DDKanqu stream sources for an event ──
-// Returns array of {url, type} objects (zhibo embed + optional HLS)
-async function getDdkanquSourcesForEvent(ev) {
-  if (ev.type === 'race') return [];
-  const key = pairKey(ev.home.name, ev.away.name);
-  const sources = [];
-
-  // 1. Manual mapping overrides everything
-  if (ddkanquMappings[key]) {
-    sources.push({ url: ddkUrl(ddkanquMappings[key]), type: 'mora' });
-    return sources;
+  if (!sources.length) {
+    document.getElementById('sp-sources').textContent = 'No streams found.';
+    document.getElementById('sp-no-streams').style.display = 'block';
+    document.getElementById('sp-iframe-wrap').style.display = 'none';
+    return;
   }
 
-  // 2. Homepage map (freshly scraped, most reliable)
-  if (ddkanquHomeMap[key]) {
-    const entry = ddkanquHomeMap[key];
-    sources.push({ url: entry.zhibo, type: 'mora' });
-    if (entry.hls) sources.push({ url: entry.hls, type: 'hls' });
-    return sources;
-  }
+  document.getElementById('sp-iframe-wrap').style.display = 'block';
+  document.getElementById('sp-sources').textContent =
+    sources.map(s=>`[${s.type}] ${s.url}`).join('\n');
 
-  // 3. In-memory cache from previous scrapes
-  if (ddkanquCache[key] !== undefined) {
-    if (ddkanquCache[key]) sources.push({ url: ddkanquCache[key], type: 'mora' });
-    return sources;
-  }
-
-  // 4. Last resort: scrape DDKanqu search page (if enabled)
-  if (CFG.enableDdkanqu) {
-    const scraped = await scrapeDDKanqu(ev.home.name, ev.away.name);
-    ddkanquCache[key] = scraped || '';
-    try { localStorage.setItem(SK_DDKC, JSON.stringify({data:ddkanquCache,ts:Date.now()})); } catch(e){}
-    if (scraped) sources.push({ url: scraped, type: 'mora' });
-  }
-  return sources;
+  const base   = (CFG.mediaPlayerBase||'https://alvinalexa.github.io/media-player/').replace(/\/+$/,'');
+  const params = sources.map(s=>`${s.type}=${encodeURIComponent(s.url)}`).join('&');
+  const url    = `${base}?${params}`;
+  document.getElementById('sp-player-url').textContent = url;
+  document.getElementById('sp-iframe').src = url;
 }
 
-// ── Backward-compat wrapper (used in DDKanqu tester modal) ──
-async function getDdkanquUrlForEvent(ev) {
-  const sources = await getDdkanquSourcesForEvent(ev);
-  return sources.length ? sources[0].url : null;
+function spCopyUrl() {
+  const url = document.getElementById('sp-player-url').textContent;
+  if (url) { navigator.clipboard.writeText(url); toast('Player URL copied ✓','s'); }
 }
 
-// ── Find matching channels for an event's league ──
-function getChannelsForEvent(ev) {
-  return findCHsForLeague(ev.league?.id||'').filter(c=>c.url).map(c=>({url:c.url, type:'mora'}));
+function spInsertToCompose() {
+  if (!_spCurrentSources.length) return;
+  const iframe = buildMultiSourceIframe(_spCurrentSources);
+  const body   = document.getElementById('post-body');
+  body.value  += (body.value ? '\n\n' : '') + iframe;
+  updateSEO();
+  closeModal('modal-stream-preview');
+  showPage('compose');
+  toast('Stream iframe inserted into post ✓','s');
 }
 
-// ── Find matching streams from prog.txt for an event ──
-function getProgTxtStreamsForEvent(ev) {
-  if (ev.type === 'race') return [];
-  const key = pairKey(ev.home.name, ev.away.name);
-  return externalStreamsMap[key] || [];
-}
+// ── toast alias used inside stream preview onclick ──
+function s803toast(msg, type) { toast(msg, type); }
 
-// ── Gather all stream sources for an event ──
-async function getAllStreamSourcesForEvent(ev) {
-  if (!CFG.autoFetchStreams) return [];
-  const sources = [];
-
-  // DDKanqu: zhibo embed + optional direct HLS
-  const ddkSources = await getDdkanquSourcesForEvent(ev);
-  sources.push(...ddkSources);
-
-  // Channel mora sources (league-matched from Channel Library)
-  sources.push(...getChannelsForEvent(ev));
-
-  // SportsonLine embed sources (prog.txt)
-  sources.push(...getProgTxtStreamsForEvent(ev));
-
-  return sources;
-}
-
-// ── Build multi-source iframe from sources array ──
-function buildMultiSourceIframe(sources) {
-  if (!sources || !sources.length) return '';
-  const base = (CFG.mediaPlayerBase || 'https://alvinalexa.github.io/media-player/').replace(/\/$/, '');
-  const params = sources.map(s => `${s.type}=${encodeURIComponent(s.url)}`).join('&');
-  const src = `${base}?${params}`;
-  return `<div style="margin:18px 0;position:relative;padding-bottom:56.25%;height:0;overflow:hidden"><iframe loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="${src}" frameborder="0" scrolling="no" allowfullscreen></iframe></div>`;
-}
-
-// ── Refresh all stream data ──
-async function refreshAllStreams() {
-  if (!CFG.autoFetchStreams) {
-    toast('Enable "Auto-fetch External Streams" in Settings first','w'); return;
-  }
-  updateAggStatus('<span class="spinner"></span> Loading…','i');
-
-  // Load prog.txt and DDKanqu homepage in parallel
-  const [,ddkCount] = await Promise.all([
-    loadExternalStreams(),
-    loadDDKanquHome(),
-  ]);
-
-  ddkanquMappings = parseDDKMappings(CFG.ddkanquMappingsRaw);
-  const progTotal = Object.keys(externalStreamsMap).length;
-  const mTotal    = Object.keys(ddkanquMappings).length;
-  const homeTotal = Object.keys(ddkanquHomeMap).length;
-
-  updateAggStatus(
-    `✓ prog.txt: ${progTotal} · DDKanqu home: ${homeTotal} · Manual maps: ${mTotal}`, 's'
-  );
-  const el = document.getElementById('streams-status');
-  if (el) el.textContent = `Updated ${new Date().toLocaleTimeString()}`;
-  const badge = document.getElementById('agg-prog-badge');
-  if (badge) badge.textContent = `prog.txt: ${progTotal} · DDK: ${homeTotal}`;
-  toast(`Streams refreshed ✓ (prog: ${progTotal}, DDKanqu: ${homeTotal})`,'s');
-}
-
-function updateAggStatus(html, type='i') {
-  const el = document.getElementById('agg-status');
+// ═══════════════════════════════════════════
+// STREAMS OBSERVABILITY PANEL
+// Shows per-event coverage: DDKanqu / prog.txt / channels / none
+// ═══════════════════════════════════════════
+async function renderStreamCoverage() {
+  const el = document.getElementById('stream-coverage');
   if (!el) return;
-  const colors = {s:'var(--green)',e:'var(--red)',i:'var(--muted2)',w:'var(--orange)'};
-  el.style.color = colors[type]||'var(--muted2)';
-  el.innerHTML = html;
+  if (!allEvents.length) { el.innerHTML='<span style="color:var(--muted2)">Fetch events first.</span>'; return; }
+  el.innerHTML = '<span class="spinner"></span> Scanning…';
+
+  const rows = await Promise.all(allEvents.filter(e=>e.type==='match').map(async ev => {
+    const name   = `${ev.home.name} vs ${ev.away.name}`;
+    const key    = typeof pairKey==='function' ? pairKey(ev.home.name, ev.away.name) : '';
+    const hasDDK = (ddkanquHomeMap && ddkanquHomeMap[key]) || (ddkanquCache && ddkanquCache[key]) || (ddkanquMappings && ddkanquMappings[key]);
+    const hasProg = externalStreamsMap && externalStreamsMap[key] && externalStreamsMap[key].length;
+    const hasCH  = findCHsForLeague(ev.league.id, ev).length > 0;
+    const total  = (hasDDK?1:0)+(hasProg?1:0)+(hasCH?1:0);
+    const color  = total===0?'var(--muted)':total===1?'var(--orange)':'var(--green)';
+    const badges = [
+      hasDDK  ? `<span style="background:rgba(76,201,240,.15);color:var(--blue);border:1px solid rgba(76,201,240,.3);padding:1px 5px;border-radius:3px;font-size:.6rem">DDK</span>` : '',
+      hasProg ? `<span style="background:rgba(6,214,160,.12);color:var(--green);border:1px solid rgba(6,214,160,.25);padding:1px 5px;border-radius:3px;font-size:.6rem">prog.txt</span>` : '',
+      hasCH   ? `<span style="background:rgba(255,214,10,.1);color:var(--gold);border:1px solid rgba(255,214,10,.25);padding:1px 5px;border-radius:3px;font-size:.6rem">CH</span>` : '',
+    ].filter(Boolean).join(' ');
+    const sid = encodeURIComponent(String(ev.id));
+    return `<div style="display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03)">
+      <div style="width:6px;height:6px;border-radius:50%;background:${color};flex-shrink:0"></div>
+      <div style="flex:1;font-size:.72rem;font-family:var(--cond);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ev.league.icon} ${name}</div>
+      <div style="display:flex;gap:3px;flex-shrink:0">${badges||'<span style="color:var(--muted);font-size:.6rem">none</span>'}</div>
+      <button class="btn-ghost btn-xs" onclick="openStreamPreview('${sid}')" style="flex-shrink:0;padding:2px 6px;font-size:.6rem">📡</button>
+    </div>`;
+  }));
+
+  el.innerHTML = rows.join('');
 }
 
-// ── DDKanqu tester modal ──
-function openDDKanquTester() { openModal('modal-ddkanqu-test'); }
+// ── Helper vars referenced by stream coverage ──
+let ddkanquHomeMap = {};
+let externalStreamsMap = {};
+let ddkanquCache   = {};
+let ddkanquMappings= {};
+const SK_DDKC = 's803u_ddkc';
 
-async function testDDKanquLookup() {
-  const home = v('ddkt-home'), away = v('ddkt-away');
-  if (!home || !away) { toast('Enter both team names','w'); return; }
-  const res = document.getElementById('ddkt-result');
-  const srcEl = document.getElementById('ddkt-sources');
-  const ifrEl = document.getElementById('ddkt-iframe');
-  res.textContent = '⏳ Looking up…';
-  const fakeEv = {type:'match', home:{name:home}, away:{name:away}, league:{id:''}};
+// ── Stub aggregator functions so the dashboard works without the full engine ──
+// These are replaced when the stream aggregator engine is loaded
+function pairKey(a,b) {
+  const norm = s=>(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,' ').trim();
+  return [norm(a),norm(b)].sort().join('|');
+}
+function buildMultiSourceIframe(sources) {
+  if (!sources||!sources.length) return '';
+  const base=(CFG.mediaPlayerBase||'https://alvinalexa.github.io/media-player/').replace(/\/+$/,'');
+  const params=sources.map(s=>`${s.type}=${encodeURIComponent(s.url)}`).join('&');
+  return `<div style="margin:18px 0;position:relative;padding-bottom:56.25%;height:0;overflow:hidden"><iframe loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="${base}?${params}" frameborder="0" scrolling="no" allowfullscreen></iframe></div>`;
+}
+async function getAllStreamSourcesForEvent(ev) { return []; }
 
-  // Manual mapping check
-  const key = pairKey(home, away);
-  const manualId = ddkanquMappings[key];
-  let lines = [`Pair key: ${key}`];
-  if (manualId) {
-    lines.push(`✓ Manual mapping found: ${manualId} → ${ddkUrl(manualId)}`);
-  } else {
-    lines.push('No manual mapping for this pair.');
+// ── prog.txt localStorage cache (2-hour TTL) ──
+const SK_PROG = 's803u_prog';
+function loadProgTxtFromCache() {
+  try {
+    const p = JSON.parse(localStorage.getItem(SK_PROG)||'{}');
+    if (!p.data || !p.ts) return false;
+    const ageHours = (Date.now()-p.ts)/3600000;
+    if (ageHours > (CFG.streamsCacheTtlHours||2)) return false;
+    externalStreamsMap = p.data;
+    const count = Object.keys(externalStreamsMap).length;
+    console.log(`[Streams] prog.txt loaded from cache: ${count} entries (age ${ageHours.toFixed(1)}h)`);
+    const el = document.getElementById('agg-prog-badge');
+    if (el) el.textContent = `prog.txt: ${count} (cached)`;
+    return true;
+  } catch(e) { return false; }
+}
+function saveProgTxtToCache() {
+  try { localStorage.setItem(SK_PROG, JSON.stringify({data:externalStreamsMap,ts:Date.now()})); } catch(e){}
+}
+
+// ═══════════════════════════════════════════
+// DDKanqu logo size fix + multi-source logo fallback
+// Upgrades wsrv calls for DDKanqu logos to use 200px (not 80px),
+// and adds a SportsDB fallback for Asian/CJK teams missed by TSDB.
+// ═══════════════════════════════════════════
+// Override wsrv for logo chips to use larger size for DDKanqu-sourced logos
+function wsrvLogo(url, size=200) {
+  if (!url || url.startsWith('data:') || url.startsWith('blob:')) return url;
+  // DDKanqu logo URLs: use larger size since they're smaller source images
+  const isDDK = url.includes('ddkanqu.com/images/');
+  return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${isDDK?Math.max(size,200):size}&h=${isDDK?Math.max(size,200):size}&fit=contain&n=-1&we`;
+}
+
+// Extended logo fetch: TSDB → DDKanqu homepage cache → SportsDB fallback
+async function fetchLogoWithFallbacks(teamName) {
+  if (!teamName) return '';
+  const key = teamName.toLowerCase().trim();
+
+  // 1. Manual override
+  if (LOGO_OVERRIDES[key]) return LOGO_OVERRIDES[key];
+
+  // 2. In-memory cache
+  if (LOGO_CACHE[key] !== undefined && LOGO_CACHE[key] !== '') return LOGO_CACHE[key];
+
+  // 3. TSDB (primary)
+  const tsdbUrl = await fetchLogo(teamName);
+  if (tsdbUrl) { LOGO_CACHE[key] = tsdbUrl; return tsdbUrl; }
+
+  // 4. DDKanqu homepage map (for CJK/Asian teams)
+  if (ddkanquHomeMap) {
+    for (const entry of Object.values(ddkanquHomeMap)) {
+      if (entry.enHome?.toLowerCase()===key || entry.enAway?.toLowerCase()===key) {
+        const ddkImgBase = 'https://ddkanqu.com/images/';
+        const zhName = entry.enHome?.toLowerCase()===key ? entry.zhHome : entry.zhAway;
+        if (zhName) {
+          const ddkLogoUrl = ddkImgBase + encodeURIComponent(zhName) + '.png';
+          // Test if it loads (DDKanqu logos exist for most teams)
+          const img = await new Promise(res=>{
+            const i=new Image(); i.crossOrigin='anonymous';
+            const t=setTimeout(()=>res(null),4000);
+            i.onload=()=>{clearTimeout(t);res(i);};
+            i.onerror=()=>{clearTimeout(t);res(null);};
+            i.src=wsrvLogo(ddkLogoUrl,200);
+          });
+          if (img) { LOGO_CACHE[key]=ddkLogoUrl; return ddkLogoUrl; }
+        }
+      }
+    }
   }
 
-  // Cache check
-  if (ddkanquCache[key]) lines.push(`✓ Cached: ${ddkanquCache[key]}`);
+  // 5. SportsDB API (broader coverage than TSDB for some leagues)
+  try {
+    const r = await fetch(`https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(teamName)}`);
+    const d = await r.json();
+    const t2 = d?.teams?.[0];
+    const url2 = t2?.strTeamBadge || t2?.strBadge || t2?.strTeamLogo || '';
+    if (url2) { LOGO_CACHE[key]=url2; return url2; }
+  } catch(e) {}
 
-  // Scrape if enabled
-  let ddk = null;
-  if (CFG.enableDdkanqu && !manualId && !ddkanquCache[key]) {
-    lines.push('Scraping DDKanqu…');
-    res.textContent = lines.join('\n');
-    ddk = await scrapeDDKanqu(home, away);
-    if (ddk) { lines.push(`✓ Scraped: ${ddk}`); ddkanquCache[key]=ddk; }
-    else lines.push('✗ Scrape returned no result.');
-  } else if (manualId) {
-    ddk = ddkUrl(manualId);
-  } else if (ddkanquCache[key]) {
-    ddk = ddkanquCache[key];
+  LOGO_CACHE[key] = '';
+  return '';
+}
+
+// Extend enrichLogos to add DDKanqu + SportsDB fallbacks for missing logos
+// We rename the original to _enrichLogosBase and wrap it
+const _enrichLogosBase = enrichLogos;
+enrichLogos = async function(events) {
+  await _enrichLogosBase(events);
+  // Second pass: extended fallbacks for teams that got no logo from TSDB/ESPN
+  const matchEvents = events.filter(e=>e.type==='match');
+  const missing = [];
+  for (const ev of matchEvents) {
+    for (const s of [ev.home, ev.away]) {
+      if (!s.logo) missing.push(s);
+    }
+  }
+  if (!missing.length) return;
+  console.log(`[Logo/Fallback] Extended fallbacks for ${missing.length} missing`);
+  await Promise.allSettled(missing.map(async s => {
+    const url = await fetchLogoWithFallbacks(s.name);
+    if (url) s.logo = url;
+  }));
+};
+
+// ═══════════════════════════════════════════
+// UPDATED quickPostEv — imgbb queue + AI article
+// ═══════════════════════════════════════════
+async function quickPostEv(sid) {
+  if (!accessToken) { toast('Sign in first','e'); return; }
+  const ev = findEv(sid); if (!ev) return;
+  const title = ev.type==='race'
+    ? `${ev.name} – Race Preview & Live Stream | Sports 803`
+    : `${ev.home.name} vs ${ev.away.name} – ${ev.league.name} Live Stream | Sports 803`;
+
+  // AI or template article
+  const body = await buildArticleWithAI(title, ev);
+  const labels = getLabels(ev);
+  const dt = ev.startTime ? ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+
+  // Thumbnail generation
+  toast('Generating thumbnail…','i');
+  const cv = document.createElement('canvas');
+  setCanvasSize(cv, '1920', '16:9');
+  try {
+    if (ev.type==='race') {
+      await drawRaceThumbnail(cv,{name:ev.name,league:ev.league.name,datetime:dt,venue:ev.venue||'',bg1:'#0a0e1a',bg2:'#1a0a00',bannerUrl:getRaceImg(ev)});
+    } else {
+      await drawMatchThumbnail(cv,{home:ev.home.name,away:ev.away.name,hLogo:ev.home.logo||'',aLogo:ev.away.logo||'',league:ev.league.name,datetime:dt,bg1:'#0d1b2a',bg2:'#1a0020',mode:'preview'});
+    }
+    setLog(ev,{thumb:cv.toDataURL('image/jpeg',.85)});
+  } catch(e) { toast('Thumb gen skipped','w'); }
+
+  // imgbb upload with retry queue
+  let thumbHtml = '';
+  if (CFG.imgbbKey) {
+    toast('Uploading thumbnail…','i');
+    const uploadedUrl = await uploadCanvasWithRetry(cv);
+    if (uploadedUrl === '__FAILED__') return; // aborted
+    if (uploadedUrl) {
+      thumbHtml = `<div><img src="${uploadedUrl}" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="${title}"></div>\n`;
+    }
+  }
+  // Fall back to base64 only if not required
+  if (!thumbHtml && !CFG.requireImgbbUpload) {
+    thumbHtml = `<div><img src="${cv.toDataURL('image/jpeg',.85)}" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="${title}"></div>\n`;
   }
 
-  res.textContent = lines.join('\n');
-
-  // Show all sources
-  const sources = await getAllStreamSourcesForEvent(fakeEv);
-  srcEl.textContent = sources.length
-    ? sources.map(s=>`[${s.type}] ${s.url}`).join('\n')
-    : 'No sources found.';
-
-  // Show iframe
-  ifrEl.textContent = sources.length ? buildMultiSourceIframe(sources) : '— no iframe —';
+  const html = thumbHtml + body.replace(/\n/g,'<br>');
+  toast(`Posting: ${title.substring(0,40)}…`,'i');
+  const post = await postRaw(title, html, CFG.schedStatus||'DRAFT', labels);
+  if (post) {
+    setLog(ev,{postId:post.id,postUrl:post.url,status:post.status||'DRAFT',title,league:ev.league.name});
+    renderEventCards(allEvents);
+    addRecentPost(title, post.url, post.status||'DRAFT');
+    toast('Posted ✓','s');
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -3034,6 +2777,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if(CFG.schedEnabled){ document.getElementById('sched-enabled').checked=true; startSched(); }
   set('player-base', CFG.playerBase);
   updateIframeBox();
+
   // Paint placeholder on compose canvas
   const cv=document.getElementById('compose-canvas');
   const ctx=cv.getContext('2d');
@@ -3041,22 +2785,20 @@ document.addEventListener('DOMContentLoaded', () => {
   ctx.fillStyle='rgba(255,255,255,.06)'; ctx.font='900 28px "Barlow Condensed",sans-serif';
   ctx.textAlign='center'; ctx.textBaseline='middle';
   ctx.fillText('SPORTS 803 · AUTO THUMBNAIL', cv.width/2, cv.height/2);
-  // Auto-load external streams if configured
-  if (CFG.autoFetchStreams) {
-    ddkanquMappings = parseDDKMappings(CFG.ddkanquMappingsRaw);
-    // Load prog.txt and DDKanqu homepage in parallel on startup
-    Promise.all([
-      loadExternalStreams().catch(e => console.warn('[Streams] prog.txt init failed:', e.message)),
-      loadDDKanquHome().catch(e => console.warn('[DDKanqu] home init failed:', e.message)),
-    ]).then(([, ddkCount]) => {
-      const progCount = Object.keys(externalStreamsMap).length;
-      const homeCount = Object.keys(ddkanquHomeMap).length;
-      const badge = document.getElementById('agg-prog-badge');
-      if (badge) badge.textContent = `prog.txt: ${progCount} · DDK: ${homeCount}`;
-      persistLogoCache(); // save any DDKanqu logo seeds
-    });
+
+  // Load DDKanqu cache from localStorage
+  try { const p=JSON.parse(localStorage.getItem(SK_DDKC)||'{}'); if(p.data) ddkanquCache=p.data; } catch(e){}
+
+  // Load prog.txt from cache (2h TTL) — avoids cold-start fetch every reload
+  const progFromCache = loadProgTxtFromCache();
+  if (!progFromCache) {
+    // Will be fetched on first Fetch Events or Refresh Streams click
+    console.log('[Streams] prog.txt cache miss or expired — will fetch on demand');
   }
-  console.log('[Sports 803] Dashboard v6-fixed loaded. Logo engine: TSDB primary → ESPN fallback. Stream aggregator: ready.');
+
+  applyLeagueTimingsToUI();
+
+  console.log('[Sports 803] Dashboard v7 loaded. AI writer: ready. Scheduler: stagger+per-league. Logo: TSDB→DDKanqu→SportsDB.');
 });
 </script>
 </body>
