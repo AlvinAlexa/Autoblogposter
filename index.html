@@ -1403,7 +1403,7 @@ toast(`✓ ${allEvents.length} events loaded`,‘s’);
 if(CFG.autoFetchStreams){toast(‘Loading external streams…’,‘i’);await loadExternalStreams();ddkanquMappings=parseDDKMappings(CFG.ddkanquMappingsRaw);}
 }
 async function fetchLeague(league){
-try{const td=v(‘target-date’);const dp=td?`?dates=${td.replace(/-/g,'')}`:’’;;const res=await fetch(`${ESPN}/${league.sport}/${league.slug}/scoreboard${dp}`);if(!res.ok)throw new Error(‘HTTP ‘+res.status);const data=await res.json();return(data.events||[]).map(ev=>parseESPN(ev,league));}
+try{const td=v(‘target-date’);const dp=td?`?dates=${td.replace(/-/g,'')}`:’’;const res=await fetch(`${ESPN}/${league.sport}/${league.slug}/scoreboard${dp}`);if(!res.ok)throw new Error(‘HTTP ‘+res.status);const data=await res.json();return(data.events||[]).map(ev=>parseESPN(ev,league));}
 catch(e){console.warn(`[Fetch] ${league.name}:`,e.message);return[];}
 }
 function parseESPN(ev,league){
@@ -1875,7 +1875,7 @@ while((m=cardRe.exec(html))!==null){
 const zhiBoPath=m[1];const inner=m[2];
 const homeM=inner.match(/class=“left-team”>([^<]+)</span>/);const awayM=inner.match(/class=“right-team”>([^<]+)</span>/);if(!homeM||!awayM)continue;
 const zhHome=homeM[1].trim();const zhAway=awayM[1].trim();
-const hlsM=inner.match(/<!--\s*(https?:\/\/\S+\.m3u8\S*)\s*-->/);const hls=hlsM?hlsM[1].trim():null;
+const hlsM=inner.match(new RegExp(’<’+’!–\s*(https?:\/\/\S+\.m3u8\S*)\s*–’+’>’) );const hls=hlsM?hlsM[1].trim():null;
 const zhibo=‘https://ddkanqu.com’+zhiBoPath;const enHome=zhToEn(zhHome);const enAway=zhToEn(zhAway);const key=pairKey(enHome,enAway);
 if(!map[key]){
 map[key]={zhibo,hls,zhHome,zhAway,enHome,enAway};
