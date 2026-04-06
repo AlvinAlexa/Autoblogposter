@@ -299,7 +299,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
     </div>
   </div>
   <div class="league-pills" id="league-filter-pills"></div>
-  <div class="searchbar"><input type="text" id="event-search" placeholder="Search events, teams, leagues…" oninput="filterEvents()"></div>
+  <div class="searchbar"><input type="text" id="event-search" placeholder="Search events, teams, leagues..." oninput="filterEvents()"></div>
   <div class="events-grid" id="events-grid">
     <div style="color:var(--muted2);grid-column:1/-1;padding:40px;text-align:center;opacity:.55;font-size:.85rem">Click "Fetch All" to load today's events.</div>
   </div>
@@ -324,7 +324,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
   </div>
   <div id="ai-writing-banner" style="display:none" class="ai-writing-indicator">
     <div class="ai-dot"></div>
-    <span style="font-family:var(--cond);font-size:.8rem;font-weight:700">Claude AI is writing your article…</span>
+    <span style="font-family:var(--cond);font-size:.8rem;font-weight:700">Claude AI is writing your article...</span>
     <span id="ai-writing-dots" style="font-family:var(--mono);font-size:.75rem;color:var(--purple)"></span>
   </div>
   <div class="compose-layout">
@@ -333,10 +333,10 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
         <div class="card-title">Post Details</div>
         <div class="form-group">
           <label>Post Title — <span style="color:var(--gold);font-size:.65rem">Auto-parses team names &amp; generates thumbnail</span></label>
-          <input type="text" id="post-title" placeholder="e.g. Manchester City vs Arsenal – Premier League Preview" oninput="onTitleChange()">
+          <input type="text" id="post-title" placeholder="e.g. Manchester City vs Arsenal -- Premier League Preview" oninput="onTitleChange()">
           <div id="title-parsed" style="margin-top:6px;display:none" class="parsed-teams">
             <span class="parsed-home" id="tp-home"></span><span class="parsed-vs">VS</span><span class="parsed-away" id="tp-away"></span>
-            <span id="tp-auto-gen" style="margin-left:auto;font-size:.6rem;color:var(--green);font-family:var(--cond)">⚡ Auto-generating…</span>
+            <span id="tp-auto-gen" style="margin-left:auto;font-size:.6rem;color:var(--green);font-family:var(--cond)">⚡ Auto-generating...</span>
           </div>
         </div>
         <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px">
@@ -347,7 +347,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
             <div><div style="font-size:.62rem;color:var(--muted2);margin-bottom:2px">Labels</div><div class="seo-bar"><div class="seo-fill" id="seo-l-bar" style="width:0%;background:var(--orange)"></div></div><div class="seo-score" id="seo-l-score">0</div></div>
           </div>
         </div>
-        <div class="form-group"><label>Post Body</label><textarea id="post-body" rows="14" placeholder="Article content… or click 🤖 AI Write to generate with Claude AI" oninput="updateSEO()"></textarea></div>
+        <div class="form-group"><label>Post Body</label><textarea id="post-body" rows="14" placeholder="Article content... or click 🤖 AI Write to generate with Claude AI" oninput="updateSEO()"></textarea></div>
         <div class="form-row">
           <div><label>Labels</label><input type="text" id="post-labels" value="sports 803,live stream" oninput="updateSEO()"></div>
           <div><label>Status</label><select id="post-status"><option value="DRAFT">Draft</option><option value="LIVE">Live</option></select></div>
@@ -375,21 +375,21 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
         <div class="card-title">🎥 Stream Links</div>
         <div class="form-group"><label>Player Base URL</label><input type="text" id="player-base" value="https://soulmap1.blogspot.com/p/media-player.html"></div>
         <div id="stream-list">
-          <div class="stream-row"><input type="text" placeholder="https://stream-source.com/…" class="mora-input" oninput="updateIframeBox()"><button class="btn-ghost btn-sm" onclick="removeStream(this)">✕</button></div>
+          <div class="stream-row"><input type="text" placeholder="https://stream-source.com/..." class="mora-input" oninput="updateIframeBox()"><button class="btn-ghost btn-sm" onclick="removeStream(this)">✕</button></div>
         </div>
         <button class="btn-ghost btn-sm" onclick="addStream()" style="margin-bottom:8px">+ Add Source</button>
-        <div class="iframe-code" id="iframe-code">Add a stream URL above…</div>
+        <div class="iframe-code" id="iframe-code">Add a stream URL above...</div>
         <div style="display:flex;gap:6px;margin-top:7px"><button class="btn-blue btn-sm" onclick="insertIframe()">Insert iframe</button></div>
       </div>
       <div class="card">
         <div class="card-title">🎬 Highlights Player</div>
         <div class="form-group">
           <label>Highlights Video URL <span style="color:var(--muted2);font-weight:400">— YouTube, Dailymotion, direct video, etc.</span></label>
-          <input type="text" id="highlights-video-url" placeholder="https://www.youtube.com/watch?v=…" oninput="updateHighlightsPlayer()">
+          <input type="text" id="highlights-video-url" placeholder="https://www.youtube.com/watch?v=..." oninput="updateHighlightsPlayer()">
         </div>
         <div class="form-group">
           <label>Generated Player Embed</label>
-          <div class="iframe-code" id="highlights-player-code">Add a highlights URL above…</div>
+          <div class="iframe-code" id="highlights-player-code">Add a highlights URL above...</div>
         </div>
         <div style="display:flex;gap:6px;margin-top:7px">
           <button class="btn-orange btn-sm" onclick="insertHighlightsPlayer()">🎬 Insert Highlights Player</button>
@@ -418,7 +418,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
         </div>
         <div class="thumb-preview-wrap">
           <canvas id="compose-canvas" width="800" height="450" style="max-width:100%"></canvas>
-          <div id="compose-gen-status" class="gen-status">Enter a title to auto-generate…</div>
+          <div id="compose-gen-status" class="gen-status">Enter a title to auto-generate...</div>
           <div class="progress-bar"><div class="progress-fill" id="compose-progress"></div></div>
         </div>
         <div class="thumb-actions">
@@ -429,7 +429,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
         </div>
         <div class="form-group" style="margin-top:10px">
           <label>Thumbnail URL (after upload)</label>
-          <input type="text" id="compose-thumb-url" readonly placeholder="Upload to get URL…" style="font-family:var(--mono);font-size:.72rem">
+          <input type="text" id="compose-thumb-url" readonly placeholder="Upload to get URL..." style="font-family:var(--mono);font-size:.72rem">
         </div>
       </div>
       <div class="card">
@@ -534,7 +534,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
         <div class="card-title">Preview</div>
         <div class="thumb-preview-wrap">
           <canvas id="tb-canvas" width="800" height="450" style="max-width:100%"></canvas>
-          <div id="tb-status" class="gen-status">Click Build or start typing…</div>
+          <div id="tb-status" class="gen-status">Click Build or start typing...</div>
           <div class="progress-bar"><div class="progress-fill" id="tb-progress"></div></div>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
@@ -556,7 +556,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
     <div style="font-family:var(--cond);font-size:1.4rem;font-weight:900;text-transform:uppercase">Channel <span style="color:var(--red)">Library</span></div>
     <button class="btn-red" onclick="openAddChannel()">+ Add Channel</button>
   </div>
-  <div class="searchbar"><input type="text" id="ch-search" placeholder="Search channels…" oninput="filterChannels()"></div>
+  <div class="searchbar"><input type="text" id="ch-search" placeholder="Search channels..." oninput="filterChannels()"></div>
   <div class="card" style="padding:0;overflow:hidden">
     <table class="ch-table">
       <thead><tr><th>Channel</th><th>Sports / League Tags</th><th>Stream URL</th><th>Region</th><th>Actions</th></tr></thead>
@@ -646,7 +646,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
     <div class="card">
       <div class="card-title">APIs &amp; Upload</div>
       <div class="form-group"><label>imgbb API Key</label><input type="text" id="cfg-imgbb" placeholder="Get free at api.imgbb.com"></div>
-      <div class="form-group"><label>Default Player URL</label><input type="text" id="cfg-player" placeholder="https://…player.html"></div>
+      <div class="form-group"><label>Default Player URL</label><input type="text" id="cfg-player" placeholder="https://...player.html"></div>
       <button class="btn-red btn-sm" onclick="saveCFG()">💾 Save</button>
     </div>
     <div class="card" style="grid-column:1/-1;border-color:rgba(114,9,183,.3)">
@@ -660,7 +660,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
       <div class="form-row">
         <div>
           <label>Claude API Key <span style="color:var(--muted2);font-weight:400">— get at console.anthropic.com</span></label>
-          <input type="password" id="cfg-deepseek-key" placeholder="sk-ant-…" oninput="onClaudeKeyChange()">
+          <input type="password" id="cfg-deepseek-key" placeholder="sk-ant-..." oninput="onClaudeKeyChange()">
         </div>
         <div>
           <label>Claude Model</label>
@@ -732,7 +732,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
     </div>
     <div class="card">
       <div class="card-title">Logo Overrides (one per line: Team Name = URL)</div>
-      <textarea id="cfg-logo-overrides" rows="8" placeholder="Manchester City = https://…&#10;Real Madrid = https://…" style="font-family:var(--mono);font-size:.72rem"></textarea>
+      <textarea id="cfg-logo-overrides" rows="8" placeholder="Manchester City = https://...&#10;Real Madrid = https://..." style="font-family:var(--mono);font-size:.72rem"></textarea>
       <button class="btn-red btn-sm" style="margin-top:8px" onclick="saveLogoOverrides()">Save Overrides</button>
     </div>
     <div class="card">
@@ -761,7 +761,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
   <div class="modal">
     <div class="modal-head"><h3 id="modal-ch-title">Add Channel</h3><button class="close-btn" onclick="closeModal('modal-channel')">✕</button></div>
     <div class="form-row"><div><label>Name</label><input type="text" id="ch-name"></div><div><label>Region</label><input type="text" id="ch-region"></div></div>
-    <div class="form-row"><div><label>Sport Tags</label><input type="text" id="ch-sport" placeholder="epl, ucl, f1…"></div><div><label>Stream URL</label><input type="text" id="ch-url"></div></div>
+    <div class="form-row"><div><label>Sport Tags</label><input type="text" id="ch-sport" placeholder="epl, ucl, f1..."></div><div><label>Stream URL</label><input type="text" id="ch-url"></div></div>
     <div style="display:flex;gap:7px;margin-top:8px"><button class="btn-red" onclick="saveChannel()">Save</button><button class="btn-ghost" onclick="closeModal('modal-channel')">Cancel</button></div>
   </div>
 </div>
@@ -787,7 +787,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
       <div><label>Away Team</label><input type="text" id="ddkt-away" placeholder="Real Madrid"></div>
     </div>
     <button class="btn-blue btn-sm" onclick="testDDKanquLookup()" style="margin-bottom:12px">🔍 Test Lookup</button>
-    <div id="ddkt-result" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.78rem;color:var(--muted2);font-family:var(--mono);min-height:60px;white-space:pre-wrap">Results will appear here…</div>
+    <div id="ddkt-result" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.78rem;color:var(--muted2);font-family:var(--mono);min-height:60px;white-space:pre-wrap">Results will appear here...</div>
     <div style="margin-top:12px"><label>Sources</label><div id="ddkt-sources" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.7rem;color:var(--muted2);font-family:var(--mono);max-height:120px;overflow-y:auto;white-space:pre-wrap">—</div></div>
     <div style="margin-top:12px"><label>Generated iFrame</label><div id="ddkt-iframe" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:.68rem;color:var(--muted2);font-family:var(--mono);max-height:100px;overflow-y:auto;word-break:break-all">—</div></div>
     <div style="display:flex;gap:7px;margin-top:10px"><button class="btn-ghost btn-sm" onclick="closeModal('modal-ddkanqu-test')">Close</button></div>
@@ -895,8 +895,8 @@ const DEFAULT_CHANNELS=[
 
 // ═══ STORAGE ═══
 function loadAll(){
-try{const p=JSON.parse(localStorage.getItem(SK_CFG)||'{}');if(p.data)CFG={…CFG,…p.data};}catch(e){}
-try{const p=JSON.parse(localStorage.getItem(SK_CH)||'{}');channels=p.data?.length?p.data:[…DEFAULT_CHANNELS];}catch(e){channels=[…DEFAULT_CHANNELS];}
+try{const p=JSON.parse(localStorage.getItem(SK_CFG)||'{}');if(p.data)CFG={...CFG,...p.data};}catch(e){}
+try{const p=JSON.parse(localStorage.getItem(SK_CH)||'{}');channels=p.data?.length?p.data:[...DEFAULT_CHANNELS];}catch(e){channels=[...DEFAULT_CHANNELS];}
 try{const p=JSON.parse(localStorage.getItem(SK_POST)||'{}');if(p.data)postLog=p.data;}catch(e){}
 try{const p=JSON.parse(localStorage.getItem(SK_LOGO)||'{}');if(p.data)LOGO_CACHE=p.data;}catch(e){}
 try{const p=JSON.parse(localStorage.getItem(SK_DDKC)||'{}');if(p.data)ddkanquCache=p.data;}catch(e){}
@@ -955,10 +955,10 @@ updateClaudeStatus();
 function v(id){return document.getElementById(id)?.value?.trim()||'';}
 function set(id,val){const el=document.getElementById(id);if(el)el.value=val||'';}
 function exportCFG(){const a=document.createElement('a');a.href='data:application/json,'+encodeURIComponent(JSON.stringify({cfg:CFG,channels,postLog},null,2));a.download='sports803-v7-config.json';a.click();}
-function importCFG(){const i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=e=>{const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.cfg)CFG={…CFG,…d.cfg};if(d.channels)channels=d.channels;if(d.postLog)postLog=d.postLog;saveAll();loadAll();renderAll();toast('Imported ✓','s');}catch{toast('Invalid file','e');}};r.readAsText(e.target.files[0]);};i.click();}
+function importCFG(){const i=document.createElement('input');i.type='file';i.accept='.json';i.onchange=e=>{const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.cfg)CFG={...CFG,...d.cfg};if(d.channels)channels=d.channels;if(d.postLog)postLog=d.postLog;saveAll();loadAll();renderAll();toast('Imported ✓','s');}catch{toast('Invalid file','e');}};r.readAsText(e.target.files[0]);};i.click();}
 function clearAll(){if(!confirm('Clear all data?'))return;[SK_CFG,SK_CH,SK_POST,SK_LOGO,SK_DDKC].forEach(k=>localStorage.removeItem(k));location.reload();}
 function saveLogoOverrides(){CFG.logoOverridesRaw=v('cfg-logo-overrides');LOGO_OVERRIDES=parseLOOverrides(CFG.logoOverridesRaw);saveAll();toast('Overrides saved — '+Object.keys(LOGO_OVERRIDES).length+' entries ✓','s');}
-function parseLOOverrides(raw){const o={};(raw||'').split('\n').forEach(l=>{const[k,…vv]=l.split('=');if(k&&vv.length)o[k.trim().toLowerCase()]=vv.join('=').trim();});return o;}
+function parseLOOverrides(raw){const o={};(raw||'').split('\n').forEach(l=>{const[k,...vv]=l.split('=');if(k&&vv.length)o[k.trim().toLowerCase()]=vv.join('=').trim();});return o;}
 
 // ═══ CLAUDE AI ═══
 function onClaudeKeyChange(){CFG.deepseekKey=v('cfg-deepseek-key');updateClaudeStatus();}
@@ -982,7 +982,7 @@ async function testClaude(){
 const key=CFG.deepseekKey||v('cfg-deepseek-key');
 const res=document.getElementById('ds-test-result');
 if(!key){if(res)res.textContent='⚠ No API key configured.';toast('Add your Claude API key first','w');return;}
-if(res)res.textContent='Testing connection…';toast('Testing Claude connection…','i');
+if(res)res.textContent='Testing connection...';toast('Testing Claude connection...','i');
 try{
 const r=await fetch(CLAUDE_API,{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:CFG.deepseekModel||'claude-sonnet-4-20250514',max_tokens:30,messages:[{role:'user',content:'Reply only: "Sports 803 Claude OK"'}]})});
 const d=await r.json();
@@ -997,7 +997,7 @@ const tone=CFG.deepseekTone||'enthusiastic sports journalist';
 const player=CFG.playerBase||'https://soulmap1.blogspot.com/p/media-player.html';
 if(isHighlights&&ev&&ev.type==='match'){
 const h=ev.home.name,a=ev.away.name,lg=ev.league.name;
-const score=ev.home.score!==''?h+' '+ev.home.score+'–'+ev.away.score+' '+a:'';
+const score=ev.home.score!==''?h+' '+ev.home.score+'--'+ev.away.score+' '+a:'';
 return 'You are a '+tone+' writing for Sports 803, a free sports streaming blog.\nWrite a highlights recap article for: '+h+' vs '+a+' — '+lg+'.\n'+(score?'Final score: '+score+'.\n':'')+'Requirements:\n- Approximately 400 words\n- HTML formatted: use <h2>, <p>, <strong>, <ul><li> tags\n- Sections: Match Summary, Key Moments, Standout Performers, What The Result Means\n- End with: <p>📺 <strong>Watch the '+h+' vs '+a+' highlights FREE on Sports 803</strong>: <a href="'+player+'">'+player+'</a></p>\n- No markdown, only HTML tags\n- Do not include DOCTYPE or body tags, only the article HTML';
 }
 if(!ev||ev.type==='race'){
@@ -1081,7 +1081,7 @@ const el=document.getElementById('logo-cache-badge');if(el)el.textContent='Cache
 async function enrichLogos(events){
 const matchEvs=events.filter(e=>e.type==='match');const needsFetch=new Set();
 for(const ev of matchEvs)for(const s of[ev.home,ev.away]){const k=s.name.toLowerCase();if(LOGO_CACHE[k]===undefined&&!LOGO_OVERRIDES[k])needsFetch.add(s.name);}
-const toFetch=[…needsFetch];
+const toFetch=[...needsFetch];
 for(let i=0;i<toFetch.length;i+=6){await Promise.allSettled(toFetch.slice(i,i+6).map(t=>fetchLogo(t)));if(i+6<toFetch.length)await new Promise(r=>setTimeout(r,80));}
 let total=0,resolved=0;
 for(const ev of matchEvs){
@@ -1110,7 +1110,7 @@ else{chip.textContent=(teamName||'?')[0].toUpperCase();if(teamName)fetchLogo(tea
 // ═══ TITLE PARSER ═══
 function parseTitle(title){
 if(!title)return null;
-const m=title.match(/^(.+?)\s+(?:vs.?|x|versus)\s+(.+?)(?:\s*[–-|].*)?$/i);
+const m=title.match(/^(.+?)\s+(?:vs.?|x|versus)\s+(.+?)(?:\s*[---|].*)?$/i);
 if(!m)return null;return{home:m[1].trim(),away:m[2].trim()};
 }
 
@@ -1170,10 +1170,10 @@ function setCanvasSize(cv,quality,aspect){const ratios={'16:9':.5625,'1:1':1,'9:
 async function renderThumb(cv,opts,progressId,statusId){
 const setP=pct=>{const el=document.getElementById(progressId);if(el)el.style.width=pct+'%';};
 const setSt=(msg,cls)=>{const el=document.getElementById(statusId);if(el){el.textContent=msg;el.className='gen-status '+(cls||'');}};
-setSt('Fetching logos…','loading');setP(10);
+setSt('Fetching logos...','loading');setP(10);
 try{
-if(opts.type==='race'){setSt('Drawing…','loading');setP(40);await drawRaceThumbnail(cv,opts);}
-else{if(!opts.hLogo&&opts.home){opts.hLogo=await fetchLogo(opts.home)||'';setP(35);}if(!opts.aLogo&&opts.away){opts.aLogo=await fetchLogo(opts.away)||'';setP(60);}setSt('Drawing canvas…','loading');setP(75);await drawMatchThumbnail(cv,opts);}
+if(opts.type==='race'){setSt('Drawing...','loading');setP(40);await drawRaceThumbnail(cv,opts);}
+else{if(!opts.hLogo&&opts.home){opts.hLogo=await fetchLogo(opts.home)||'';setP(35);}if(!opts.aLogo&&opts.away){opts.aLogo=await fetchLogo(opts.away)||'';setP(60);}setSt('Drawing canvas...','loading');setP(75);await drawMatchThumbnail(cv,opts);}
 setP(100);setSt('✓ Generated','done');setTimeout(()=>setP(0),1500);
 }catch(e){setSt('Error: '+e.message,'error');setP(0);}
 }
@@ -1232,7 +1232,7 @@ function sendTBToCompose(){const title=(v('tb-home')||'')+(v('tb-away')?' vs '+v
 // ═══ IMGBB UPLOAD ═══
 async function uploadCanvas(cv){
 if(!CFG.imgbbKey){toast('Add imgbb API key in Settings','w');return null;}
-toast('Uploading to imgbb…','i');
+toast('Uploading to imgbb...','i');
 try{const fd=new FormData();fd.append('key',CFG.imgbbKey);fd.append('image',cv.toDataURL('image/jpeg',.9).split(',')[1]);const res=await fetch('https://api.imgbb.com/1/upload',{method:'POST',body:fd});const json=await res.json();if(json.success){toast('Upload ✓','s');return json.data.url;}toast('Upload failed: '+(json.error?.message||'unknown'),'e');return null;}
 catch(e){toast('Network error: '+e.message,'e');return null;}
 }
@@ -1240,7 +1240,7 @@ catch(e){toast('Network error: '+e.message,'e');return null;}
 // ═══ BULK THUMBNAIL ═══
 async function bulkGenThumbs(){
 if(!allEvents.length){toast('Fetch events first','w');return;}
-toast('Generating thumbnails for '+allEvents.length+' events…','i');let count=0;
+toast('Generating thumbnails for '+allEvents.length+' events...','i');let count=0;
 for(const ev of allEvents){
 const pl=getLog(ev);if(pl?.thumb){count++;continue;}
 const cv=document.createElement('canvas');setCanvasSize(cv,'1920','16:9');
@@ -1259,16 +1259,16 @@ renderEventCards(allEvents);toast('✓ Generated '+count+' thumbnails','s');
 async function fetchAllEvents(){
 document.getElementById('fetch-spinner').style.display='inline-block';
 allEvents=[];const active=LEAGUES.filter(l=>CFG.activeLeagues.includes(l.id));
-toast('Fetching '+active.length+' leagues…','i');
+toast('Fetching '+active.length+' leagues...','i');
 const results=await Promise.allSettled(active.map(l=>fetchLeague(l)));
-results.forEach(r=>{if(r.status==='fulfilled')allEvents.push(…r.value);});
+results.forEach(r=>{if(r.status==='fulfilled')allEvents.push(...r.value);});
 document.getElementById('fetch-spinner').style.display='none';
-toast('Resolving logos via TheSportsDB…','i');
+toast('Resolving logos via TheSportsDB...','i');
 await enrichLogos(allEvents);
 document.getElementById('st-events').textContent=allEvents.length;
 renderLeagueFilterPills();renderEventCards(allEvents);updateSchedQueue();populateHLSelect();
 toast('✓ '+allEvents.length+' events loaded','s');
-if(CFG.autoFetchStreams){toast('Loading external streams…','i');await loadExternalStreams();ddkanquMappings=parseDDKMappings(CFG.ddkanquMappingsRaw);}
+if(CFG.autoFetchStreams){toast('Loading external streams...','i');await loadExternalStreams();ddkanquMappings=parseDDKMappings(CFG.ddkanquMappingsRaw);}
 }
 async function fetchLeague(league){
 try{const td=v('target-date');const dp=td?'?dates='+td.replace(/-/g,''):'';const res=await fetch(ESPN+'/'+league.sport+'/'+league.slug+'/scoreboard'+dp);if(!res.ok)throw new Error('HTTP '+res.status);const data=await res.json();return(data.events||[]).map(ev=>parseESPN(ev,league));}
@@ -1303,7 +1303,7 @@ const hLogo=ev.home.logo||LOGO_CACHE[ev.home.name.toLowerCase()]||'';
 const aLogo=ev.away.logo||LOGO_CACHE[ev.away.name.toLowerCase()]||'';
 const hChip=hLogo?'<div class="logo-chip"><img src="https://wsrv.nl/?url='+encodeURIComponent(hLogo)+'&w=80&h=80&fit=contain&n=-1&we" onerror="this.parentElement.textContent=\''+ev.home.name[0]+'\'" alt="'+ev.home.name+'" style="width:100%;height:100%;object-fit:contain"></div>':'<div class="logo-chip">'+ev.home.name[0]+'</div>';
 const aChip=aLogo?'<div class="logo-chip"><img src="https://wsrv.nl/?url='+encodeURIComponent(aLogo)+'&w=80&h=80&fit=contain&n=-1&we" onerror="this.parentElement.textContent=\''+ev.away.name[0]+'\'" alt="'+ev.away.name+'" style="width:100%;height:100%;object-fit:contain"></div>':'<div class="logo-chip">'+ev.away.name[0]+'</div>';
-return'<div class="event-card '+(pl?.thumb?'has-thumb':'')+' '+(pl?.postId?'posted':'')+'" data-id="'+ev.id+'"><div class="ec-top"><span class="ec-league">'+ev.league.icon+' '+ev.league.name+'</span><div style="display:flex;align-items:center;gap:4px">'+thumbBadge+badge+'<span class="ec-status '+sc+'">'+ev.status+'</span></div></div><div class="ec-match"><div class="ec-team">'+hChip+'<div class="ec-team-name">'+ev.home.name+'</div></div><div style="display:flex;flex-direction:column;align-items:center"><div class="ec-vs">'+(ev.home.score!==''?ev.home.score+' – '+ev.away.score:'vs')+'</div><div class="ec-time">'+ts+'</div></div><div class="ec-team">'+aChip+'<div class="ec-team-name">'+ev.away.name+'</div></div></div>'+(pl?.postUrl?'<div style="font-size:.62rem;color:var(--muted2)">📝 <a href="'+pl.postUrl+'" target="_blank" style="color:var(--blue)">View post</a></div>':'')+'<div class="ec-actions"><button class="btn-red btn-sm" onclick="genAndFill(\''+sid+'\')">✍️ Gen</button><button class="btn-blue btn-sm" onclick="quickPostEv(\''+sid+'\')">📤 Post</button><button class="btn-gold btn-sm" onclick="genThumbForEv(\''+sid+'\')">🖼️ Thumb</button>'+(fin?'<button class="btn-orange btn-sm" onclick="openHLForEv(\''+sid+'\')">🎬 HL</button>':'')+'</div></div>';
+return'<div class="event-card '+(pl?.thumb?'has-thumb':'')+' '+(pl?.postId?'posted':'')+'" data-id="'+ev.id+'"><div class="ec-top"><span class="ec-league">'+ev.league.icon+' '+ev.league.name+'</span><div style="display:flex;align-items:center;gap:4px">'+thumbBadge+badge+'<span class="ec-status '+sc+'">'+ev.status+'</span></div></div><div class="ec-match"><div class="ec-team">'+hChip+'<div class="ec-team-name">'+ev.home.name+'</div></div><div style="display:flex;flex-direction:column;align-items:center"><div class="ec-vs">'+(ev.home.score!==''?ev.home.score+' -- '+ev.away.score:'vs')+'</div><div class="ec-time">'+ts+'</div></div><div class="ec-team">'+aChip+'<div class="ec-team-name">'+ev.away.name+'</div></div></div>'+(pl?.postUrl?'<div style="font-size:.62rem;color:var(--muted2)">📝 <a href="'+pl.postUrl+'" target="_blank" style="color:var(--blue)">View post</a></div>':'')+'<div class="ec-actions"><button class="btn-red btn-sm" onclick="genAndFill(\''+sid+'\')">✍️ Gen</button><button class="btn-blue btn-sm" onclick="quickPostEv(\''+sid+'\')">📤 Post</button><button class="btn-gold btn-sm" onclick="genThumbForEv(\''+sid+'\')">🖼️ Thumb</button>'+(fin?'<button class="btn-orange btn-sm" onclick="openHLForEv(\''+sid+'\')">🎬 HL</button>':'')+'</div></div>';
 }
 function renderRaceCard(ev){
 const ts=ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'TBD';
@@ -1317,22 +1317,22 @@ return'<div class="event-card '+(pl?.thumb?'has-thumb':'')+' '+(pl?.postId?'post
 // ═══ PER-EVENT ACTIONS ═══
 function findEv(sid){const id=decodeURIComponent(String(sid));return allEvents.find(e=>String(e.id)===id)||allEvents.find(e=>String(e.id)===String(sid))||null;}
 function getLog(ev){return postLog[evKey(ev)]||null;}
-function setLog(ev,data){postLog[evKey(ev)]={…(postLog[evKey(ev)]||{}),…data,ts:Date.now()};saveAll();updateStats();}
+function setLog(ev,data){postLog[evKey(ev)]={...(postLog[evKey(ev)]||{}),...data,ts:Date.now()};saveAll();updateStats();}
 function evKey(ev){return ev.league.id+'|'+(ev.home?.name||ev.name||'').replace(/\s/g,'*')+'|'+(ev.away?.name||'').replace(/\s/g,'*');}
 async function genAndFill(sid){
 const ev=findEv(sid);if(!ev){toast('Event not found','e');return;}
 const fin=ev.type==='match'&&(ev.status==='Final'||ev.status==='FT'||ev.status==='Completed');
-const score=fin&&ev.home.score!==''?ev.home.score+'–'+ev.away.score:'';
+const score=fin&&ev.home.score!==''?ev.home.score+'--'+ev.away.score:'';
 let title;
 if(fin&&ev.type==='match'){
-title=score?ev.home.name+' '+score+' '+ev.away.name+' – '+ev.league.name+' Highlights | Sports 803':ev.home.name+' vs '+ev.away.name+' – '+ev.league.name+' Highlights | Sports 803';
+title=score?ev.home.name+' '+score+' '+ev.away.name+' -- '+ev.league.name+' Highlights | Sports 803':ev.home.name+' vs '+ev.away.name+' -- '+ev.league.name+' Highlights | Sports 803';
 }else{
-title=ev.type==='race'?ev.name+' – Race Preview & Live Stream | Sports 803':ev.home.name+' vs '+ev.away.name+' – '+ev.league.name+' Live Stream | Sports 803';
+title=ev.type==='race'?ev.name+' -- Race Preview & Live Stream | Sports 803':ev.home.name+' vs '+ev.away.name+' -- '+ev.league.name+' Live Stream | Sports 803';
 }
 const pl=getLog(ev);
 // If a post already exists, load its current content from Blogger
 if(pl?.postId){
-toast('Loading existing post from Blogger…','i');
+toast('Loading existing post from Blogger...','i');
 const existing=await fetchPostBody(pl.postId);
 if(existing){
 set('post-title',fin?title:existing.title||title);
@@ -1359,7 +1359,7 @@ toast('Could not load existing post body — starting fresh','w');
 // No existing post — generate fresh
 clearEditMode();
 set('post-title',title);
-toast(fin?'Generating highlights article…':'Generating article…','i');
+toast(fin?'Generating highlights article...':'Generating article...','i');
 const body=await buildArticleWithStreams(title,ev,fin);
 document.getElementById('post-body').value=body;
 document.getElementById('post-labels').value=getLabels(ev).join(', ');
@@ -1384,7 +1384,7 @@ async function reloadComposeAgg(){
 const aggEl=document.getElementById('compose-agg-list');const statusEl=document.getElementById('compose-agg-status');
 if(!currentComposeEv){toast('No event loaded — use ✍️ Gen from Events first','w');return;}
 if(!CFG.autoFetchStreams){toast('Enable "Auto-fetch External Streams" in Settings first','w');return;}
-if(statusEl)statusEl.textContent='Loading…';if(aggEl)aggEl.innerHTML='<span class="spinner"></span> Fetching…';
+if(statusEl)statusEl.textContent='Loading...';if(aggEl)aggEl.innerHTML='<span class="spinner"></span> Fetching...';
 try{const sources=await getAllStreamSourcesForEvent(currentComposeEv);if(statusEl)statusEl.textContent=sources.length+' source(s)';if(!sources.length){if(aggEl)aggEl.innerHTML='<span style="color:var(--muted2)">No streams found.</span>';return;}if(aggEl){aggEl.innerHTML=sources.map(s=>'<div class="stream-row"><input type="text" class="mora-input" value="'+s.url+'" readonly style="font-size:.7rem;color:var(--muted2);font-family:var(--mono)"><button class="btn-blue btn-xs" onclick="insertSourceToCompose(''+s.url.replace(/'/g,"\'").replace(/"/g,'"')+''">Insert</button></div>').join('');}toast(sources.length+' streams loaded ✓','s');}catch(e){if(statusEl)statusEl.textContent='Error';toast('Aggregator error: '+e.message,'e');}
 }
 async function insertAllAggStreams(){
@@ -1410,24 +1410,24 @@ if(pl?.postId){
 const confirmed=confirm('A post already exists for this event.\n\nUpdate it with new content (e.g. highlights, final score)?');
 if(!confirmed)return;
 // Regenerate content and update existing post
-const title=ev.type==='race'?ev.name+' – Race Preview & Live Stream | Sports 803':ev.home.name+' vs '+ev.away.name+' – '+ev.league.name+' Live Stream | Sports 803';
+const title=ev.type==='race'?ev.name+' -- Race Preview & Live Stream | Sports 803':ev.home.name+' vs '+ev.away.name+' -- '+ev.league.name+' Live Stream | Sports 803';
 const body=await buildArticleWithStreams(title,ev);const labels=getLabels(ev);
 const dt=ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
-toast('Regenerating thumbnail…','i');const cv=document.createElement('canvas');setCanvasSize(cv,'1920','16:9');
+toast('Regenerating thumbnail...','i');const cv=document.createElement('canvas');setCanvasSize(cv,'1920','16:9');
 try{if(ev.type==='race')await drawRaceThumbnail(cv,{name:ev.name,league:ev.league.name,datetime:dt,venue:ev.venue||'',bg1:'#0a0e1a',bg2:'#1a0a00',bannerUrl:getRaceImg(ev)});else await drawMatchThumbnail(cv,{home:ev.home.name,away:ev.away.name,hLogo:ev.home.logo||'',aLogo:ev.away.logo||'',league:ev.league.name,datetime:dt,bg1:'#0d1b2a',bg2:'#1a0020',mode:'preview'});setLog(ev,{thumb:cv.toDataURL('image/jpeg',.85)});}catch(e){toast('Thumb gen skipped','w');}
 let thumbHtml='';
 if(CFG.imgbbKey){try{const fd=new FormData();fd.append('key',CFG.imgbbKey);fd.append('image',cv.toDataURL('image/jpeg',.9).split(',')[1]);const res=await fetch('https://api.imgbb.com/1/upload',{method:'POST',body:fd});const json=await res.json();if(json.success){thumbHtml='<div><img src="'+json.data.url+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+title+'"></div>\n';setLog(ev,{thumb:json.data.url});}}catch(e){}}
 if(!thumbHtml)thumbHtml='<div><img src="'+cv.toDataURL('image/jpeg',.85)+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+title+'"></div>\n';
 const html=thumbHtml+body.replace(/\n/g,'<br>');
-toast('Updating post…','i');
+toast('Updating post...','i');
 await updateExistingPost(ev,title,html,pl.status||'DRAFT',labels,pl.scheduledFor||null);
 return;
 }
 // No existing post — create new
-const title=ev.type==='race'?ev.name+' – Race Preview & Live Stream | Sports 803':ev.home.name+' vs '+ev.away.name+' – '+ev.league.name+' Live Stream | Sports 803';
+const title=ev.type==='race'?ev.name+' -- Race Preview & Live Stream | Sports 803':ev.home.name+' vs '+ev.away.name+' -- '+ev.league.name+' Live Stream | Sports 803';
 const body=await buildArticleWithStreams(title,ev);const labels=getLabels(ev);
 const dt=ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
-toast('Generating thumbnail…','i');const cv=document.createElement('canvas');setCanvasSize(cv,'1920','16:9');
+toast('Generating thumbnail...','i');const cv=document.createElement('canvas');setCanvasSize(cv,'1920','16:9');
 try{if(ev.type==='race')await drawRaceThumbnail(cv,{name:ev.name,league:ev.league.name,datetime:dt,venue:ev.venue||'',bg1:'#0a0e1a',bg2:'#1a0a00',bannerUrl:getRaceImg(ev)});else await drawMatchThumbnail(cv,{home:ev.home.name,away:ev.away.name,hLogo:ev.home.logo||'',aLogo:ev.away.logo||'',league:ev.league.name,datetime:dt,bg1:'#0d1b2a',bg2:'#1a0020',mode:'preview'});setLog(ev,{thumb:cv.toDataURL('image/jpeg',.85)});}catch(e){toast('Thumb gen skipped','w');}
 let thumbHtml='';
 if(CFG.imgbbKey){try{const fd=new FormData();fd.append('key',CFG.imgbbKey);fd.append('image',cv.toDataURL('image/jpeg',.9).split(',')[1]);const res=await fetch('https://api.imgbb.com/1/upload',{method:'POST',body:fd});const json=await res.json();if(json.success)thumbHtml='<div><img src="'+json.data.url+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+title+'"></div>\n';}catch(e){}}
@@ -1435,21 +1435,21 @@ if(!thumbHtml)thumbHtml='<div><img src="'+cv.toDataURL('image/jpeg',.85)+'" styl
 let publishDate=null;const schedMode=CFG.schedStatus||'DRAFT';
 if(ev.startTime&&schedMode==='LIVE'){const offsetMs=(CFG.schedTiming||60)*60*1000;publishDate=new Date(ev.startTime.getTime()-offsetMs).toISOString();}
 const html=thumbHtml+body.replace(/\n/g,'<br>');
-toast('Posting: '+title.substring(0,40)+'…','i');
+toast('Posting: '+title.substring(0,40)+'...','i');
 const post=await postRaw(title,html,schedMode,labels,publishDate);
 if(post){setLog(ev,{postId:post.id,postUrl:post.url,status:schedMode,title,league:ev.league.name,scheduledFor:publishDate||null});renderEventCards(allEvents);addRecentPost(title,post.url,schedMode);toast(publishDate?'Scheduled for '+new Date(publishDate).toLocaleTimeString()+' ✓':'Posted ✓','s');}
 }
 async function bulkPostAll(){
 if(!accessToken){toast('Sign in first','e');return;}
 const toPost=allEvents.filter(ev=>!getLog(ev)?.postId);if(!toPost.length){toast('All events already posted','i');return;}
-toast('Bulk posting '+toPost.length+' events…','i');
+toast('Bulk posting '+toPost.length+' events...','i');
 for(const ev of toPost){await quickPostEv(encodeURIComponent(String(ev.id)));await new Promise(r=>setTimeout(r,1200));}
 toast('Bulk post complete ✓','s');
 }
 const RACE_IMGS={'monaco':'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Monaco_Circuit.png.transform/7col/image.png','formula 1':'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/1280px-F1.svg.png','motogp':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/MotoGP_Logo.svg/1280px-MotoGP_Logo.svg.png','nascar':'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/NASCAR_Logo.svg/1280px-NASCAR_Logo.svg.png'};
 function getRaceImg(ev){const hay=((ev.name||'')+(ev.venue||'')).toLowerCase();for(const k of Object.keys(RACE_IMGS).sort((a,b)=>b.length-a.length))if(hay.includes(k))return RACE_IMGS[k];if(ev.league?.id==='f1')return RACE_IMGS['formula 1'];if(ev.league?.id==='motogp')return RACE_IMGS['motogp'];if(ev.league?.id==='nascar')return RACE_IMGS['nascar'];return'';}
 const LEAGUE_LABELS={ucl:['UEFA Champions League','UCL','Football Live Stream','Sports 803'],epl:['Premier League','EPL','Football Live Stream','Sports 803'],laliga:['La Liga','Spanish Football','Football Live Stream','Sports 803'],seriea:['Serie A','Italian Football','Football Live Stream','Sports 803'],bundesliga:['Bundesliga','German Football','Football Live Stream','Sports 803'],f1:['Formula 1','F1','Grand Prix','Motorsport Live Stream','Sports 803'],nba:['NBA','Basketball','NBA Live Stream','Sports 803'],nfl:['NFL','American Football','Sports 803'],ufc:['UFC','MMA','Combat Sports','Sports 803'],atp:['ATP','Tennis','Sports 803'],wta:['WTA','Women Tennis','Sports 803']};
-function getLabels(ev){const base=LEAGUE_LABELS[ev.league?.id]||['Sports 803','Live Stream'];const extra=[];if(ev.home?.name)extra.push(ev.home.name);if(ev.away?.name)extra.push(ev.away.name);return[…new Set([…base,…extra])];}
+function getLabels(ev){const base=LEAGUE_LABELS[ev.league?.id]||['Sports 803','Live Stream'];const extra=[];if(ev.home?.name)extra.push(ev.home.name);if(ev.away?.name)extra.push(ev.away.name);return[...new Set([...base,...extra])];}
 function findCHsForLeague(id){return channels.filter(c=>c.sport.split(',').map(s=>s.trim()).some(s=>s===id||id.includes(s)||s.includes(id)));}
 
 // ═══ CONTENT INJECTORS ═══
@@ -1471,27 +1471,27 @@ body.value+=(body.value?'\n\n':'')+block;updateSEO();toast(type.toUpperCase()+' 
 function updateSEO(){
 const t=v('post-title'),b=document.getElementById('post-body').value,lb=v('post-labels').split(',').filter(s=>s.trim()).length;
 const tl=t.length,tpct=Math.min(100,tl<30?(tl/30)*60:tl<=70?100:Math.max(0,100-(tl-70)*3));
-document.getElementById('seo-t-bar').style.width=tpct+'%';document.getElementById('seo-t-score').textContent=tl+' ch';document.getElementById('seo-t-score').style.color=tpct>70?'var(–green)':tpct>40?'var(–orange)':'var(–red)';
+document.getElementById('seo-t-bar').style.width=tpct+'%';document.getElementById('seo-t-score').textContent=tl+' ch';document.getElementById('seo-t-score').style.color=tpct>70?'var(--green)':tpct>40?'var(--orange)':'var(--red)';
 const wc=b.split(/\s+/).filter(w=>w.length>2).length,wpct=Math.min(100,(wc/500)*100);
-document.getElementById('seo-w-bar').style.width=wpct+'%';document.getElementById('seo-w-score').textContent=wc+' words';document.getElementById('seo-w-score').style.color=wpct>70?'var(–green)':wpct>40?'var(–orange)':'var(–red)';
+document.getElementById('seo-w-bar').style.width=wpct+'%';document.getElementById('seo-w-score').textContent=wc+' words';document.getElementById('seo-w-score').style.color=wpct>70?'var(--green)':wpct>40?'var(--orange)':'var(--red)';
 const lpct=Math.min(100,(lb/8)*100);document.getElementById('seo-l-bar').style.width=lpct+'%';document.getElementById('seo-l-score').textContent=lb+' labels';
 }
 
 // ═══ STREAM BUILDER ═══
-function addStream(){const r=document.createElement('div');r.className='stream-row';r.innerHTML='<input type="text" placeholder="https://stream.com/…" class="mora-input" oninput="updateIframeBox()"><button class="btn-ghost btn-sm" onclick="removeStream(this)">✕</button>';document.getElementById('stream-list').appendChild(r);updateIframeBox();}
+function addStream(){const r=document.createElement('div');r.className='stream-row';r.innerHTML='<input type="text" placeholder="https://stream.com/..." class="mora-input" oninput="updateIframeBox()"><button class="btn-ghost btn-sm" onclick="removeStream(this)">✕</button>';document.getElementById('stream-list').appendChild(r);updateIframeBox();}
 function removeStream(btn){const l=document.getElementById('stream-list');if(l.children.length<=1){btn.previousElementSibling.value='';return;}btn.parentElement.remove();updateIframeBox();}
 function getMoraURLs(){return Array.from(document.querySelectorAll('.mora-input')).map(i=>i.value.trim()).filter(Boolean);}
 function buildIframe(urls){const base=(v('player-base')||CFG.playerBase).trim();const params=urls.map(u=>'mora='+encodeURIComponent(u)).join('&');const src=params?base+'?'+params:base;return'<div style="margin:18px 0"><iframe loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" width="100%" height="500" src="'+src+'" frameborder="0" scrolling="no" allowfullscreen></iframe></div>';}
-function updateIframeBox(){const urls=getMoraURLs();document.getElementById('iframe-code').textContent=urls.length?buildIframe(urls):'Add a stream URL above…';}
+function updateIframeBox(){const urls=getMoraURLs();document.getElementById('iframe-code').textContent=urls.length?buildIframe(urls):'Add a stream URL above...';}
 function insertIframe(){const urls=getMoraURLs();if(!urls.length){toast('Add at least one stream URL','w');return;}const body=document.getElementById('post-body');body.value+=(body.value?'\n\n':'')+buildIframe(urls);updateSEO();toast('iframe inserted ✓','s');}
 
 // ═══ BLOGGER AUTH ═══
 function handleAuth(){
 if(accessToken){signOut();return;}if(!CFG.clientId){toast('Enter OAuth Client ID in Settings','e');return;}
-const client=google.accounts.oauth2.initTokenClient({client_id:CFG.clientId,scope:'https://www.googleapis.com/auth/blogger',callback:r=>{if(r.error){toast('Auth error: '+r.error,'e');return;}accessToken=r.access_token;document.getElementById('auth-dot').className='on';document.getElementById('auth-label').textContent='Signed in';document.getElementById('auth-label').style.color='var(–green)';document.getElementById('auth-btn').textContent='Sign out';toast('Signed in ✓','s');}});
+const client=google.accounts.oauth2.initTokenClient({client_id:CFG.clientId,scope:'https://www.googleapis.com/auth/blogger',callback:r=>{if(r.error){toast('Auth error: '+r.error,'e');return;}accessToken=r.access_token;document.getElementById('auth-dot').className='on';document.getElementById('auth-label').textContent='Signed in';document.getElementById('auth-label').style.color='var(--green)';document.getElementById('auth-btn').textContent='Sign out';toast('Signed in ✓','s');}});
 client.requestAccessToken();
 }
-function signOut(){if(accessToken)try{google.accounts.oauth2.revoke(accessToken,()=>{});}catch(e){}accessToken=null;document.getElementById('auth-dot').className='';document.getElementById('auth-label').textContent='Not signed in';document.getElementById('auth-label').style.color='var(–muted)';document.getElementById('auth-btn').textContent='Sign in';toast('Signed out','i');}
+function signOut(){if(accessToken)try{google.accounts.oauth2.revoke(accessToken,()=>{});}catch(e){}accessToken=null;document.getElementById('auth-dot').className='';document.getElementById('auth-label').textContent='Not signed in';document.getElementById('auth-label').style.color='var(--muted)';document.getElementById('auth-btn').textContent='Sign in';toast('Signed out','i');}
 async function postToBlogger(){
 if(!accessToken){toast('Sign in first','e');return;}if(!CFG.blogId){toast('Enter Blog ID in Settings','e');return;}
 const t=v('post-title'),b=document.getElementById('post-body').value.trim(),st=v('post-status');
@@ -1579,7 +1579,7 @@ const banner=document.getElementById('edit-mode-banner');if(banner)banner.style.
 }
 function addRecentPost(title,url,status){
 const list=document.getElementById('recent-posts');if(list.textContent.includes('No posts'))list.innerHTML='';
-const d=document.createElement('div');d.style.cssText='padding:6px 0;border-bottom:1px solid var(–border);display:flex;align-items:center;gap:7px';
+const d=document.createElement('div');d.style.cssText='padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px';
 d.innerHTML='<span class="post-badge '+(status||'').toLowerCase()+'">'+status+'</span><span style="flex:1;font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+title+'</span>'+(url?'<a href="'+url+'" target="_blank" style="font-size:.68rem;color:var(--blue)">View</a>':'');
 list.prepend(d);updateStats();
 }
@@ -1593,15 +1593,15 @@ function onHLSelect(){const idx=parseInt(document.getElementById('hl-select').va
 async function genHLText(){
 const idx=parseInt(document.getElementById('hl-select').value);if(isNaN(idx)){toast('Select an event','i');return;}
 const ev=allEvents[idx];if(!ev)return;const label=ev.type==='race'?ev.name:ev.home.name+' vs '+ev.away.name;
-if(CFG.deepseekKey){toast('Claude AI writing highlights…','i');try{const sc=ev.type!=='race'&&ev.home.score!==''?'Final score: '+ev.home.name+' '+ev.home.score+'–'+ev.away.score+' '+ev.away.name+'. ':'';const prompt='Write a highlights recap for '+label+' ('+ev.league?.name+'). '+sc+'Write ~250 words in HTML format with <h2>, <p> tags. Enthusiastic sports journalist tone. End with: <p>📺 Watch highlights free on Sports 803.</p>';const article=await callClaude(prompt);document.getElementById('hl-body').value=article;toast('Highlights written by Claude AI ✓','s');return;}catch(e){toast('Claude fallback to template','w');}}
-const sc=ev.type!=='race'&&ev.home.score!==''?'Final: '+ev.home.name+' '+ev.home.score+'–'+ev.away.score+' '+ev.away.name+'\n\n':'';
+if(CFG.deepseekKey){toast('Claude AI writing highlights...','i');try{const sc=ev.type!=='race'&&ev.home.score!==''?'Final score: '+ev.home.name+' '+ev.home.score+'--'+ev.away.score+' '+ev.away.name+'. ':'';const prompt='Write a highlights recap for '+label+' ('+ev.league?.name+'). '+sc+'Write ~250 words in HTML format with <h2>, <p> tags. Enthusiastic sports journalist tone. End with: <p>📺 Watch highlights free on Sports 803.</p>';const article=await callClaude(prompt);document.getElementById('hl-body').value=article;toast('Highlights written by Claude AI ✓','s');return;}catch(e){toast('Claude fallback to template','w');}}
+const sc=ev.type!=='race'&&ev.home.score!==''?'Final: '+ev.home.name+' '+ev.home.score+'--'+ev.away.score+' '+ev.away.name+'\n\n':'';
 document.getElementById('hl-body').value=pick(P.hl)+' '+label+'.\n\n'+sc+pick(P.mc)+' '+pick(P.mc)+'\n\n'+pick(P.cta);toast('Highlights text generated ✓','s');
 }
 async function postHighlights(){
 const idx=parseInt(document.getElementById('hl-select').value);if(isNaN(idx)){toast('Select an event','i');return;}const ev=allEvents[idx];if(!ev)return;
 const body=document.getElementById('hl-body').value.trim();if(!body){toast('Write/generate text first','i');return;}
 if(!accessToken||!CFG.blogId){toast('Sign in and set Blog ID','e');return;}
-const label=ev.type==='race'?ev.name:ev.home.name+' vs '+ev.away.name;const title=label+' – Highlights & Replay | Sports 803';
+const label=ev.type==='race'?ev.name:ev.home.name+' vs '+ev.away.name;const title=label+' -- Highlights & Replay | Sports 803';
 const video=v('hl-video');const iframeHtml=video?buildIframe([video]):'';const html=(body+(iframeHtml?'\n\n'+iframeHtml:'')).replace(/\n/g,'<br>');
 const pl=getLog(ev);
 if(pl?.postId){try{const res=await fetch('https://www.googleapis.com/blogger/v3/blogs/'+CFG.blogId+'/posts/'+pl.postId,{method:'PUT',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({kind:'blogger#post',id:pl.postId,blog:{id:CFG.blogId},title,content:html,labels:getLabels(ev)})});if(!res.ok)throw new Error(res.status);const post=await res.json();const thumbUpdate=v('hl-thumb-url')||pl?.thumb||null;setLog(ev,{postId:post.id,postUrl:post.url,title,hasHL:true,thumb:thumbUpdate||pl?.thumb||null});toast('Post updated ✓','s');closeModal('modal-hl');renderEventCards(allEvents);}catch(e){toast('Update failed: '+e.message,'e');}}
@@ -1609,16 +1609,16 @@ else{const post=await postRaw(title,html,'LIVE',getLabels(ev),null);if(post){set
 }
 
 // ═══ CHANNELS ═══
-function renderChannels(filter=''){const tbody=document.getElementById('ch-tbody');const list=filter?channels.filter(c=>[c.name,c.sport,c.region].some(f=>f.toLowerCase().includes(filter))):channels;tbody.innerHTML=list.map(c=>'<tr><td><strong style="font-family:var(--cond)">'+c.name+'</strong></td><td>'+c.sport.split(',').map(s=>'<span class="sport-tag">'+s.trim()+'</span>').join('')+'</td><td>'+(c.url?'<a href="'+c.url+'" target="_blank" style="font-size:.7rem;color:var(--blue)">'+c.url.substring(0,36)+'…</a>':'<span style="color:var(--muted2)">—</span>')+'</td><td><span style="background:var(--bg3);padding:2px 7px;border-radius:5px;font-size:.68rem;font-family:var(--cond);font-weight:700">'+c.region+'</span></td><td style="display:flex;gap:5px"><button class="btn-ghost btn-sm" onclick="editCH(\''+c.id+'\')">✏️</button><button class="btn-sm" style="background:#3d0c0c;color:#fff;padding:4px 8px" onclick="deleteCH(\''+c.id+'\')">✕</button></td></tr>').join('')||'<tr><td colspan="5" style="text-align:center;color:var(--muted2);padding:20px">No channels.</td></tr>';}
+function renderChannels(filter=''){const tbody=document.getElementById('ch-tbody');const list=filter?channels.filter(c=>[c.name,c.sport,c.region].some(f=>f.toLowerCase().includes(filter))):channels;tbody.innerHTML=list.map(c=>'<tr><td><strong style="font-family:var(--cond)">'+c.name+'</strong></td><td>'+c.sport.split(',').map(s=>'<span class="sport-tag">'+s.trim()+'</span>').join('')+'</td><td>'+(c.url?'<a href="'+c.url+'" target="_blank" style="font-size:.7rem;color:var(--blue)">'+c.url.substring(0,36)+'...</a>':'<span style="color:var(--muted2)">—</span>')+'</td><td><span style="background:var(--bg3);padding:2px 7px;border-radius:5px;font-size:.68rem;font-family:var(--cond);font-weight:700">'+c.region+'</span></td><td style="display:flex;gap:5px"><button class="btn-ghost btn-sm" onclick="editCH(\''+c.id+'\')">✏️</button><button class="btn-sm" style="background:#3d0c0c;color:#fff;padding:4px 8px" onclick="deleteCH(\''+c.id+'\')">✕</button></td></tr>').join('')||'<tr><td colspan="5" style="text-align:center;color:var(--muted2);padding:20px">No channels.</td></tr>';}
 function filterChannels(){renderChannels(document.getElementById('ch-search').value.toLowerCase());}
 function openAddChannel(){editingCH=null;document.getElementById('modal-ch-title').textContent='Add Channel';['ch-name','ch-region','ch-sport','ch-url'].forEach(id=>set(id,''));openModal('modal-channel');}
 function editCH(id){const c=channels.find(x=>x.id===id);if(!c)return;editingCH=id;document.getElementById('modal-ch-title').textContent='Edit Channel';set('ch-name',c.name);set('ch-region',c.region);set('ch-sport',c.sport);set('ch-url',c.url);openModal('modal-channel');}
-function saveChannel(){const name=v('ch-name');if(!name){toast('Name required','e');return;}const obj={name,region:v('ch-region'),sport:v('ch-sport'),url:v('ch-url')};if(editingCH){const i=channels.findIndex(c=>c.id===editingCH);if(i>-1)channels[i]={…channels[i],…obj};}else channels.push({id:'c'+Date.now(),…obj});saveAll();renderChannels();closeModal('modal-channel');toast('Channel saved ✓','s');}
+function saveChannel(){const name=v('ch-name');if(!name){toast('Name required','e');return;}const obj={name,region:v('ch-region'),sport:v('ch-sport'),url:v('ch-url')};if(editingCH){const i=channels.findIndex(c=>c.id===editingCH);if(i>-1)channels[i]={...channels[i],...obj};}else channels.push({id:'c'+Date.now(),...obj});saveAll();renderChannels();closeModal('modal-channel');toast('Channel saved ✓','s');}
 function deleteCH(id){if(!confirm('Delete?'))return;channels=channels.filter(c=>c.id!==id);saveAll();renderChannels();}
 
 // ═══ SCHEDULER ═══
 const schedLogs=[];
-function toggleScheduler(){CFG.schedEnabled=document.getElementById('sched-enabled').checked;saveCFG();if(CFG.schedEnabled){startSched();toast('Scheduler enabled ✓','s');}else{stopSched();toast('Scheduler disabled','i');}const el=document.getElementById('sched-enabled-label');if(el)el.style.color=CFG.schedEnabled?'var(–green)':'var(–text)';}
+function toggleScheduler(){CFG.schedEnabled=document.getElementById('sched-enabled').checked;saveCFG();if(CFG.schedEnabled){startSched();toast('Scheduler enabled ✓','s');}else{stopSched();toast('Scheduler disabled','i');}const el=document.getElementById('sched-enabled-label');if(el)el.style.color=CFG.schedEnabled?'var(--green)':'var(--text)';}
 function startSched(){stopSched();const interval=CFG.schedInterval||300000;schedNextFire=Date.now()+interval;schedTimer=setInterval(async()=>{schedNextFire=Date.now()+interval;await runSchedTick();updateSchedQueue();},interval);countdownTimer=setInterval(updateSchedCountdown,1000);runSchedTick();}
 function stopSched(){if(schedTimer){clearInterval(schedTimer);schedTimer=null;}if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null;}}
 function updateSchedCountdown(){const el=document.getElementById('sched-next');if(!el||!schedNextFire)return;const rem=Math.max(0,Math.round((schedNextFire-Date.now())/1000));const m=Math.floor(rem/60),s=rem%60;el.textContent=CFG.schedEnabled?'⏱ Next check in: '+m+':'+s.toString().padStart(2,'0'):'';}
@@ -1685,7 +1685,7 @@ function normTeam(name){return(name||'').normalize('NFD').replace(/[\u0300-\u036
 function pairKey(a,b){return[normTeam(a),normTeam(b)].sort().join('|');}
 function parseProgTxt(text){
 const map={};const lines=(text||'').split('\n');
-for(const line of lines){const trimmed=line.trim();if(!trimmed||trimmed.startsWith('#')||!trimmed.includes('|'))continue;const parts=trimmed.split('|').map(p=>p.trim()).filter(Boolean);if(parts.length<2)continue;let matchStr=parts[0].replace(/^\d{1,2}:\d{2}\s+/,'').replace(/\s*(W)\s*$/i,'').trim();const urls=parts.slice(1).filter(u=>u.startsWith('http'));if(!urls.length)continue;const sep=matchStr.match(/ (x|vs.?|–|-) /i);if(!sep)continue;const idx=matchStr.toLowerCase().indexOf(sep[0].toLowerCase());const teamA=matchStr.substring(0,idx).trim();const teamB=matchStr.substring(idx+sep[0].length).trim();if(!teamA||!teamB)continue;const key=pairKey(teamA,teamB);if(!map[key])map[key]=[];for(const u of urls)map[key].push({url:u,type:'embed'});}
+for(const line of lines){const trimmed=line.trim();if(!trimmed||trimmed.startsWith('#')||!trimmed.includes('|'))continue;const parts=trimmed.split('|').map(p=>p.trim()).filter(Boolean);if(parts.length<2)continue;let matchStr=parts[0].replace(/^\d{1,2}:\d{2}\s+/,'').replace(/\s*(W)\s*$/i,'').trim();const urls=parts.slice(1).filter(u=>u.startsWith('http'));if(!urls.length)continue;const sep=matchStr.match(/ (x|vs.?|--|-) /i);if(!sep)continue;const idx=matchStr.toLowerCase().indexOf(sep[0].toLowerCase());const teamA=matchStr.substring(0,idx).trim();const teamB=matchStr.substring(idx+sep[0].length).trim();if(!teamA||!teamB)continue;const key=pairKey(teamA,teamB);if(!map[key])map[key]=[];for(const u of urls)map[key].push({url:u,type:'embed'});}
 return map;
 }
 async function loadExternalStreams(){
@@ -1697,7 +1697,7 @@ const el=document.getElementById('agg-prog-badge');if(el)el.textContent='prog.tx
 const el2=document.getElementById('prog-txt-count');if(el2)el2.textContent='prog.txt: '+total+' match entries';
 updateAggStatus('✓ prog.txt: '+total+' entries loaded','s');
 }
-function parseDDKMappings(raw){const out={};(raw||'').split('\n').forEach(line=>{const eq=line.indexOf('=');if(eq<0)return;const lhs=line.substring(0,eq).trim();const rhs=line.substring(eq+1).trim();if(!lhs||!rhs)return;const sep=lhs.match(/ (vs.?|x|–|-) /i);let key;if(sep){const idx=lhs.toLowerCase().indexOf(sep[0].toLowerCase());const a=lhs.substring(0,idx).trim(),b=lhs.substring(idx+sep[0].length).trim();key=pairKey(a,b);}else key=lhs.toLowerCase().trim();out[key]=rhs;});return out;}
+function parseDDKMappings(raw){const out={};(raw||'').split('\n').forEach(line=>{const eq=line.indexOf('=');if(eq<0)return;const lhs=line.substring(0,eq).trim();const rhs=line.substring(eq+1).trim();if(!lhs||!rhs)return;const sep=lhs.match(/ (vs.?|x|--|-) /i);let key;if(sep){const idx=lhs.toLowerCase().indexOf(sep[0].toLowerCase());const a=lhs.substring(0,idx).trim(),b=lhs.substring(idx+sep[0].length).trim();key=pairKey(a,b);}else key=lhs.toLowerCase().trim();out[key]=rhs;});return out;}
 function ddkUrl(idOrUrl){if(!idOrUrl)return null;if(idOrUrl.startsWith('http'))return idOrUrl;return'https://ddkanqu.com/zhibo/'+idOrUrl+'.html';}
 async function scrapeDDKanqu(home,away){
 const q=encodeURIComponent(home+' '+away);const searchUrl='https://ddkanqu.com/search?keyword='+q;const proxies=['https://corsproxy.io/?'+encodeURIComponent(searchUrl),'https://api.allorigins.win/raw?url='+encodeURIComponent(searchUrl)];
@@ -1730,11 +1730,11 @@ return sources;
 }
 function getChannelsForEvent(ev){return findCHsForLeague(ev.league?.id||'').filter(c=>c.url).map(c=>({url:c.url,type:'mora'}));}
 function getProgTxtStreamsForEvent(ev){if(ev.type==='race')return[];const key=pairKey(ev.home.name,ev.away.name);return externalStreamsMap[key]||[];}
-async function getAllStreamSourcesForEvent(ev){if(!CFG.autoFetchStreams)return[];const sources=[];const ddkSources=await getDdkanquSourcesForEvent(ev);sources.push(…ddkSources);sources.push(…getChannelsForEvent(ev));sources.push(…getProgTxtStreamsForEvent(ev));return sources;}
+async function getAllStreamSourcesForEvent(ev){if(!CFG.autoFetchStreams)return[];const sources=[];const ddkSources=await getDdkanquSourcesForEvent(ev);sources.push(...ddkSources);sources.push(...getChannelsForEvent(ev));sources.push(...getProgTxtStreamsForEvent(ev));return sources;}
 function buildMultiSourceIframe(sources){if(!sources||!sources.length)return'';const base=(CFG.mediaPlayerBase||'https://alvinalexa.github.io/media-player/').replace(//$/,'');const params=sources.map(s=>s.type+'='+encodeURIComponent(s.url)).join('&');const src=base+'?'+params;return'<div style="margin:18px 0;position:relative;padding-bottom:56.25%;height:0;overflow:hidden"><iframe loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="'+src+'" frameborder="0" scrolling="no" allowfullscreen></iframe></div>';}
 async function refreshAllStreams(){
 if(!CFG.autoFetchStreams){toast('Enable "Auto-fetch External Streams" in Settings first','w');return;}
-updateAggStatus('<span class="spinner"></span> Loading…','i');
+updateAggStatus('<span class="spinner"></span> Loading...','i');
 await Promise.all([loadExternalStreams(),loadDDKanquHome()]);
 ddkanquMappings=parseDDKMappings(CFG.ddkanquMappingsRaw);
 const progTotal=Object.keys(externalStreamsMap).length;const homeTotal=Object.keys(ddkanquHomeMap).length;const mTotal=Object.keys(ddkanquMappings).length;
@@ -1743,15 +1743,15 @@ const el=document.getElementById('streams-status');if(el)el.textContent='Updated
 const badge=document.getElementById('agg-prog-badge');if(badge)badge.textContent='prog.txt: '+progTotal+' · DDK: '+homeTotal;
 persistLogoCache();toast('Streams refreshed ✓','s');
 }
-function updateAggStatus(html,type='i'){const el=document.getElementById('agg-status');if(!el)return;const colors={s:'var(–green)',e:'var(–red)',i:'var(–muted2)',w:'var(–orange)'};el.style.color=colors[type]||'var(–muted2)';el.innerHTML=html;}
+function updateAggStatus(html,type='i'){const el=document.getElementById('agg-status');if(!el)return;const colors={s:'var(--green)',e:'var(--red)',i:'var(--muted2)',w:'var(--orange)'};el.style.color=colors[type]||'var(--muted2)';el.innerHTML=html;}
 function openDDKanquTester(){openModal('modal-ddkanqu-test');}
 async function testDDKanquLookup(){
 const home=v('ddkt-home'),away=v('ddkt-away');if(!home||!away){toast('Enter both team names','w');return;}
 const res=document.getElementById('ddkt-result');const srcEl=document.getElementById('ddkt-sources');const ifrEl=document.getElementById('ddkt-iframe');
-res.textContent='⏳ Looking up…';const fakeEv={type:'match',home:{name:home},away:{name:away},league:{id:''}};const key=pairKey(home,away);const manualId=ddkanquMappings[key];
+res.textContent='⏳ Looking up...';const fakeEv={type:'match',home:{name:home},away:{name:away},league:{id:''}};const key=pairKey(home,away);const manualId=ddkanquMappings[key];
 let lines=['Pair key: '+key];if(manualId)lines.push('✓ Manual mapping: '+manualId+' → '+ddkUrl(manualId));else lines.push('No manual mapping.');
 if(ddkanquCache[key])lines.push('✓ Cached: '+ddkanquCache[key]);
-if(CFG.enableDdkanqu&&!manualId&&!ddkanquCache[key]){lines.push('Scraping DDKanqu…');res.textContent=lines.join('\n');const ddk=await scrapeDDKanqu(home,away);if(ddk){lines.push('✓ Scraped: '+ddk);ddkanquCache[key]=ddk;}else lines.push('✗ No result.');}
+if(CFG.enableDdkanqu&&!manualId&&!ddkanquCache[key]){lines.push('Scraping DDKanqu...');res.textContent=lines.join('\n');const ddk=await scrapeDDKanqu(home,away);if(ddk){lines.push('✓ Scraped: '+ddk);ddkanquCache[key]=ddk;}else lines.push('✗ No result.');}
 res.textContent=lines.join('\n');
 const sources=await getAllStreamSourcesForEvent(fakeEv);
 srcEl.textContent=sources.length?sources.map(s=>'['+s.type+'] '+s.url).join('\n'):'No sources found.';
@@ -1769,7 +1769,7 @@ function updateHighlightsPlayer(){
 const url=v('highlights-video-url');
 const el=document.getElementById('highlights-player-code');
 if(!el)return;
-if(!url){el.textContent='Add a highlights URL above…';return;}
+if(!url){el.textContent='Add a highlights URL above...';return;}
 el.textContent=buildHighlightsPlayerIframe(url);
 }
 function insertHighlightsPlayer(){
