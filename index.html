@@ -121,6 +121,10 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
 .toast.i{background:#0a1a2a;border:1px solid var(--blue);color:var(--blue)}
 .toast.w{background:#2a1a0b;border:1px solid var(--orange);color:var(--orange)}
 .spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.12);border-top-color:var(--blue);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:4px}
+.edit-mode-banner{display:none;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,214,10,.08);border:1px solid rgba(255,214,10,.35);border-radius:9px;margin-bottom:14px;font-size:.78rem;font-family:var(--cond);font-weight:700;color:var(--gold);letter-spacing:.3px}
+.edit-mode-banner .emb-icon{font-size:1rem}
+.edit-mode-banner .emb-link{margin-left:auto;font-size:.68rem;color:var(--blue);text-decoration:none}
+.edit-mode-banner .emb-link:hover{text-decoration:underline}
 .form-group{margin-bottom:12px}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .form-row.col3{grid-template-columns:1fr 1fr 1fr}
@@ -304,9 +308,15 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
     <div style="font-family:var(--cond);font-size:1.4rem;font-weight:900;text-transform:uppercase">Compose <span style="color:var(--red)">Post</span></div>
     <div style="display:flex;gap:7px">
       <button class="btn-purple" onclick="generateWithDeepSeek()" id="ds-gen-btn">🤖 AI Write</button>
-      <button class="btn-red" onclick="postToBlogger()">📤 Publish</button>
+      <button class="btn-red" onclick="postToBlogger()" id="compose-publish-btn">📤 Publish</button>
       <button class="btn-ghost" onclick="previewPost()">👁 Preview</button>
     </div>
+  </div>
+  <div id="edit-mode-banner" class="edit-mode-banner">
+    <span class="emb-icon">✏️</span>
+    <span>Editing existing post — saving will <strong>update the live article</strong>, not create a new one.</span>
+    <a href="#" id="edit-mode-banner-link" target="_blank" class="emb-link">View live post ↗</a>
+    <button class="btn-ghost btn-xs" style="margin-left:6px" onclick="clearEditMode()">✕ Cancel</button>
   </div>
   <div id="ai-writing-banner" style="display:none" class="ai-writing-indicator">
     <div class="ai-dot"></div>
@@ -782,6 +792,8 @@ let CFG={
 let LOGO_OVERRIDES={},LOGO_CACHE={};
 let allEvents=[],channels=[],postLog={};
 let accessToken=null,editingCH=null;
+let editingPostId=null;   // postId of an existing Blogger post being edited via Compose
+let editingEventKey=null; // evKey() of the event currently being edited
 let schedTimer=null,countdownTimer=null,schedNextFire=null;
 let tbDebounce,composDebounce;
 let currentComposeEv=null;
@@ -1280,6 +1292,29 @@ function evKey(ev){return ev.league.id+'|'+(ev.home?.name||ev.name||'').replace(
 async function genAndFill(sid){
   const ev=findEv(sid);if(!ev){toast('Event not found','e');return;}
   const title=ev.type==='race'?ev.name+' – Race Preview & Live Stream | Sports 803':ev.home.name+' vs '+ev.away.name+' – '+ev.league.name+' Live Stream | Sports 803';
+  const pl=getLog(ev);
+  // If a post already exists, load its current content from Blogger
+  if(pl?.postId){
+    toast('Loading existing post from Blogger…','i');
+    const existing=await fetchPostBody(pl.postId);
+    if(existing){
+      set('post-title',existing.title||title);
+      document.getElementById('post-body').value=existing.content||'';
+      document.getElementById('post-labels').value=(existing.labels||[]).join(', ');
+      if(pl.thumb)set('compose-thumb-url',pl.thumb.startsWith('http')?pl.thumb:'');
+      setEditMode(pl.postId,evKey(ev),pl.postUrl||'#');
+      set('c-league',ev.league.name);
+      set('c-datetime',ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'');
+      if(ev.type==='match'){set('c-home',ev.home.name);set('c-away',ev.away.name);set('c-home-logo',ev.home.logo||'');set('c-away-logo',ev.away.logo||'');}
+      currentComposeEv=ev;updateSEO();showPage('compose');onTitleChange();
+      toast('Existing post loaded — editing mode ✓','s');
+      if(CFG.autoFetchStreams&&ev.type==='match')populateComposeStreams(ev);
+      return;
+    }
+    toast('Could not load existing post body — starting fresh','w');
+  }
+  // No existing post — generate fresh
+  clearEditMode();
   set('post-title',title);toast('Generating article…','i');
   const body=await buildArticleWithStreams(title,ev);
   document.getElementById('post-body').value=body;
@@ -1320,6 +1355,26 @@ async function genThumbForEv(sid){
 // ═══ BLOGGER / POST ═══
 async function quickPostEv(sid){
   if(!accessToken){toast('Sign in first','e');return;}const ev=findEv(sid);if(!ev)return;
+  const pl=getLog(ev);
+  // Check if a post already exists for this event
+  if(pl?.postId){
+    const confirmed=confirm('A post already exists for this event.\n\nUpdate it with new content (e.g. highlights, final score)?');
+    if(!confirmed)return;
+    // Regenerate content and update existing post
+    const title=ev.type==='race'?ev.name+' – Race Preview & Live Stream | Sports 803':ev.home.name+' vs '+ev.away.name+' – '+ev.league.name+' Live Stream | Sports 803';
+    const body=await buildArticleWithStreams(title,ev);const labels=getLabels(ev);
+    const dt=ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+    toast('Regenerating thumbnail…','i');const cv=document.createElement('canvas');setCanvasSize(cv,'1920','16:9');
+    try{if(ev.type==='race')await drawRaceThumbnail(cv,{name:ev.name,league:ev.league.name,datetime:dt,venue:ev.venue||'',bg1:'#0a0e1a',bg2:'#1a0a00',bannerUrl:getRaceImg(ev)});else await drawMatchThumbnail(cv,{home:ev.home.name,away:ev.away.name,hLogo:ev.home.logo||'',aLogo:ev.away.logo||'',league:ev.league.name,datetime:dt,bg1:'#0d1b2a',bg2:'#1a0020',mode:'preview'});setLog(ev,{thumb:cv.toDataURL('image/jpeg',.85)});}catch(e){toast('Thumb gen skipped','w');}
+    let thumbHtml='';
+    if(CFG.imgbbKey){try{const fd=new FormData();fd.append('key',CFG.imgbbKey);fd.append('image',cv.toDataURL('image/jpeg',.9).split(',')[1]);const res=await fetch('https://api.imgbb.com/1/upload',{method:'POST',body:fd});const json=await res.json();if(json.success){thumbHtml='<div><img src="'+json.data.url+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+title+'"></div>\n';setLog(ev,{thumb:json.data.url});}}catch(e){}}
+    if(!thumbHtml)thumbHtml='<div><img src="'+cv.toDataURL('image/jpeg',.85)+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+title+'"></div>\n';
+    const html=thumbHtml+body.replace(/\n/g,'<br>');
+    toast('Updating post…','i');
+    await updateExistingPost(ev,title,html,pl.status||'DRAFT',labels,pl.scheduledFor||null);
+    return;
+  }
+  // No existing post — create new
   const title=ev.type==='race'?ev.name+' – Race Preview & Live Stream | Sports 803':ev.home.name+' vs '+ev.away.name+' – '+ev.league.name+' Live Stream | Sports 803';
   const body=await buildArticleWithStreams(title,ev);const labels=getLabels(ev);
   const dt=ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
@@ -1397,8 +1452,18 @@ async function postToBlogger(){
   const html=(thumbUrl?'<div><img src="'+thumbUrl+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+t+'"></div>\n':'')+b.replace(/\n/g,'<br>');
   const schedDtVal=document.getElementById('post-schedule-dt')?.value;
   let publishDate=null;if(schedDtVal&&st==='LIVE'){publishDate=new Date(schedDtVal).toISOString();}
-  const post=await postRaw(t,html,st,labels,publishDate);
-  if(post){addRecentPost(t,post.url,st);toast(publishDate?'Scheduled for '+new Date(publishDate).toLocaleString()+' ✓':'Published ✓','s');}
+  if(editingPostId){
+    // Update existing post
+    const ev=currentComposeEv;
+    await updateExistingPost(ev,t,html,st,labels,publishDate);
+  } else {
+    const post=await postRaw(t,html,st,labels,publishDate);
+    if(post){
+      if(currentComposeEv)setLog(currentComposeEv,{postId:post.id,postUrl:post.url,status:st,title:t,league:currentComposeEv.league?.name,scheduledFor:publishDate||null});
+      addRecentPost(t,post.url,st);
+      toast(publishDate?'Scheduled for '+new Date(publishDate).toLocaleString()+' ✓':'Published ✓','s');
+    }
+  }
 }
 async function postRaw(title,html,status,labels,publishDate=null){
   if(!CFG.blogId||!accessToken)return null;
@@ -1408,6 +1473,60 @@ async function postRaw(title,html,status,labels,publishDate=null){
   if(publishDate&&isLive)body.published=publishDate;
   try{const res=await fetch(url,{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify(body)});if(!res.ok)throw new Error('Blogger '+res.status+': '+await res.text());return await res.json();}
   catch(e){toast('Post failed: '+e.message,'e');return null;}
+}
+
+// ═══ UPDATE EXISTING POST (PUT) ═══
+async function updateExistingPost(ev,title,html,status,labels,publishDate=null){
+  if(!CFG.blogId||!accessToken){toast('Not authenticated','e');return null;}
+  const pl=ev?getLog(ev):null;const postId=editingPostId||pl?.postId;
+  if(!postId){toast('No post ID to update','e');return null;}
+  const isLive=status==='LIVE';
+  const body={kind:'blogger#post',id:postId,blog:{id:CFG.blogId},title,content:html,labels:labels||['sports 803','live stream']};
+  if(publishDate&&isLive)body.published=publishDate;
+  let url='https://www.googleapis.com/blogger/v3/blogs/'+CFG.blogId+'/posts/'+postId;
+  if(!isLive)url+='?publish=false';
+  try{
+    const res=await fetch(url,{method:'PUT',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!res.ok)throw new Error('Blogger PUT '+res.status+': '+await res.text());
+    const post=await res.json();
+    // Update postLog for the event
+    const targetEv=ev||currentComposeEv;
+    if(targetEv){
+      const thumbUrl=v('compose-thumb-url')||pl?.thumb||null;
+      setLog(targetEv,{postId:post.id,postUrl:post.url,status,title,league:targetEv.league?.name,scheduledFor:publishDate||null,thumb:thumbUrl||pl?.thumb||null});
+      renderEventCards(allEvents);
+    }
+    addRecentPost(title,post.url,status);
+    clearEditMode();
+    toast('Post updated ✓','s');
+    return post;
+  }catch(e){toast('Update failed: '+e.message,'e');return null;}
+}
+
+// Fetch post content from Blogger API (returns {title, content, labels} or null)
+async function fetchPostBody(postId){
+  if(!accessToken||!CFG.blogId)return null;
+  try{
+    const res=await fetch('https://www.googleapis.com/blogger/v3/blogs/'+CFG.blogId+'/posts/'+postId,{headers:{'Authorization':'Bearer '+accessToken}});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    return{title:data.title||'',content:(data.content||'').replace(/<br>/g,'\n'),labels:data.labels||[]};
+  }catch(e){console.warn('[fetchPostBody]',e.message);return null;}
+}
+
+// Enter edit mode in Compose page
+function setEditMode(postId,eventKey,postUrl){
+  editingPostId=postId;editingEventKey=eventKey;
+  const btn=document.getElementById('compose-publish-btn');if(btn){btn.textContent='🔄 Update Post';btn.className='btn-gold';}
+  const banner=document.getElementById('edit-mode-banner');if(banner)banner.style.display='flex';
+  const link=document.getElementById('edit-mode-banner-link');if(link&&postUrl&&postUrl!=='#'){link.href=postUrl;link.style.display='inline';}else if(link)link.style.display='none';
+}
+
+// Clear edit mode — back to fresh publish mode
+function clearEditMode(){
+  editingPostId=null;editingEventKey=null;
+  const btn=document.getElementById('compose-publish-btn');if(btn){btn.textContent='📤 Publish';btn.className='btn-red';}
+  const banner=document.getElementById('edit-mode-banner');if(banner)banner.style.display='none';
 }
 function addRecentPost(title,url,status){
   const list=document.getElementById('recent-posts');if(list.textContent.includes('No posts'))list.innerHTML='';
@@ -1436,7 +1555,7 @@ async function postHighlights(){
   const label=ev.type==='race'?ev.name:ev.home.name+' vs '+ev.away.name;const title=label+' – Highlights & Replay | Sports 803';
   const video=v('hl-video');const iframeHtml=video?buildIframe([video]):'';const html=(body+(iframeHtml?'\n\n'+iframeHtml:'')).replace(/\n/g,'<br>');
   const pl=getLog(ev);
-  if(pl?.postId){try{const res=await fetch('https://www.googleapis.com/blogger/v3/blogs/'+CFG.blogId+'/posts/'+pl.postId,{method:'PUT',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({kind:'blogger#post',id:pl.postId,blog:{id:CFG.blogId},title,content:html,labels:getLabels(ev)})});if(!res.ok)throw new Error(res.status);const post=await res.json();setLog(ev,{postId:post.id,postUrl:post.url,title,hasHL:true});toast('Post updated ✓','s');closeModal('modal-hl');renderEventCards(allEvents);}catch(e){toast('Update failed: '+e.message,'e');}}
+  if(pl?.postId){try{const res=await fetch('https://www.googleapis.com/blogger/v3/blogs/'+CFG.blogId+'/posts/'+pl.postId,{method:'PUT',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({kind:'blogger#post',id:pl.postId,blog:{id:CFG.blogId},title,content:html,labels:getLabels(ev)})});if(!res.ok)throw new Error(res.status);const post=await res.json();const thumbUpdate=v('hl-thumb-url')||pl?.thumb||null;setLog(ev,{postId:post.id,postUrl:post.url,title,hasHL:true,thumb:thumbUpdate||pl?.thumb||null});toast('Post updated ✓','s');closeModal('modal-hl');renderEventCards(allEvents);}catch(e){toast('Update failed: '+e.message,'e');}}
   else{const post=await postRaw(title,html,'LIVE',getLabels(ev),null);if(post){setLog(ev,{postId:post.id,postUrl:post.url,title,hasHL:true});toast('Highlights posted ✓','s');closeModal('modal-hl');renderEventCards(allEvents);}}
 }
 
@@ -1500,7 +1619,11 @@ function updateStats(){document.getElementById('st-events').textContent=allEvent
 function renderAll(){renderChannels();renderLeagueToggles();renderPostLog();renderLeagueFilterPills();updateStats();}
 
 // ═══ NAVIGATION ═══
-function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-pill').forEach(b=>b.classList.remove('active'));const page=document.getElementById('page-'+id);if(page)page.classList.add('active');document.querySelectorAll('.nav-pill').forEach(b=>{if(b.getAttribute('onclick')?.includes("'"+id+"'"))b.classList.add('active');});}
+function showPage(id){
+  // If navigating away from compose, clear edit mode to prevent stale state
+  if(id!=='compose'&&editingPostId)clearEditMode();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-pill').forEach(b=>b.classList.remove('active'));const page=document.getElementById('page-'+id);if(page)page.classList.add('active');document.querySelectorAll('.nav-pill').forEach(b=>{if(b.getAttribute('onclick')?.includes("'"+id+"'"))b.classList.add('active');});
+}
 
 // ═══ MODAL + TOAST ═══
 function openModal(id){document.getElementById(id).classList.add('open');}
