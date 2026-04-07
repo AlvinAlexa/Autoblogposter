@@ -388,8 +388,9 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
           <div class="iframe-code" id="highlights-player-code">Add a highlights URL above…</div>
         </div>
         <div style="display:flex;gap:6px;margin-top:7px">
-          <button class="btn-orange btn-sm" onclick="insertHighlightsPlayer()">🎬 Insert Highlights Player</button>
-          <button class="btn-ghost btn-sm" onclick="copyHighlightsPlayerCode()">📋 Copy Code</button>
+          <button class="btn-gold btn-sm" onclick="ytSearchAndFill(null)">🔍 YT Search</button>
+<button class="btn-orange btn-sm" onclick="insertHighlightsPlayer()">🎬 Insert Highlights Player</button>
+<button class="btn-ghost btn-sm" onclick="copyHighlightsPlayerCode()">📋 Copy Code</button>
         </div>
       </div>
       <div class="card">
@@ -635,10 +636,10 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
       <button class="btn-red btn-sm" onclick="saveCFG()">💾 Save</button>
     </div>
     <div class="card">
-      <div class="card-title">APIs &amp; Upload</div>
-      <div class="form-group"><label>imgbb API Key</label><input type="text" id="cfg-imgbb" placeholder="Get free at api.imgbb.com"></div>
-      <div class="form-group"><label>Default Player URL</label><input type="text" id="cfg-player" placeholder="https://…player.html"></div>
-      <button class="btn-red btn-sm" onclick="saveCFG()">💾 Save</button>
+<div class="form-group"><label>imgbb API Key</label><input type="text" id="cfg-imgbb" placeholder="Get free at api.imgbb.com"></div>
+<div class="form-group"><label>YouTube Data API Key <span style="color:var(--muted2);font-weight:400">— get at console.cloud.google.com</span></label><input type="text" id="cfg-yt-key" placeholder="AIzaSy…"></div>
+<div class="form-group"><label>Default Player URL</label><input type="text" id="cfg-player" placeholder="https://…player.html"></div>
+<button class="btn-red btn-sm" onclick="saveCFG()">💾 Save</button>
     </div>
     <div class="card" style="grid-column:1/-1;border-color:rgba(114,9,183,.3)">
       <div class="card-title" style="color:#b47ffa">🤖 Claude AI Content Engine
@@ -763,9 +764,10 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
     <div class="form-group"><label>Highlights Video URL / Embed</label><input type="text" id="hl-video"></div>
     <div class="form-group"><label>Highlights Body</label><textarea id="hl-body" rows="9"></textarea></div>
     <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:8px">
-      <button class="btn-purple btn-sm" onclick="genHLText()">🤖 AI Generate</button>
-      <button class="btn-red btn-sm" onclick="postHighlights()">📤 Post</button>
-      <button class="btn-ghost btn-sm" onclick="closeModal('modal-hl')">Cancel</button>
+     <button class="btn-gold btn-sm" onclick="ytSearchForModal()">🔍 YT Search</button>
+<button class="btn-purple btn-sm" onclick="genHLText()">🤖 AI Generate</button>
+<button class="btn-red btn-sm" onclick="postHighlights()">📤 Post</button>
+<button class="btn-ghost btn-sm" onclick="closeModal('modal-hl')">Cancel</button>
     </div>
   </div>
 </div>
@@ -802,7 +804,8 @@ let CFG={
   progTxtUrl:'https://sportsonline.st/prog.txt',
   autoFetchStreams:false,enableDdkanqu:false,embedStreamsInPost:true,
   ddkanquMappingsRaw:'',
-  deepseekKey:'',deepseekModel:'claude-sonnet-4-20250514',deepseekTone:'',deepseekLength:'medium'
+  deepseekKey:'',deepseekModel:'claude-sonnet-4-20250514',deepseekTone:'',deepseekLength:'medium',
+ytApiKey:''
 };
 let LOGO_OVERRIDES={},LOGO_CACHE={};
 let allEvents=[],channels=[],postLog={};
@@ -906,7 +909,7 @@ function saveAll(){
 }
 function saveCFG(){
   CFG.blogId=v('cfg-blogid');CFG.clientId=v('cfg-clientid');
-  CFG.imgbbKey=v('cfg-imgbb');CFG.playerBase=v('cfg-player')||'https://soulmap1.blogspot.com/p/media-player.html';
+  CFG.imgbbKey=v('cfg-imgbb');CFG.ytApiKey=v('cfg-yt-key');CFG.playerBase=v('cfg-player')||'https://soulmap1.blogspot.com/p/media-player.html';
   CFG.schedTiming=parseInt(document.getElementById('sched-timing')?.value||60);
   CFG.schedStatus=document.getElementById('sched-def-status')?.value||'DRAFT';
   CFG.schedInterval=parseInt(document.getElementById('sched-interval')?.value||300000);
@@ -926,7 +929,7 @@ function saveCFG(){
 }
 function applyConfigToUI(){
   set('cfg-blogid',CFG.blogId);set('cfg-clientid',CFG.clientId);
-  set('cfg-imgbb',CFG.imgbbKey);set('cfg-player',CFG.playerBase);
+  set('cfg-imgbb',CFG.imgbbKey);set('cfg-yt-key',CFG.ytApiKey||'');set('cfg-player',CFG.playerBase);
   set('cfg-logo-overrides',CFG.logoOverridesRaw);set('player-base',CFG.playerBase);
   if(document.getElementById('sched-timing'))document.getElementById('sched-timing').value=CFG.schedTiming||60;
   if(document.getElementById('sched-def-status'))document.getElementById('sched-def-status').value=CFG.schedStatus||'DRAFT';
@@ -1778,6 +1781,93 @@ function insertHighlightsPlayer(){
 function copyHighlightsPlayerCode(){
   const url=v('highlights-video-url');if(!url){toast('Add a highlights video URL first','w');return;}
   navigator.clipboard.writeText(buildHighlightsPlayerIframe(url));toast('Player code copied ✓','s');
+}
+
+
+// ═══ YOUTUBE HIGHLIGHTS SEARCH ═══
+const YT_PRIORITY_CHANNELS={
+  nfl:['UCB2G9aBKHxfFqGpgMt1WKSA'],
+  f1:['UCB_qr75-ydFVKSF9Dmo6izg'],
+  motogp:['UCmkNMbsKc_Q3UaXTG4UlbbQ'],
+  nba:['UCzL7I9P4xqBT7wDdGdAjOCw'],
+  nhl:['UCqFMzb-4AUf6WAIbl132QKA'],
+  epl:['UCqZQlzSHbVJrwrn5XvzrzcA'],
+  laliga:['UCpcTrCXblq78GZrTUTLWeBw'],
+  seriea:['UCNAf1k0yIjyGu3k9BwAg3lg'],
+  ucl:['UCpcTrCXblq78GZrTUTLWeBw'],
+  bundesliga:['UC_xU5tpJ_DUfKFI2qoNQMqw'],
+  bein:['UCY52HZwKL8IAfFxFn7BPQfA'],
+};
+const YT_QUERY_TEMPLATES={
+  nfl:'{home} vs {away} NFL highlights official',
+  f1:'{name} F1 highlights official Formula 1',
+  motogp:'{name} MotoGP highlights official',
+  nba:'{home} vs {away} NBA highlights official',
+  nhl:'{home} vs {away} NHL highlights official',
+  epl:'{home} vs {away} Premier League highlights official',
+  laliga:'{home} vs {away} LaLiga highlights official',
+  seriea:'{home} vs {away} Serie A highlights official',
+  ucl:'{home} vs {away} Champions League highlights official',
+  bundesliga:'{home} vs {away} Bundesliga highlights official',
+  ligue1:'{home} vs {away} Ligue 1 highlights official',
+  mls:'{home} vs {away} MLS highlights official',
+  ufc:'{name} UFC highlights official',
+  atp:'{home} vs {away} ATP tennis highlights',
+  wta:'{home} vs {away} WTA tennis highlights',
+  pga:'{name} PGA Tour highlights official',
+  nascar:'{name} NASCAR highlights official',
+  _default:'{home} vs {away} {league} highlights official',
+};
+
+function buildYTQuery(ev){
+  const lid=ev.league?.id||'';const tmpl=YT_QUERY_TEMPLATES[lid]||YT_QUERY_TEMPLATES._default;
+  return tmpl
+    .replace('{home}',ev.home?.name||ev.name||'')
+    .replace('{away}',ev.away?.name||'')
+    .replace('{name}',ev.name||((ev.home?.name||'')+' vs '+(ev.away?.name||'')))
+    .replace('{league}',ev.league?.name||'')
+    .replace(/\s+/g,' ').trim();
+}
+
+async function searchYTHighlights(ev){
+  const key=CFG.ytApiKey;if(!key){toast('Add YouTube Data API key in Settings → APIs & Upload','w');return null;}
+  const query=buildYTQuery(ev);toast('Searching YouTube: '+query.substring(0,50)+'…','i');
+  const lid=ev.league?.id||'';const priorityCh=YT_PRIORITY_CHANNELS[lid]||[];
+  const preferSources=['NFL','Formula 1','MotoGP','beIN SPORTS','Serie A','LaLiga','NHL'];
+  const params=new URLSearchParams({part:'snippet',type:'video',videoDefinition:'high',order:'date',maxResults:'10',q:query,key});
+  try{
+    const res=await fetch('https://www.googleapis.com/youtube/v3/search?'+params);
+    if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'HTTP '+res.status);}
+    const data=await res.json();const items=data.items||[];
+    if(!items.length){toast('No YouTube results found','w');return null;}
+    let best=null;
+    for(const item of items){const ch=item.snippet?.channelId,cn=item.snippet?.channelTitle||'';if(priorityCh.includes(ch)){best=item;break;}if(!best&&preferSources.some(s=>cn.toLowerCase().includes(s.toLowerCase())))best=item;}
+    if(!best)best=items[0];
+    const videoId=best.id?.videoId;if(!videoId){toast('No video ID found','w');return null;}
+    return{url:'https://www.youtube.com/watch?v='+videoId,embed:'https://www.youtube.com/embed/'+videoId,title:best.snippet?.title||'',channel:best.snippet?.channelTitle||'',thumb:best.snippet?.thumbnails?.high?.url||''};
+  }catch(e){toast('YouTube search failed: '+e.message,'e');return null;}
+}
+
+async function ytSearchAndFill(sid){
+  const ev=sid?findEv(sid):currentComposeEv;if(!ev){toast('No event selected','w');return;}
+  const result=await searchYTHighlights(ev);if(!result)return;
+  set('highlights-video-url',result.url);updateHighlightsPlayer();
+  const body=document.getElementById('post-body');
+  if(body.value&&!body.value.includes(result.url)){
+    const block='\n\n'+buildHighlightsPlayerIframe(result.url);
+    body.value+=block;updateSEO();
+    toast('✓ Highlights found: '+result.title.substring(0,50),'s');
+  }else{toast('✓ Highlights URL set: '+result.title.substring(0,50),'s');}
+  set('hl-video',result.url);
+}
+
+async function ytSearchForModal(){
+  const idx=parseInt(document.getElementById('hl-select').value);
+  if(isNaN(idx)||idx<0){toast('Select an event first','w');return;}
+  const ev=allEvents[idx];if(!ev)return;
+  const result=await searchYTHighlights(ev);if(!result)return;
+  set('hl-video',result.url);
+  toast('✓ Found on '+result.channel+': '+result.title.substring(0,40),'s');
 }
 
 // ═══ INIT ═══
