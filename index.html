@@ -1040,13 +1040,144 @@ async function generateWithClaude(){
   catch(e){toast('Claude error: '+e.message,'e');}
   finally{clearInterval(dotsTimer);banner.style.display='none';}
 }
-const P={
-  mo:['Football fans worldwide are in for an unmissable treat as','The stage is set for a high-stakes encounter between'],
-  mc:['Both clubs arrive at this fixture in contrasting form.','The head-to-head history between these two sides makes for compelling reading.'],
-  ro:['The engines are revving and the motorsport world is focused on'],
-  rc:['The championship standings remain tight, making every point decisive.'],
-  cta:['Watch it all LIVE on Sports 803 — free, no sign-up required.'],
-  hl:['It was a night to remember — here is the full breakdown from'],
+const P = {
+  // Opening sentences (match previews)
+  mo: [
+    'Football fans worldwide are in for an unmissable treat as',
+    'The stage is set for a high-stakes encounter between',
+    'Excitement reaches fever pitch as two titans prepare to collide:',
+    'In a clash that promises fireworks, all eyes are on the showdown between',
+    'Get ready for a pulsating 90 minutes as',
+    'The atmosphere is electric as the referee prepares to blow the whistle for',
+    'This fixture has all the makings of a classic – two hungry sides ready to battle for supremacy:',
+    'When these two giants meet, the football world stops to watch – tonight it’s',
+    'History, pride, and precious points are on the line as',
+    'Neutrals and die‑hards alike will be glued to the screen for',
+    'Expect passion, drama, and moments of magic when',
+    'The build‑up has been intense, and now the moment has arrived:'
+  ],
+
+  // Match context / tactical insights
+  mc: [
+    'Both clubs arrive at this fixture in contrasting form.',
+    'The head-to-head history between these two sides makes for compelling reading.',
+    'Recent results suggest momentum could play a decisive role in this contest.',
+    'Tactical battles across the pitch will likely determine who comes out on top.',
+    'Injuries and suspensions could force last‑minute adjustments from both benches.',
+    'The pressure of the occasion will test the nerve of every player on that pitch.',
+    'Statistically, home advantage has often proven crucial in this fixture.',
+    'Set pieces and transitions might be where this game is won or lost.',
+    'Midfield control will be vital – the team that dominates the centre often dictates the flow.',
+    'Defensive organisation against attacking flair: which philosophy will prevail?',
+    'Both managers have a history of tactical surprises – expect the unexpected.',
+    'The form table over the last six matches gives a slight edge to the home side.',
+    'Key injuries in the backline could force a reshuffle that might be exploited.',
+    'European ambitions, relegation fears, or local bragging rights – the stakes are enormous.',
+    'The referee’s temperament could also play a role in a fixture known for its intensity.',
+    'Fans from both camps believe this is their year – tonight could provide a statement result.'
+  ],
+
+  // Race opening lines
+  ro: [
+    'The engines are revving and the motorsport world is focused on',
+    'Throttle‑deep anticipation builds as the grid lights prepare to go out for',
+    'From pole position to the final chequered flag, all attention is on',
+    'The roar of the crowd mixes with the scream of engines as',
+    'Strategy, bravery and speed – everything is on the line at',
+    'The pit lane is buzzing, the tyres are warming, and the drivers are locked in for',
+    'Twenty cars, one winner – the battle begins at',
+    'Aerodynamics, engine modes, and driver instincts converge for',
+    'Wet or dry, hot or cold – the only certainty is drama at',
+    'Milliseconds separate glory from disappointment – welcome to'
+  ],
+
+  // Race context / technical notes
+  rc: [
+    'The championship standings remain tight, making every point decisive.',
+    'Tyre degradation and fuel loads will be critical factors throughout the race.',
+    'Overtaking zones and DRS activation points will provide plenty of action.',
+    'Weather forecasts could shuffle the pack and reward bold strategy calls.',
+    'Team radio messages and pit wall decisions will be scrutinised in real time.',
+    'Experience and raw pace both have their part to play in this weekend’s outcome.',
+    'Starting grid position is important, but racecraft and reliability often decide the podium.',
+    'Safety car periods could compress the field and create late drama.',
+    'Each driver has a different tyre allocation – the choice of compound could be decisive.',
+    'The battle for constructors’ points adds another layer of intrigue.',
+    'Recent upgrades to the cars could unlock extra tenths per lap.',
+    'Track limits and corner‑cutting penalties will be strictly enforced today.',
+    'The pit exit and entry have been noted as potential hotspots for incidents.'
+  ],
+
+  // Call to action (streaming)
+  cta: [
+    'Watch it all LIVE on Sports 803 — free, no sign-up required.',
+    'Stream the full action absolutely FREE on Sports 803 – no subscription needed.',
+    'Don’t miss a second of the drama: watch live on Sports 803, completely free.',
+    'Join thousands of fans and watch the HD live stream on Sports 803 – zero cost, zero hassle.',
+    'Catch every goal, save, and highlight live and free – only on Sports 803.',
+    'No credit card, no registration – just pure sport at Sports 803.',
+    'Your front‑row seat is waiting: click the link and enjoy the game in crystal‑clear HD.',
+    'Why pay for cable? Stream every match for free on Sports 803.',
+    'From kick‑off to final whistle, Sports 803 brings you uninterrupted action.',
+    'Bookmark Sports 803 now – your go‑to destination for free sports streaming.'
+  ],
+
+  // Highlights introduction
+  hl: [
+    'It was a night to remember — here is the full breakdown from',
+    'Relive all the key moments from a classic encounter:',
+    'The final whistle brought drama, emotion, and talking points – here’s what happened in',
+    'If you missed the live action, don’t worry – here’s your complete highlights package from',
+    'From the opening goal to the last‑minute drama, this is how it all unfolded in',
+    'Sit back and enjoy the condensed brilliance of',
+    'Goals, saves, tackles, and controversy – all the best bits from',
+    'The highlights tell the story of a match that had everything:',
+    'For those who couldn’t watch live, we’ve got you covered with the extended highlights of'
+  ],
+
+  // Team‑specific descriptions (used when we know home/away)
+  teamForm: [
+    ' have looked dangerous going forward, scoring freely in recent outings.',
+    ' have tightened their defence, conceding very few clear chances.',
+    ' are on a winning streak and full of confidence.',
+    ' have struggled for consistency, but possess match‑winners in their squad.',
+    ' tend to start fast – early goals could be on the cards.',
+    ' are known for their second‑half resilience and late comebacks.',
+    ' have a poor record against top‑half opponents this season.',
+    ' thrive in high‑pressure environments, especially in front of their own fans.'
+  ],
+
+  // Key players section
+  keyPlayers: [
+    'Keep an eye on the midfield maestro pulling the strings – his passing range is exceptional.',
+    'The centre‑forward has been in red‑hot form, with goals in his last three appearances.',
+    'A rock at the back, the captain leads by example with timely tackles and organisation.',
+    'The young winger possesses lightning pace and the ability to beat defenders one‑on‑one.',
+    'Set‑piece specialist – any free kick within range is a genuine goal threat.',
+    'The goalkeeper’s shot‑stopping could be the difference on a night of fine margins.',
+    'An experienced head who knows how to manage the tempo and break opposition rhythm.',
+    'The creative number ten has the vision to unlock the deepest defences.'
+  ],
+
+  // Prediction / scoreline
+  prediction: [
+    'Expect a tight contest with both teams likely to score – a draw would not surprise.',
+    'Home advantage may prove decisive, but away fans will fancy their chances on the counter.',
+    'Given recent meetings, a single goal could separate these sides at the final whistle.',
+    'If the early exchanges are anything to go by, we could be in for a goalfest.',
+    'The statistics suggest a low‑scoring affair, but derbies often defy the numbers.',
+    'Momentum shifts quickly – the team that scores first will be difficult to catch.',
+    'Both managers are tactically astute; substitutions could win the game late on.'
+  ],
+
+  // Closing / reminder
+  closing: [
+    'Stay with us for post‑match reaction, player ratings, and extended highlights.',
+    'After the final whistle, return to Sports 803 for analysis and interviews.',
+    'Don’t forget to share your thoughts in the comments – who was your man of the match?',
+    'This fixture has delivered drama before – tonight should be no different.',
+    'Make sure your stream is ready; kick‑off is just moments away.'
+  ]
 };
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 function buildArticleFallback(title,ev){
