@@ -1340,7 +1340,32 @@ async function genAndFill(sid){
       set('c-league',ev.league.name);
       set('c-datetime',ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'');
       if(ev.type==='match'){set('c-home',ev.home.name);set('c-away',ev.away.name);set('c-home-logo',ev.home.logo||'');set('c-away-logo',ev.away.logo||'');}
-      if(fin&&ev.type==='match'){const modeEl=document.getElementById('c-mode');if(modeEl)modeEl.value='highlights';if(score)set('c-score',score);set('post-title',title);}
+     if(fin && ev.type==='match'){
+  // Switch mode dropdown to Highlights (Score)
+  const modeEl = document.getElementById('c-mode');
+  if(modeEl) modeEl.value = 'highlights';
+  
+  // Auto-populate score field
+  if(score) set('c-score', score);
+  
+  // Also update the thumbnail's score input if it exists in the compose panel
+  const scoreInput = document.getElementById('c-score');
+  if(scoreInput && score) scoreInput.value = score;
+  
+  // Transform title to highlights format
+  set('post-title', title);
+  
+  // 🔥 CRITICAL: Regenerate thumbnail with new mode and score
+  // Small delay to ensure DOM values are applied
+  setTimeout(() => {
+    const parsed = parseTitle(title);
+    if(parsed) {
+      // Force thumbnail redraw using the updated mode & score
+      triggerComposeThumb(parsed, title);
+    }
+    toast('Thumbnail mode switched to Highlights with score: ' + score, 's');
+  }, 200);
+}
       currentComposeEv=ev;updateSEO();showPage('compose');onTitleChange();
       toast('Existing post loaded — editing mode ✓','s');
       if(CFG.autoFetchStreams&&ev.type==='match')populateComposeStreams(ev);
@@ -1855,6 +1880,11 @@ async function ytSearchAndFill(sid){
   const ev=sid?findEv(sid):currentComposeEv;if(!ev){toast('No event selected','w');return;}
   const result=await searchYTHighlights(ev);if(!result)return;
   set('highlights-video-url',result.url);updateHighlightsPlayer();
+  // Also refresh thumbnail to ensure score/highlights mode is visible
+const parsed = parseTitle(v('post-title'));
+if(parsed) {
+  setTimeout(() => triggerComposeThumb(parsed, v('post-title')), 300);
+}
   const body=document.getElementById('post-body');
   if(body.value&&!body.value.includes(result.url)){
     const block='\n\n'+buildHighlightsPlayerIframe(result.url);
