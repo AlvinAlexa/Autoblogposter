@@ -346,7 +346,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
         </div>
         <div class="form-group"><label>Post Body</label><textarea id="post-body" rows="14" placeholder="Article content… or click 🤖 AI Write to generate with Claude AI" oninput="updateSEO()"></textarea></div>
         <div class="form-row">
-          <div><label>Labels</label><input type="text" id="post-labels" value="sports 803,live stream" oninput="updateSEO()"></div>
+          <div><label>Labels</label><input type="text" id="post-labels" value="sports 803,live" oninput="updateSEO()"></div>
           <div><label>Status</label><select id="post-status"><option value="DRAFT">Draft</option><option value="LIVE">Live</option></select></div>
         </div>
         <div class="form-group" id="schedule-dt-wrap" style="display:none">
@@ -1040,22 +1040,234 @@ async function generateWithClaude(){
   catch(e){toast('Claude error: '+e.message,'e');}
   finally{clearInterval(dotsTimer);banner.style.display='none';}
 }
-const P={
-  mo:['Football fans worldwide are in for an unmissable treat as','The stage is set for a high-stakes encounter between'],
-  mc:['Both clubs arrive at this fixture in contrasting form.','The head-to-head history between these two sides makes for compelling reading.'],
-  ro:['The engines are revving and the motorsport world is focused on'],
-  rc:['The championship standings remain tight, making every point decisive.'],
-  cta:['Watch it all LIVE on Sports 803 — free, no sign-up required.'],
-  hl:['It was a night to remember — here is the full breakdown from'],
+const P = {
+  // Opening sentences (match previews)
+  mo: [
+    'Football fans worldwide are in for an unmissable treat as',
+    'The stage is set for a high-stakes encounter between',
+    'Excitement reaches fever pitch as two titans prepare to collide:',
+    'In a clash that promises fireworks, all eyes are on the showdown between',
+    'Get ready for a pulsating 90 minutes as',
+    'The atmosphere is electric as the referee prepares to blow the whistle for',
+    'This fixture has all the makings of a classic – two hungry sides ready to battle for supremacy:',
+    'When these two giants meet, the football world stops to watch – tonight it’s',
+    'History, pride, and precious points are on the line as',
+    'Neutrals and die‑hards alike will be glued to the screen for',
+    'Expect passion, drama, and moments of magic when',
+    'The build‑up has been intense, and now the moment has arrived:'
+  ],
+
+  // Match context / tactical insights
+  mc: [
+    'Both clubs arrive at this fixture in contrasting form.',
+    'The head-to-head history between these two sides makes for compelling reading.',
+    'Recent results suggest momentum could play a decisive role in this contest.',
+    'Tactical battles across the pitch will likely determine who comes out on top.',
+    'Injuries and suspensions could force last‑minute adjustments from both benches.',
+    'The pressure of the occasion will test the nerve of every player on that pitch.',
+    'Statistically, home advantage has often proven crucial in this fixture.',
+    'Set pieces and transitions might be where this game is won or lost.',
+    'Midfield control will be vital – the team that dominates the centre often dictates the flow.',
+    'Defensive organisation against attacking flair: which philosophy will prevail?',
+    'Both managers have a history of tactical surprises – expect the unexpected.',
+    'The form table over the last six matches gives a slight edge to the home side.',
+    'Key injuries in the backline could force a reshuffle that might be exploited.',
+    'European ambitions, relegation fears, or local bragging rights – the stakes are enormous.',
+    'The referee’s temperament could also play a role in a fixture known for its intensity.',
+    'Fans from both camps believe this is their year – tonight could provide a statement result.'
+  ],
+
+  // Race opening lines
+  ro: [
+    'The engines are revving and the motorsport world is focused on',
+    'Throttle‑deep anticipation builds as the grid lights prepare to go out for',
+    'From pole position to the final chequered flag, all attention is on',
+    'The roar of the crowd mixes with the scream of engines as',
+    'Strategy, bravery and speed – everything is on the line at',
+    'The pit lane is buzzing, the tyres are warming, and the drivers are locked in for',
+    'Twenty cars, one winner – the battle begins at',
+    'Aerodynamics, engine modes, and driver instincts converge for',
+    'Wet or dry, hot or cold – the only certainty is drama at',
+    'Milliseconds separate glory from disappointment – welcome to'
+  ],
+
+  // Race context / technical notes
+  rc: [
+    'The championship standings remain tight, making every point decisive.',
+    'Tyre degradation and fuel loads will be critical factors throughout the race.',
+    'Overtaking zones and DRS activation points will provide plenty of action.',
+    'Weather forecasts could shuffle the pack and reward bold strategy calls.',
+    'Team radio messages and pit wall decisions will be scrutinised in real time.',
+    'Experience and raw pace both have their part to play in this weekend’s outcome.',
+    'Starting grid position is important, but racecraft and reliability often decide the podium.',
+    'Safety car periods could compress the field and create late drama.',
+    'Each driver has a different tyre allocation – the choice of compound could be decisive.',
+    'The battle for constructors’ points adds another layer of intrigue.',
+    'Recent upgrades to the cars could unlock extra tenths per lap.',
+    'Track limits and corner‑cutting penalties will be strictly enforced today.',
+    'The pit exit and entry have been noted as potential hotspots for incidents.'
+  ],
+
+  // Call to action (streaming)
+  cta: [
+    'Watch it all LIVE on Sports 803 — free, no sign-up required.',
+    'Stream the full action absolutely FREE on Sports 803 – no subscription needed.',
+    'Don’t miss a second of the drama: watch live on Sports 803, completely free.',
+    'Join thousands of fans and watch the HD live stream on Sports 803 – zero cost, zero hassle.',
+    'Catch every goal, save, and highlight live and free – only on Sports 803.',
+    'No credit card, no registration – just pure sport at Sports 803.',
+    'Your front‑row seat is waiting: click the link and enjoy the game in crystal‑clear HD.',
+    'Why pay for cable? Stream every match for free on Sports 803.',
+    'From kick‑off to final whistle, Sports 803 brings you uninterrupted action.',
+    'Bookmark Sports 803 now – your go‑to destination for free sports streaming.'
+  ],
+
+  // Highlights introduction
+  hl: [
+    'It was a night to remember — here is the full breakdown from',
+    'Relive all the key moments from a classic encounter:',
+    'The final whistle brought drama, emotion, and talking points – here’s what happened in',
+    'If you missed the live action, don’t worry – here’s your complete highlights package from',
+    'From the opening goal to the last‑minute drama, this is how it all unfolded in',
+    'Sit back and enjoy the condensed brilliance of',
+    'Goals, saves, tackles, and controversy – all the best bits from',
+    'The highlights tell the story of a match that had everything:',
+    'For those who couldn’t watch live, we’ve got you covered with the extended highlights of'
+  ],
+
+  // Team‑specific descriptions (used when we know home/away)
+  teamForm: [
+    ' have looked dangerous going forward, scoring freely in recent outings.',
+    ' have tightened their defence, conceding very few clear chances.',
+    ' are on a winning streak and full of confidence.',
+    ' have struggled for consistency, but possess match‑winners in their squad.',
+    ' tend to start fast – early goals could be on the cards.',
+    ' are known for their second‑half resilience and late comebacks.',
+    ' have a poor record against top‑half opponents this season.',
+    ' thrive in high‑pressure environments, especially in front of their own fans.'
+  ],
+
+  // Key players section
+  keyPlayers: [
+    'Keep an eye on the midfield maestro pulling the strings – his passing range is exceptional.',
+    'The centre‑forward has been in red‑hot form, with goals in his last three appearances.',
+    'A rock at the back, the captain leads by example with timely tackles and organisation.',
+    'The young winger possesses lightning pace and the ability to beat defenders one‑on‑one.',
+    'Set‑piece specialist – any free kick within range is a genuine goal threat.',
+    'The goalkeeper’s shot‑stopping could be the difference on a night of fine margins.',
+    'An experienced head who knows how to manage the tempo and break opposition rhythm.',
+    'The creative number ten has the vision to unlock the deepest defences.'
+  ],
+
+  // Prediction / scoreline
+  prediction: [
+    'Expect a tight contest with both teams likely to score – a draw would not surprise.',
+    'Home advantage may prove decisive, but away fans will fancy their chances on the counter.',
+    'Given recent meetings, a single goal could separate these sides at the final whistle.',
+    'If the early exchanges are anything to go by, we could be in for a goalfest.',
+    'The statistics suggest a low‑scoring affair, but derbies often defy the numbers.',
+    'Momentum shifts quickly – the team that scores first will be difficult to catch.',
+    'Both managers are tactically astute; substitutions could win the game late on.'
+  ],
+
+  // Closing / reminder
+  closing: [
+    'Stay with us for post‑match reaction, player ratings, and extended highlights.',
+    'After the final whistle, return to Sports 803 for analysis and interviews.',
+    'Don’t forget to share your thoughts in the comments – who was your man of the match?',
+    'This fixture has delivered drama before – tonight should be no different.',
+    'Make sure your stream is ready; kick‑off is just moments away.'
+  ]
 };
 const pick=a=>a[Math.floor(Math.random()*a.length)];
-function buildArticleFallback(title,ev){
-  const player=CFG.playerBase;
-  if(!ev){const p=parseTitle(title);const h=p?.home||'Home Team',a=p?.away||'Away Team';return pick(P.mo)+' '+h+' and '+a+'.\n\n'+pick(P.mc)+'\n\n📅 Date: TBD\n⚽ Match: '+h+' vs '+a+'\n\n📺 Watch free on Sports 803 — no sign-up required.\n\n'+pick(P.cta)+'\n\n#'+h.replace(/\s/g,'')+' #'+a.replace(/\s/g,'')+' #Sports803';}
-  if(ev.type==='race'){const ts=ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}):'this weekend';return pick(P.ro)+' the '+ev.name+'.\n\n'+pick(P.rc)+'\n\n🏎️ Event: '+ev.name+'\n📍 Venue: '+(ev.venue||'TBC')+'\n🕐 Start: '+ts+'\n\nStream FREE: '+player+'\n\n'+pick(P.cta);}
-  const h=ev.home.name,a=ev.away.name,lg=ev.league.name;
-  const ts=ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'}):'today';
-  return pick(P.mo)+' '+h+' and '+a+' go head-to-head in '+lg+'.\n\n'+pick(P.mc)+' '+pick(P.mc)+'\n\n📅 Date: '+ts+'\n🏆 Competition: '+lg+'\n⚽ Match: '+h+' vs '+a+'\n\nStream FREE on Sports 803: '+player+'\n\n'+pick(P.cta)+'\n\n#'+h.replace(/\s/g,'')+' #'+a.replace(/\s/g,'')+' #'+lg.replace(/\s/g,'')+' #Sports803';
+function buildArticleFallback(title, ev){
+  const player = CFG.playerBase;
+  const randomPick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const multiPick = (arr, count = 2) => {
+    let result = '';
+    for(let i = 0; i < count; i++) result += randomPick(arr) + ' ';
+    return result.trim();
+  };
+
+  // If no event object, use title parsing
+  if(!ev){
+    const p = parseTitle(title);
+    const home = p?.home || 'Home Team';
+    const away = p?.away || 'Away Team';
+    let article = '<p>' + randomPick(P.mo) + ' ' + home + ' and ' + away + '.</p>\n';
+    article += '<p>' + multiPick(P.mc, 3) + '</p>\n';
+    article += '<p>' + home + P.teamForm[Math.floor(Math.random() * P.teamForm.length)] + '</p>\n';
+    article += '<p>' + away + P.teamForm[Math.floor(Math.random() * P.teamForm.length)] + '</p>\n';
+    article += '<p>' + randomPick(P.keyPlayers) + '</p>\n';
+    article += '<p>' + randomPick(P.prediction) + '</p>\n';
+    article += '<p>' + randomPick(P.cta) + '</p>\n';
+    article += '<p>📅 <strong>Fixture:</strong> ' + home + ' vs ' + away + '<br>📺 <strong>Watch FREE:</strong> <a href="' + player + '">' + player + '</a></p>\n';
+    article += '<p>#' + home.replace(/\s/g,'') + ' #' + away.replace(/\s/g,'') + ' #Sports803</p>';
+    return article;
+  }
+
+  // Race event
+  if(ev.type === 'race'){
+    const raceName = ev.name || 'Grand Prix';
+    const league = ev.league?.name || 'Motorsport';
+    const venue = ev.venue || 'TBC';
+    const ts = ev.startTime ? ev.startTime.toLocaleString(undefined, {weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit', timeZoneName:'short'}) : 'this weekend';
+    let article = '<p>' + randomPick(P.ro) + ' ' + raceName + '.</p>\n';
+    article += '<p>' + multiPick(P.rc, 4) + '</p>\n';
+    article += '<p>🏁 <strong>Event:</strong> ' + raceName + '<br>📍 <strong>Venue:</strong> ' + venue + '<br>🕐 <strong>Start time:</strong> ' + ts + '</p>\n';
+    article += '<p>' + randomPick(P.cta) + '</p>\n';
+    article += '<p>🏆 <strong>What to watch:</strong> Pole position battle, first corner drama, and potential safety car periods – everything that makes ' + league + ' unforgettable.</p>\n';
+    article += '<p>📺 <strong>Live stream:</strong> <a href="' + player + '">' + player + '</a> – no sign‑up, HD quality.</p>\n';
+    article += '<p>#' + league.replace(/\s/g,'') + ' #' + raceName.replace(/\s/g,'') + ' #Sports803</p>';
+    return article;
+  }
+
+  // Match preview (default)
+  const home = ev.home.name;
+  const away = ev.away.name;
+  const leagueName = ev.league.name;
+  const ts = ev.startTime ? ev.startTime.toLocaleString(undefined, {weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit', timeZoneName:'short'}) : 'today';
+  
+  let article = '<p>' + randomPick(P.mo) + ' ' + home + ' and ' + away + ' in a ' + leagueName + ' showdown.</p>\n';
+  article += '<p>' + multiPick(P.mc, 3) + '</p>\n';
+  article += '<p><strong>' + home + '</strong>' + P.teamForm[Math.floor(Math.random() * P.teamForm.length)] + '</p>\n';
+  article += '<p><strong>' + away + '</strong>' + P.teamForm[Math.floor(Math.random() * P.teamForm.length)] + '</p>\n';
+  article += '<p>' + randomPick(P.keyPlayers) + '</p>\n';
+  article += '<p>' + randomPick(P.keyPlayers) + '</p>\n';
+  article += '<p>' + randomPick(P.prediction) + '</p>\n';
+  article += '<p>' + randomPick(P.cta) + '</p>\n';
+  article += '<p>📅 <strong>Kick‑off:</strong> ' + ts + '<br>🏆 <strong>Competition:</strong> ' + leagueName + '<br>⚽ <strong>Match:</strong> ' + home + ' vs ' + away + '</p>\n';
+  article += '<p>📺 <strong>Watch the full match LIVE for free on Sports 803:</strong> <a href="' + player + '">' + player + '</a> – no sign‑up, no subscription.</p>\n';
+  article += '<p>' + randomPick(P.closing) + '</p>\n';
+  article += '<p>#' + home.replace(/\s/g,'') + ' #' + away.replace(/\s/g,'') + ' #' + leagueName.replace(/\s/g,'') + ' #Sports803</p>';
+  
+  return article;
+}
+  
+  // Match preview (default)
+  const home = ev.home.name;
+  const away = ev.away.name;
+  const leagueName = ev.league.name;
+  const ts = ev.startTime ? ev.startTime.toLocaleString(undefined, {weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit', timeZoneName:'short'}) : 'today';
+  
+  const paragraphs = [
+    randomPick(P.mo) + ' ' + home + ' and ' + away + ' in a ' + leagueName + ' showdown that has fans eagerly anticipating.',
+    randomPick(P.mc) + ' ' + randomPick(P.mc),
+    home + ' come into this match looking to impose their attacking philosophy, while ' + away + ' will rely on defensive organisation and quick transitions.',
+    'Key players to watch include the creative midfielders and the clinical finishers on both sides – their individual brilliance could turn the tide.',
+    'Recent meetings between these teams have produced drama, late goals, and tactical masterclasses.',
+    'With both sets of supporters creating an electric atmosphere, expect a fiercely contested 90 minutes.',
+    randomPick(P.cta)
+  ];
+  
+  let article = '';
+  for(let p of paragraphs) article += '<p>' + p + '</p>\n';
+  article += '<p>📅 <strong>Kick‑off:</strong> ' + ts + '<br>🏆 <strong>Competition:</strong> ' + leagueName + '<br>⚽ <strong>Match:</strong> ' + home + ' vs ' + away + '</p>\n';
+  article += '<p>📺 <strong>Watch the full match LIVE for free on Sports 803:</strong> <a href="' + player + '">' + player + '</a> – no sign‑up, no subscription, just pure football.</p>\n';
+  article += '<p>🔁 <strong>Share this preview</strong> with fellow fans and come back after the final whistle for extended highlights and post‑match analysis.</p>\n';
+  article += '<p>#' + home.replace(/\s/g,'') + ' #' + away.replace(/\s/g,'') + ' #' + leagueName.replace(/\s/g,'') + ' #Sports803</p>';
+  
+  return article;
 }
 async function buildArticleWithClaude(title,ev,isHighlights=false){
   const cacheKey=(ev?evKey(ev):title)+(isHighlights?'|hl':'');if(dsArticleCache[cacheKey])return dsArticleCache[cacheKey];
