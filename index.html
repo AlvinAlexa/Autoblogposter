@@ -1524,8 +1524,20 @@ async function postToBlogger(){
   const t=v('post-title'),b=document.getElementById('post-body').value.trim(),st=v('post-status');
   const labels=v('post-labels').split(',').map(s=>s.trim()).filter(Boolean);
   if(!t||!b){toast('Title and body required','e');return;}
-  const thumbUrl=v('compose-thumb-url');
-  const html=(thumbUrl?'<div><img src="'+thumbUrl+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+t+'"></div>\n':'')+b.replace(/\n/g,'<br>');
+  let thumbUrl = v('compose-thumb-url');
+// If no thumbnail URL but canvas exists, auto-generate and upload
+if (!thumbUrl) {
+  const cv = document.getElementById('compose-canvas');
+  if (cv && cv.width > 0) {
+    toast('Auto‑uploading thumbnail…', 'i');
+    thumbUrl = await uploadCanvas(cv);
+    if (thumbUrl) {
+      set('compose-thumb-url', thumbUrl);
+      toast('Thumbnail uploaded automatically ✓', 's');
+    }
+  }
+}
+const html = (thumbUrl ? '<div><img src="'+thumbUrl+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+t+'"></div>\n' : '') + b.replace(/\n/g,'<br>');
   const schedDtVal=document.getElementById('post-schedule-dt')?.value;
   let publishDate=null;if(schedDtVal&&st==='LIVE'){publishDate=new Date(schedDtVal).toISOString();}
   if(editingPostId){
