@@ -786,11 +786,19 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
     <div style="display:flex;gap:7px;margin-top:8px"><button class="btn-red" onclick="saveChannel()">Save</button><button class="btn-ghost" onclick="closeModal('modal-channel')">Cancel</button></div>
   </div>
 </div>
-<div class="modal-overlay" id="modal-hl">
+  <div class="modal-overlay" id="modal-hl">
   <div class="modal">
     <div class="modal-head"><h3>🎬 Post Highlights</h3><button class="close-btn" onclick="closeModal('modal-hl')">✕</button></div>
     <div class="form-group"><label>Event</label><select id="hl-select" onchange="onHLSelect()"><option value="">— choose —</option></select></div>
     <div id="hl-existing" class="hl-row" style="display:none"><span>📝 Existing post:</span><a id="hl-link" href="#" target="_blank" style="font-size:.72rem">View</a><span style="margin-left:auto;color:var(--green);font-size:.7rem">Will be updated</span></div>
+
+    <!-- Manual post URL — paste any Blogger post URL or numeric ID to update it -->
+    <div class="form-group" style="background:rgba(76,201,240,.06);border:1px solid rgba(76,201,240,.2);border-radius:8px;padding:10px 12px">
+      <label style="color:var(--blue)">📌 Manual Post URL / ID to Update <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional — paste your Blogger post URL or numeric post ID)</span></label>
+      <input type="text" id="hl-manual-post-url" placeholder="https://sports803livestream.blogspot.com/…  OR  1234567890123456789" style="font-family:var(--mono);font-size:.72rem">
+      <div style="font-size:.62rem;color:var(--muted2);margin-top:4px">If filled, the highlights will UPDATE that specific post instead of creating a new one. Leave blank to auto-detect from post log or create new.</div>
+    </div>
+
     <div style="margin-bottom:12px">
       <div class="card-title" style="font-size:.68rem">🖼️ Auto Highlights Thumbnail
         <span class="ct-right" id="hl-thumb-badge" style="font-size:.62rem;color:var(--muted2);font-family:var(--mono)">—</span>
@@ -811,10 +819,10 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
     <div class="form-group"><label>Highlights Video URL / Embed</label><input type="text" id="hl-video"></div>
     <div class="form-group"><label>Highlights Body</label><textarea id="hl-body" rows="7"></textarea></div>
     <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:8px">
-     <button class="btn-gold btn-sm" onclick="ytSearchForModal()">🔍 YT Search</button>
-<button class="btn-purple btn-sm" onclick="genHLText()">🤖 AI Generate</button>
-<button class="btn-red btn-sm" onclick="postHighlights()">📤 Post</button>
-<button class="btn-ghost btn-sm" onclick="closeModal('modal-hl')">Cancel</button>
+      <button class="btn-gold btn-sm" onclick="ytSearchForModal()">🔍 YT Search</button>
+      <button class="btn-purple btn-sm" onclick="genHLText()">🤖 AI Generate</button>
+      <button class="btn-red btn-sm" onclick="postHighlights()">📤 Post / Update</button>
+      <button class="btn-ghost btn-sm" onclick="closeModal('modal-hl')">Cancel</button>
     </div>
   </div>
 </div>
@@ -1481,7 +1489,7 @@ function renderMatchCard(ev){
   const aLogo=ev.away.logo||LOGO_CACHE[ev.away.name.toLowerCase()]||'';
   const hChip=hLogo?'<div class="logo-chip"><img src="https://wsrv.nl/?url='+encodeURIComponent(hLogo)+'&w=80&h=80&fit=contain&n=-1&we" onerror="this.parentElement.textContent=\''+ev.home.name[0]+'\'" alt="'+ev.home.name+'" style="width:100%;height:100%;object-fit:contain"></div>':'<div class="logo-chip">'+ev.home.name[0]+'</div>';
   const aChip=aLogo?'<div class="logo-chip"><img src="https://wsrv.nl/?url='+encodeURIComponent(aLogo)+'&w=80&h=80&fit=contain&n=-1&we" onerror="this.parentElement.textContent=\''+ev.away.name[0]+'\'" alt="'+ev.away.name+'" style="width:100%;height:100%;object-fit:contain"></div>':'<div class="logo-chip">'+ev.away.name[0]+'</div>';
-  return'<div class="event-card '+(pl?.thumb?'has-thumb':'')+' '+(pl?.postId?'posted':'')+'" data-id="'+ev.id+'"><div class="ec-top"><span class="ec-league">'+ev.league.icon+' '+ev.league.name+'</span><div style="display:flex;align-items:center;gap:4px">'+thumbBadge+badge+'<span class="ec-status '+sc+'">'+ev.status+'</span></div></div><div class="ec-match"><div class="ec-team">'+hChip+'<div class="ec-team-name">'+ev.home.name+'</div></div><div style="display:flex;flex-direction:column;align-items:center"><div class="ec-vs">'+(ev.home.score!==''?ev.home.score+' – '+ev.away.score:'vs')+'</div><div class="ec-time">'+ts+'</div></div><div class="ec-team">'+aChip+'<div class="ec-team-name">'+ev.away.name+'</div></div></div>'+(pl?.postUrl?'<div style="font-size:.62rem;color:var(--muted2)">📝 <a href="'+pl.postUrl+'" target="_blank" style="color:var(--blue)">View post</a></div>':'')+'<div class="ec-actions"><button class="btn-red btn-sm" onclick="genAndFill(\''+sid+'\')">✍️ Gen</button><button class="btn-blue btn-sm" onclick="quickPostEv(\''+sid+'\')">📤 Post</button><button class="btn-gold btn-sm" onclick="genThumbForEv(\''+sid+'\')">🖼️ Thumb</button>'+(fin?'<button class="btn-orange btn-sm" onclick="openHLForEv(\''+sid+'\')">🎬 HL</button>':'')+'</div></div>';
+  return'<div class="event-card '+(pl?.thumb?'has-thumb':'')+' '+(pl?.postId?'posted':'')+'" data-id="'+ev.id+'"><div class="ec-top"><span class="ec-league">'+ev.league.icon+' '+ev.league.name+'</span><div style="display:flex;align-items:center;gap:4px">'+thumbBadge+badge+'<span class="ec-status '+sc+'">'+ev.status+'</span></div></div><div class="ec-match"><div class="ec-team">'+hChip+'<div class="ec-team-name">'+ev.home.name+'</div></div><div style="display:flex;flex-direction:column;align-items:center"><div class="ec-vs">'+(ev.home.score!==''?ev.home.score+' – '+ev.away.score:'vs')+'</div><div class="ec-time">'+ts+'</div></div><div class="ec-team">'+aChip+'<div class="ec-team-name">'+ev.away.name+'</div></div></div>'+(pl?.postUrl?'<div style="font-size:.62rem;color:var(--muted2)">📝 <a href="'+pl.postUrl+'" target="_blank" style="color:var(--blue)">View post</a></div>':'')+'<div class="ec-actions"><button class="btn-red btn-sm" onclick="genAndFill(\''+sid+'\')">✍️ Gen</button><button class="btn-blue btn-sm" onclick="quickPostEv(\''+sid+'\')">📤 Post</button><button class="btn-gold btn-sm" onclick="genThumbForEv(\''+sid+'\')">🖼️ Thumb</button><button class="btn-orange btn-sm" onclick="openHLForEv(\''+sid+'\')" title="Post Highlights / Update">🎬 HL</button></div></div>';
 }
 function renderRaceCard(ev){
   const ts=ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'TBD';
@@ -1705,6 +1713,8 @@ async function postToBlogger(){
   const t=v('post-title'),b=document.getElementById('post-body').value.trim(),st=v('post-status');
   const labels=v('post-labels').split(',').map(s=>s.trim()).filter(Boolean);
   if(!t||!b){toast('Title and body required','e');return;}
+
+  // Auto-upload canvas thumbnail if no URL set yet
   let thumbUrl=v('compose-thumb-url');
   if(!thumbUrl){
     const cv=document.getElementById('compose-canvas');
@@ -1716,18 +1726,9 @@ async function postToBlogger(){
   }
   const thumbHtml=thumbUrl?'<div><img src="'+thumbUrl+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+t+'"></div>\n':'';
 
-  // For race posts from Full Races: append sources list + player iframe
-  let raceExtra='';
-  if(currentComposeRace){
-    const race=currentComposeRace;
-    if(race.sources&&race.sources.length){
-      raceExtra+='\n\n<div style="margin:14px 0;padding:12px 16px;background:#0e1320;border:1px solid #1e2d45;border-radius:10px"><p style="color:#4cc9f0;font-weight:700;margin-bottom:8px">📹 Watch Full Race — All Parts:</p>'+
-        race.sources.map((s,i)=>'<p><a href="'+s.url+'" style="color:#e63946;text-decoration:none" target="_blank">▶ '+(s.label||'Part '+(i+1))+'</a></p>').join('')+'</div>';
-      raceExtra+='\n\n'+buildRacePlayerIframe(race);
-    }
-  }
+  // Body already contains the race iframe from genRacePost — no need to re-append
+  const html=thumbHtml+b.replace(/\n/g,'<br>');
 
-  const html=thumbHtml+b.replace(/\n/g,'<br>')+raceExtra;
   const schedDtVal=document.getElementById('post-schedule-dt')?.value;
   let publishDate=null;if(schedDtVal&&st==='LIVE'){publishDate=new Date(schedDtVal).toISOString();}
   if(editingPostId){
@@ -1815,52 +1816,125 @@ function previewPost(){document.getElementById('preview-title').textContent=v('p
 
 // ═══ HIGHLIGHTS ═══
 function populateHLSelect(){const sel=document.getElementById('hl-select');sel.innerHTML='<option value="">— choose event —</option>'+allEvents.map((ev,i)=>{const l=ev.type==='race'?ev.name:ev.home.name+' vs '+ev.away.name;return'<option value="'+i+'">'+ev.league.icon+' '+l+' ('+ev.status+')</option>';}).join('');}
-function openHLForEv(sid){populateHLSelect();const idx=allEvents.findIndex(e=>String(e.id)===String(decodeURIComponent(sid)));if(idx>-1)document.getElementById('hl-select').value=idx;onHLSelect();openModal('modal-hl');}
-function checkHighlights(){const ready=allEvents.filter(ev=>{const fin=ev.status==='Final'||ev.status==='FT'||ev.status==='Completed';const pl=getLog(ev);return fin&&pl?.postId&&!pl.hasHL;});if(!ready.length){toast('No finished events pending highlights','i');return;}toast(ready.length+' event(s) ready for highlights','i');populateHLSelect();const idx=allEvents.findIndex(e=>e.id===ready[0].id);if(idx>-1)document.getElementById('hl-select').value=idx;onHLSelect();openModal('modal-hl');}
-function onHLSelect(){   const idx=parseInt(document.getElementById('hl-select').value);   const ex=document.getElementById('hl-existing');   if(isNaN(idx)||idx<0){ex.style.display='none';return;}   const ev=allEvents[idx];if(!ev)return;   const pl=getLog(ev);   if(pl?.postId){ex.style.display='flex';document.getElementById('hl-link').href=pl.postUrl||'#';}   else ex.style.display='none';   genHLThumbAuto(ev); } async function genHLThumbAuto(ev){   if(!ev||ev.type==='race')return;   const cv=document.getElementById('hl-canvas');if(!cv)return;   const score=ev.home.score!==''?ev.home.score+' - '+ev.away.score:'';   const badge=document.getElementById('hl-thumb-badge');   const dt=ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric'}):'';   if(badge)badge.textContent=score?'Score: '+score:'No score yet';   setCanvasSize(cv,'800','16:9');   await renderThumb(cv,{type:'match',home:ev.home.name,away:ev.away.name,hLogo:ev.home.logo||'',aLogo:ev.away.logo||'',league:ev.league.name,datetime:dt,bg1:'#0d1b2a',bg2:'#1a0020',mode:'highlights',score},'hl-thumb-progress','hl-thumb-status'); } async function regenHLThumb(){   const idx=parseInt(document.getElementById('hl-select').value);   if(isNaN(idx)){toast('Select an event first','w');return;}   genHLThumbAuto(allEvents[idx]); } async function uploadHLThumb(){   const cv=document.getElementById('hl-canvas');   const url=await uploadCanvas(cv);   if(url){set('hl-thumb-url',url);toast('HL thumbnail uploaded ✓','s');} }
-async function genHLText(){
-  const idx=parseInt(document.getElementById('hl-select').value);if(isNaN(idx)){toast('Select an event','i');return;}
-  const ev=allEvents[idx];if(!ev)return;const label=ev.type==='race'?ev.name:ev.home.name+' vs '+ev.away.name;
-  if(CFG.deepseekKey){toast('DeepSeek writing highlights…','i');try{const sc=ev.type!=='race'&&ev.home.score!==''?'Final score: '+ev.home.name+' '+ev.home.score+'–'+ev.away.score+' '+ev.away.name+'. ':'';const prompt='Write a highlights recap for '+label+' ('+ev.league?.name+'). '+sc+'Write ~250 words in HTML format with <h2>, <p> tags. Enthusiastic sports journalist tone. End with: <p>📺 Watch highlights free on Sports 803.</p>';const article=await callClaude(prompt);document.getElementById('hl-body').value=article;toast('Highlights written by DeepSeek ✓','s');return;}catch(e){toast('Claude fallback to template','w');}}
-  const sc=ev.type!=='race'&&ev.home.score!==''?'Final: '+ev.home.name+' '+ev.home.score+'–'+ev.away.score+' '+ev.away.name+'\n\n':'';
-  document.getElementById('hl-body').value=pick(P.hl)+' '+label+'.\n\n'+sc+pick(P.mc)+' '+pick(P.mc)+'\n\n'+pick(P.cta);toast('Highlights text generated ✓','s');
+function openHLForEv(sid){
+  populateHLSelect();
+  const idx=allEvents.findIndex(e=>String(e.id)===String(decodeURIComponent(sid)));
+  if(idx>-1)document.getElementById('hl-select').value=idx;
+  // Clear manual URL so it auto-detects from postLog
+  const manualEl=document.getElementById('hl-manual-post-url');
+  if(manualEl)manualEl.value='';
+  // Clear video/body/thumb fields for fresh start
+  set('hl-video','');set('hl-body','');set('hl-thumb-url','');
+  onHLSelect();openModal('modal-hl');
+}
+function checkHighlights(){
+  // Show ALL finished events — not just ones posted via this dashboard.
+  // Users can manually set a post URL/ID to update, or post a new highlights post.
+  const fin=allEvents.filter(ev=>['Final','FT','Completed','Full Time','AET','Penalties','Post','Ended','Finished'].includes(ev.status));
+  if(!fin.length){toast('No finished events found. Fetch today\'s events first.','w');return;}
+  populateHLSelect();
+  // Pre-select the first one that hasn't had highlights posted yet, else just the first
+  const pending=fin.find(ev=>!getLog(ev)?.hasHL);
+  const first=pending||fin[0];
+  const idx=allEvents.findIndex(e=>e.id===first.id);
+  if(idx>-1)document.getElementById('hl-select').value=idx;
+  onHLSelect();openModal('modal-hl');
+  toast(fin.length+' finished event(s) available','i');
+}
+function onHLSelect(){
+  const idx=parseInt(document.getElementById('hl-select').value);
+  const ex=document.getElementById('hl-existing');
+  if(isNaN(idx)||idx<0){ex.style.display='none';return;}
+  const ev=allEvents[idx];if(!ev)return;
+  const pl=getLog(ev);
+  if(pl?.postId){
+    ex.style.display='flex';
+    document.getElementById('hl-link').href=pl.postUrl||'#';
+    // Pre-fill manual field with known post URL if available
+    const manualEl=document.getElementById('hl-manual-post-url');
+    if(manualEl&&!manualEl.value&&pl.postUrl)manualEl.value=pl.postUrl;
+  }else{
+    ex.style.display='none';
+  }
+  genHLThumbAuto(ev);
+}
+async function genHLThumbAuto(ev){
+  if(!ev||ev.type==='race')return;
+  const cv=document.getElementById('hl-canvas');if(!cv)return;
+  const score=ev.home.score!==''?ev.home.score+' - '+ev.away.score:'';
+  const badge=document.getElementById('hl-thumb-badge');
+  const dt=ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric'}):'';
+  if(badge)badge.textContent=score?'Score: '+score:'No score yet';
+  setCanvasSize(cv,'800','16:9');
+  await renderThumb(cv,{type:'match',home:ev.home.name,away:ev.away.name,hLogo:ev.home.logo||'',aLogo:ev.away.logo||'',league:ev.league.name,datetime:dt,bg1:'#0d1b2a',bg2:'#1a0020',mode:'highlights',score},'hl-thumb-progress','hl-thumb-status');
+}
+async function regenHLThumb(){
+  const idx=parseInt(document.getElementById('hl-select').value);
+  if(isNaN(idx)){toast('Select an event first','w');return;}
+  genHLThumbAuto(allEvents[idx]);
+}
+async function uploadHLThumb(){
+  const cv=document.getElementById('hl-canvas');
+  const url=await uploadCanvas(cv);
+  if(url){set('hl-thumb-url',url);toast('HL thumbnail uploaded ✓','s');}
 }
 async function postHighlights(){
   const idx=parseInt(document.getElementById('hl-select').value);if(isNaN(idx)){toast('Select an event','i');return;}const ev=allEvents[idx];if(!ev)return;
   const body=document.getElementById('hl-body').value.trim();if(!body){toast('Write/generate text first','i');return;}
   if(!accessToken||!CFG.blogId){toast('Sign in and set Blog ID','e');return;}
- const label=ev.type==='race'?ev.name:ev.home.name+' vs '+ev.away.name;const title=label+' – Highlights & Replay | Sports 803';
-  const video=v('hl-video');const iframeHtml=video?buildIframe([video]):'';
-  // Auto-generate & upload highlights thumbnail
+  const label=ev.type==='race'?ev.name:ev.home.name+' vs '+ev.away.name;const title=label+' – Highlights & Replay | Sports 803';
+  const video=v('hl-video');
+  // Use buildMultiSourceIframe for the video so it goes through the player
+  const iframeHtml=video?buildHighlightsPlayerIframe(video):'';
+
+  // Thumbnail
   let thumbHtml='';
   const preUploadedUrl=v('hl-thumb-url');
   if(preUploadedUrl){
     thumbHtml='<div><img src="'+preUploadedUrl+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+title+'"></div>\n';
-    toast('Using uploaded thumbnail ✓','s');
-  } else {
-    toast('Auto-generating highlights thumbnail…','i');
+  }else{
     try{
-      const cv2=document.createElement('canvas');
-      setCanvasSize(cv2,'1920','16:9');
+      const cv2=document.createElement('canvas');setCanvasSize(cv2,'1920','16:9');
       const score2=ev.type!=='race'&&ev.home.score!==''?ev.home.score+' - '+ev.away.score:'';
       const dt2=ev.startTime?ev.startTime.toLocaleString(undefined,{weekday:'short',month:'short',day:'numeric'}):'';
       if(ev.type==='race')await drawRaceThumbnail(cv2,{name:ev.name,league:ev.league.name,datetime:dt2,venue:ev.venue||'',bg1:'#0a0e1a',bg2:'#1a0a00',bannerUrl:getRaceImg(ev)});
       else await drawMatchThumbnail(cv2,{home:ev.home.name,away:ev.away.name,hLogo:ev.home.logo||'',aLogo:ev.away.logo||'',league:ev.league.name,datetime:dt2,bg1:'#0d1b2a',bg2:'#1a0020',mode:'highlights',score:score2});
-      if(CFG.imgbbKey){
-        const fd=new FormData();fd.append('key',CFG.imgbbKey);fd.append('image',cv2.toDataURL('image/jpeg',.9).split(',')[1]);
-        const res=await fetch('https://api.imgbb.com/1/upload',{method:'POST',body:fd});
-        const json=await res.json();
-        if(json.success){thumbHtml='<div><img src="'+json.data.url+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+title+'"></div>\n';set('hl-thumb-url',json.data.url);toast('Thumbnail uploaded ✓','s');}
-        else thumbHtml='<div><img src="'+cv2.toDataURL('image/jpeg',.85)+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+title+'"></div>\n';
-      } else {
-        thumbHtml='<div><img src="'+cv2.toDataURL('image/jpeg',.85)+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+title+'"></div>\n';
-      }
-    }catch(e){toast('Thumb gen skipped: '+e.message,'w');}
+      if(CFG.imgbbKey){const fd=new FormData();fd.append('key',CFG.imgbbKey);fd.append('image',cv2.toDataURL('image/jpeg',.9).split(',')[1]);const res=await fetch('https://api.imgbb.com/1/upload',{method:'POST',body:fd});const json=await res.json();if(json.success){thumbHtml='<div><img src="'+json.data.url+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+title+'"></div>\n';set('hl-thumb-url',json.data.url);}}
+      if(!thumbHtml)thumbHtml='<div><img src="'+cv2.toDataURL('image/jpeg',.85)+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+title+'"></div>\n';
+    }catch(e){}
   }
   const html=thumbHtml+(body+(iframeHtml?'\n\n'+iframeHtml:'')).replace(/\n/g,'<br>');
   const pl=getLog(ev);
-  if(pl?.postId){try{const res=await fetch('https://www.googleapis.com/blogger/v3/blogs/'+CFG.blogId+'/posts/'+pl.postId,{method:'PUT',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({kind:'blogger#post',id:pl.postId,blog:{id:CFG.blogId},title,content:html,labels:getLabels(ev)})});if(!res.ok)throw new Error(res.status);const post=await res.json();const thumbUpdate=v('hl-thumb-url')||pl?.thumb||null;setLog(ev,{postId:post.id,postUrl:post.url,title,hasHL:true,thumb:thumbUpdate||pl?.thumb||null});toast('Post updated ✓','s');closeModal('modal-hl');renderEventCards(allEvents);}catch(e){toast('Update failed: '+e.message,'e');}}
-  else{const post=await postRaw(title,html,'LIVE',getLabels(ev),null);if(post){setLog(ev,{postId:post.id,postUrl:post.url,title,hasHL:true});toast('Highlights posted ✓','s');closeModal('modal-hl');renderEventCards(allEvents);}}
+
+  // Resolve post ID: manual field > postLog > create new
+  const manualInput=(document.getElementById('hl-manual-post-url')?.value||'').trim();
+  let resolvedPostId=pl?.postId||null;
+  let resolvedPostUrl=pl?.postUrl||null;
+  if(manualInput){
+    // Extract numeric post ID from URL or use directly if it's a number
+    const numMatch=manualInput.match(/(\d{10,})/);
+    if(numMatch)resolvedPostId=numMatch[1];
+    if(manualInput.startsWith('http'))resolvedPostUrl=manualInput;
+  }
+
+  if(resolvedPostId){
+    // UPDATE existing post via PUT
+    toast('Updating post…','i');
+    try{
+      const res=await fetch('https://www.googleapis.com/blogger/v3/blogs/'+CFG.blogId+'/posts/'+resolvedPostId,{method:'PUT',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({kind:'blogger#post',id:resolvedPostId,blog:{id:CFG.blogId},title,content:html,labels:getLabels(ev)})});
+      if(!res.ok)throw new Error('HTTP '+res.status+': '+await res.text());
+      const post=await res.json();
+      const thumbUpdate=v('hl-thumb-url')||pl?.thumb||null;
+      setLog(ev,{postId:post.id,postUrl:post.url||resolvedPostUrl,title,hasHL:true,thumb:thumbUpdate||pl?.thumb||null});
+      // Clear manual field after success
+      const manualEl=document.getElementById('hl-manual-post-url');if(manualEl)manualEl.value='';
+      toast('Post updated with highlights ✓','s');closeModal('modal-hl');renderEventCards(allEvents);
+    }catch(e){toast('Update failed: '+e.message+' — check post ID','e');}
+  }else{
+    // CREATE new highlights post
+    const post=await postRaw(title,html,'LIVE',getLabels(ev),null);
+    if(post){setLog(ev,{postId:post.id,postUrl:post.url,title,hasHL:true});toast('Highlights posted ✓','s');closeModal('modal-hl');renderEventCards(allEvents);}
+  }
 }
 
 // ═══ CHANNELS ═══
@@ -2295,37 +2369,46 @@ async function genRacePost(id){
   const race=findRace(id);if(!race)return;
   clearEditMode();
   currentComposeEv=null;
-  currentComposeRace=race; // postToBlogger reads this to append player iframe
+  currentComposeRace=race; // postToBlogger reads this to append player iframe on Publish
 
+  // ── TITLE: use scraped race.title directly ──
   const postTitle=race.title+' – Full Race Replay | Sports 803';
   set('post-title',postTitle);
 
-  // Labels
+  // ── LABELS ──
   document.getElementById('post-labels').value=['sports 803','full race replay',race.sportSlug,'motorsport'].filter(Boolean).join(', ');
 
-  // Thumbnail: set URL so postToBlogger prepends it; also draw canvas preview
-  set('compose-thumb-url',race.previewImg||'');
+  // ── THUMBNAIL: draw race canvas using the scraped previewImg as banner ──
   const cv=document.getElementById('compose-canvas');
   setCanvasSize(cv,'1920','16:9');
-  toast('Drawing thumbnail…','i');
   await drawRaceThumbnail(cv,{
     name:race.title,
     league:race.sportSlug?race.sportSlug.toUpperCase():'Full Race',
     datetime:race.dateStr||'',
     venue:'',bg1:'#0a0e1a',bg2:'#1a0a00',
-    bannerUrl:race.previewImg||''
+    bannerUrl:race.previewImg||''  // scraped image used as banner on canvas
   });
-  // If previewImg exists, keep it as thumb URL (direct img embed — faster than re-upload)
-  // Otherwise leave compose-thumb-url blank so postToBlogger auto-uploads the canvas
-  if(!race.previewImg)set('compose-thumb-url','');
+  // Set compose-thumb-url to the scraped image URL so postToBlogger uses it directly
+  // (saves an imgbb upload if we already have a good hosted URL from the scrape)
+  set('compose-thumb-url',race.previewImg||'');
 
-  // Generate article body (Claude AI or rich fallback)
+  // ── ARTICLE BODY: Claude AI or rich fallback, with player iframe appended ──
   toast('Generating article…','i');
-  const body=await buildRaceArticleBody(race);
-  document.getElementById('post-body').value=body;
+  const article=await buildRaceArticleBody(race);
+
+  // Build the player iframe with all scraped sources
+  const iframeHtml=race.sources&&race.sources.length?'\n\n'+buildRacePlayerIframe(race):'';
+
+  // Source links block so readers can click each part directly
+  const sourceLinksHtml=race.sources&&race.sources.length
+    ?'\n\n<div style="margin:14px 0;padding:12px 16px;background:#0e1320;border:1px solid #1e2d45;border-radius:10px"><p style="color:#4cc9f0;font-weight:700;margin-bottom:8px">📹 Watch Full Race — All Parts:</p>'+
+      race.sources.map((s,i)=>'<p><a href="'+s.url+'" style="color:#e63946;text-decoration:none" target="_blank">▶ '+(s.label||'Part '+(i+1))+'</a></p>').join('')+'</div>'
+    :'';
+
+  document.getElementById('post-body').value=article+sourceLinksHtml+iframeHtml;
 
   updateSEO();showPage('compose');
-  toast('Race post ready — review then click Publish ✓','s');
+  toast('Race post ready — review & click Publish ✓','s');
 }
 
 // ── Quick Post: posts directly to Blogger with title, thumbnail, article, and player iframe
