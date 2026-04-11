@@ -1714,7 +1714,7 @@ async function postToBlogger(){
   const labels=v('post-labels').split(',').map(s=>s.trim()).filter(Boolean);
   if(!t||!b){toast('Title and body required','e');return;}
 
-  // Auto-upload canvas thumbnail if no URL set yet
+  // Use scraped/set thumb URL if already available; only auto-upload canvas as last resort
   let thumbUrl=v('compose-thumb-url');
   if(!thumbUrl){
     const cv=document.getElementById('compose-canvas');
@@ -2373,30 +2373,68 @@ async function genRacePost(id){
 
   // ── TITLE: use scraped race.title directly ──
   const postTitle=race.title+' – Full Race Replay | Sports 803';
-  set('post-title',postTitle);
+  // Set value directly AND fire oninput so SEO meter + auto-thumb update
+  const titleEl=document.getElementById('post-title');
+  if(titleEl){titleEl.value=postTitle;titleEl.dispatchEvent(new Event('input'));}
 
   // ── LABELS ──
   document.getElementById('post-labels').value=['sports 803','full race replay',race.sportSlug,'motorsport'].filter(Boolean).join(', ');
 
-  // ── THUMBNAIL: draw race canvas using the scraped previewImg as banner ──
+  // ── THUMBNAIL: show scraped image in the thumb preview area ──
   const cv=document.getElementById('compose-canvas');
   setCanvasSize(cv,'1920','16:9');
-  await drawRaceThumbnail(cv,{
-    name:race.title,
-    league:race.sportSlug?race.sportSlug.toUpperCase():'Full Race',
-    datetime:race.dateStr||'',
-    venue:'',bg1:'#0a0e1a',bg2:'#1a0a00',
-    bannerUrl:race.previewImg||''  // scraped image used as banner on canvas
-  });
+  // If we have a scraped preview image, draw it onto the canvas as a proper banner
+  if(race.previewImg){
+    try{
+      await new Promise((resolve,reject)=>{
+        const img=new Image();img.crossOrigin='anonymous';
+        img.onload=()=>{
+          const ctx=cv.getContext('2d');
+          // Draw image to fill canvas
+          ctx.drawImage(img,0,0,cv.width,cv.height);
+          // Dark overlay for text readability
+          ctx.fillStyle='rgba(0,0,0,0.45)';ctx.fillRect(0,0,cv.width,cv.height);
+          // Sport label
+          ctx.font='bold '+(cv.height*0.06)+'px "Barlow Condensed",sans-serif';
+          ctx.fillStyle='#e63946';ctx.textAlign='left';ctx.textBaseline='top';
+          ctx.fillText((race.sportSlug?race.sportSlug.toUpperCase():'FULL RACE')+' · REPLAY',cv.width*0.04,cv.height*0.06);
+          // Title
+          ctx.font='900 '+(cv.height*0.1)+'px "Barlow Condensed",sans-serif';
+          ctx.fillStyle='#ffffff';ctx.textAlign='left';ctx.textBaseline='middle';
+          const maxW=cv.width*0.92;let txt=race.title;
+          while(ctx.measureText(txt).width>maxW&&txt.length>10)txt=txt.slice(0,-4)+'…';
+          ctx.fillText(txt,cv.width*0.04,cv.height*0.52);
+          // Bottom bar
+          ctx.fillStyle='#e63946';ctx.fillRect(0,cv.height*0.82,cv.width,cv.height*0.18);
+          ctx.font='bold '+(cv.height*0.065)+'px "Barlow Condensed",sans-serif';
+          ctx.fillStyle='#ffffff';ctx.textAlign='center';ctx.textBaseline='middle';
+          ctx.fillText('SPORTS 803 · WATCH FREE',cv.width/2,cv.height*0.91);
+          resolve();
+        };
+        img.onerror=reject;
+        img.src=race.previewImg;
+      });
+    }catch(e){
+      // Fallback to standard race thumbnail if image load fails
+      await drawRaceThumbnail(cv,{name:race.title,league:race.sportSlug?race.sportSlug.toUpperCase():'Full Race',datetime:race.dateStr||'',venue:'',bg1:'#0a0e1a',bg2:'#1a0a00',bannerUrl:''});
+    }
+  }else{
+    await drawRaceThumbnail(cv,{name:race.title,league:race.sportSlug?race.sportSlug.toUpperCase():'Full Race',datetime:race.dateStr||'',venue:'',bg1:'#0a0e1a',bg2:'#1a0a00',bannerUrl:''});
+  }
   // Set compose-thumb-url to the scraped image URL so postToBlogger uses it directly
-  // (saves an imgbb upload if we already have a good hosted URL from the scrape)
+  // (avoids an extra imgbb upload when we already have a hosted URL from the scrape)
   set('compose-thumb-url',race.previewImg||'');
+  // Show canvas in the preview area
+  const genStatus=document.getElementById('compose-gen-status');
+  if(genStatus){genStatus.textContent=race.previewImg?'✓ Race image loaded':'✓ Thumbnail generated';genStatus.className='gen-status done';}
+  const autoBadge=document.getElementById('compose-auto-badge');
+  if(autoBadge)autoBadge.style.display='inline-flex';
 
   // ── ARTICLE BODY: Claude AI or rich fallback, with player iframe appended ──
   toast('Generating article…','i');
   const article=await buildRaceArticleBody(race);
 
-  // Build the player iframe with all scraped sources
+  // Build the player iframe with all scraped sources (Part 1, Part 2 … Embed 1 etc.)
   const iframeHtml=race.sources&&race.sources.length?'\n\n'+buildRacePlayerIframe(race):'';
 
   // Source links block so readers can click each part directly
