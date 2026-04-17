@@ -356,7 +356,7 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
         </div>
         <div class="form-group"><label>Post Body</label><textarea id="post-body" rows="14" placeholder="Article content… or click 🤖 AI Write to generate with Claude AI" oninput="updateSEO()"></textarea></div>
         <div class="form-row">
-          <div><label>Labels</label><input type="text" id="post-labels" value="sports 803,live stream" oninput="updateSEO()"></div>
+          <div><label>Labels</label><input type="text" id="post-labels" value="sports 803,live " oninput="updateSEO()"></div>
           <div><label>Status</label><select id="post-status"><option value="DRAFT">Draft</option><option value="LIVE">Live</option></select></div>
         </div>
         <div class="form-group" id="schedule-dt-wrap" style="display:none">
@@ -1666,7 +1666,7 @@ async function bulkPostAll(){
 const RACE_IMGS={'monaco':'https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Monaco_Circuit.png.transform/7col/image.png','formula 1':'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/1280px-F1.svg.png','motogp':'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/MotoGP_Logo.svg/1280px-MotoGP_Logo.svg.png','nascar':'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/NASCAR_Logo.svg/1280px-NASCAR_Logo.svg.png'};
 function getRaceImg(ev){const hay=((ev.name||'')+(ev.venue||'')).toLowerCase();for(const k of Object.keys(RACE_IMGS).sort((a,b)=>b.length-a.length))if(hay.includes(k))return RACE_IMGS[k];if(ev.league?.id==='f1')return RACE_IMGS['formula 1'];if(ev.league?.id==='motogp')return RACE_IMGS['motogp'];if(ev.league?.id==='nascar')return RACE_IMGS['nascar'];return'';}
 const LEAGUE_LABELS={ucl:['UEFA Champions League','UCL','Football Live Stream','Sports 803'],epl:['Premier League','EPL','Football Live Stream','Sports 803'],laliga:['La Liga','Spanish Football','Football Live Stream','Sports 803'],seriea:['Serie A','Italian Football','Football Live Stream','Sports 803'],bundesliga:['Bundesliga','German Football','Football Live Stream','Sports 803'],f1:['Formula 1','F1','Grand Prix','Motorsport Live Stream','Sports 803'],nba:['NBA','Basketball','NBA Live Stream','Sports 803'],nfl:['NFL','American Football','Sports 803'],ufc:['UFC','MMA','Combat Sports','Sports 803'],atp:['ATP','Tennis','Sports 803'],wta:['WTA','Women Tennis','Sports 803']};
-function getLabels(ev){const base=LEAGUE_LABELS[ev.league?.id]||['Sports 803','Live Stream'];const extra=[];if(ev.home?.name)extra.push(ev.home.name);if(ev.away?.name)extra.push(ev.away.name);return[...new Set([...base,...extra])];}
+function getLabels(ev){const base=LEAGUE_LABELS[ev.league?.id]||['Sports 803','Live '];const extra=[];if(ev.home?.name)extra.push(ev.home.name);if(ev.away?.name)extra.push(ev.away.name);return[...new Set([...base,...extra])];}
 function findCHsForLeague(id){return channels.filter(c=>c.sport.split(',').map(s=>s.trim()).some(s=>s===id||id.includes(s)||s.includes(id)));}
 
 // ═══ CONTENT INJECTORS ═══
@@ -1748,7 +1748,7 @@ async function postRaw(title,html,status,labels,publishDate=null){
   if(!CFG.blogId||!accessToken)return null;
   let url='https://www.googleapis.com/blogger/v3/blogs/'+CFG.blogId+'/posts/';
   const isLive=status==='LIVE';if(!isLive)url+='?isDraft=true';
-  const body={kind:'blogger#post',blog:{id:CFG.blogId},title,content:html,labels:labels||['sports 803','live stream']};
+  const body={kind:'blogger#post',blog:{id:CFG.blogId},title,content:html,labels:labels||['sports 803','live ']};
   if(publishDate&&isLive)body.published=publishDate;
   try{const res=await fetch(url,{method:'POST',headers:{'Authorization':'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify(body)});if(!res.ok)throw new Error('Blogger '+res.status+': '+await res.text());return await res.json();}
   catch(e){toast('Post failed: '+e.message,'e');return null;}
@@ -1760,7 +1760,7 @@ async function updateExistingPost(ev,title,html,status,labels,publishDate=null){
   const pl=ev?getLog(ev):null;const postId=editingPostId||pl?.postId;
   if(!postId){toast('No post ID to update','e');return null;}
   const isLive=status==='LIVE';
-  const body={kind:'blogger#post',id:postId,blog:{id:CFG.blogId},title,content:html,labels:labels||['sports 803','live stream']};
+  const body={kind:'blogger#post',id:postId,blog:{id:CFG.blogId},title,content:html,labels:labels||['sports 803','live ']};
   if(publishDate&&isLive)body.published=publishDate;
   let url='https://www.googleapis.com/blogger/v3/blogs/'+CFG.blogId+'/posts/'+postId;
   if(!isLive)url+='?publish=false';
