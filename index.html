@@ -1386,7 +1386,6 @@ function onTitleChange(){
   document.getElementById('schedule-dt-wrap').style.display='block';
   if(parsed){document.getElementById('tp-home').textContent=parsed.home;document.getElementById('tp-away').textContent=parsed.away;row.style.display='flex';set('c-home',parsed.home);set('c-away',parsed.away);badge.style.display='inline-flex';clearTimeout(composeTitleDebounce);composeTitleDebounce=setTimeout(()=>triggerComposeThumb(parsed,title),700);}
   else{row.style.display='none';badge.style.display='none';}
-  updateIframeBox();
 }
 async function triggerComposeThumb(parsed,title){
   const cv=document.getElementById('compose-canvas');const quality=v('c-quality')||'1920';const aspect=v('c-aspect')||'16:9';setCanvasSize(cv,quality,aspect);
@@ -1398,7 +1397,7 @@ async function triggerComposeThumb(parsed,title){
 }
 function schedComposeThumb(){clearTimeout(composDebounce);composDebounce=setTimeout(()=>{const parsed=parseTitle(v('post-title'));if(parsed||v('c-home'))triggerComposeThumb(parsed||{home:v('c-home'),away:v('c-away')},v('post-title'));},600);}
 function regenComposeThumb(){const parsed=parseTitle(v('post-title'));if(!parsed&&!v('c-home')){toast('Add a post title first','w');return;}triggerComposeThumb(parsed||{home:v('c-home'),away:v('c-away')},v('post-title'));}
-async function uploadComposeThumb(){const cv=document.getElementById('compose-canvas');const url=await uploadCanvas(cv);if(url){set('compose-thumb-url',url);updateIframeBox();toast('Uploaded ✓','s');}}
+async function uploadComposeThumb(){const cv=document.getElementById('compose-canvas');const url=await uploadCanvas(cv);if(url){set('compose-thumb-url',url);toast('Uploaded ✓','s');}}
 function insertThumbIntoPost(){const url=v('compose-thumb-url');const title=v('post-title');let html='';if(url){html='<div><img src="'+url+'" alt="'+title+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px"></div>\n';toast('Thumbnail attached ✓','s');}else{const cv=document.getElementById('compose-canvas');html='<div><img src="'+cv.toDataURL('image/jpeg',.88)+'" alt="'+title+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px"></div>\n';toast('Thumbnail embedded ✓','s');}const body=document.getElementById('post-body');body.value=html+body.value;updateSEO();}
 function downloadComposeThumb(){const cv=document.getElementById('compose-canvas');const a=document.createElement('a');a.download='sports803-thumb.jpg';a.href=cv.toDataURL('image/jpeg',.9);a.click();}
 
@@ -1596,18 +1595,22 @@ async function reloadComposeAgg(){
   if(!currentComposeEv){toast('No event loaded — use ✍️ Gen from Events first','w');return;}
   if(!CFG.autoFetchStreams){toast('Enable "Auto-fetch External Streams" in Settings first','w');return;}
   if(statusEl)statusEl.textContent='Loading…';if(aggEl)aggEl.innerHTML='<span class="spinner"></span> Fetching…';
-    try{
+  try{
     const sources=await getAllStreamSourcesForEvent(currentComposeEv);
     if(statusEl)statusEl.textContent=sources.length+' source(s)';
-    if(!sources.length){if(aggEl)aggEl.innerHTML='<span style="color:var(--muted2)">No streams found.</span>';return;}
+    if(!sources.length){if(aggEl)aggEl.innerHTML='<span style="color:var(--muted2)">No streams found for this match.</span>';return;}
     if(aggEl){aggEl.innerHTML=sources.map(s=>'<div class="stream-row"><input type="text" class="mora-input" value="'+s.url.replace(/"/g,'&quot;')+'" readonly style="font-size:.7rem;color:var(--muted2);font-family:var(--mono)"><button class="btn-blue btn-xs" onclick="insertSourceToCompose(this.previousElementSibling.value)">Insert</button></div>').join('');}
-    toast(sources.length+' streams loaded ✓','s');
+    const list=document.getElementById('stream-list');list.innerHTML='';
+    sources.forEach(s=>{const row=document.createElement('div');row.className='stream-row';row.innerHTML='<input type="text" class="mora-input" value="'+s.url.replace(/"/g,'&quot;')+'" oninput="updateIframeBox()"><button class="btn-ghost btn-sm" onclick="removeStream(this)">✕</button>';list.appendChild(row);});
+    updateIframeBox();
+    toast(sources.length+' stream(s) loaded & inserted ✓','s');
   }catch(e){if(statusEl)statusEl.textContent='Error';toast('Aggregator error: '+e.message,'e');}
 }
 async function insertAllAggStreams(){
   if(!currentComposeEv){toast('No event loaded','w');return;}if(!CFG.autoFetchStreams){toast('Enable "Auto-fetch External Streams" in Settings first','w');return;}
   const sources=await getAllStreamSourcesForEvent(currentComposeEv);if(!sources.length){toast('No streams found','w');return;}
-  const list=document.getElementById('stream-list');sources.forEach(s=>{const row=document.createElement('div');row.className='stream-row';row.innerHTML='<input type="text" class="mora-input" value="'+s.url+'" oninput="updateIframeBox()"><button class="btn-ghost btn-sm" onclick="removeStream(this)">✕</button>';list.appendChild(row);});updateIframeBox();toast(sources.length+' stream(s) added ✓','s');
+  const list=document.getElementById('stream-list');list.innerHTML='';
+  sources.forEach(s=>{const row=document.createElement('div');row.className='stream-row';row.innerHTML='<input type="text" class="mora-input" value="'+s.url+'" oninput="updateIframeBox()"><button class="btn-ghost btn-sm" onclick="removeStream(this)">✕</button>';list.appendChild(row);});updateIframeBox();toast(sources.length+' stream(s) inserted ✓','s');
 }
 async function genThumbForEv(sid){
   const ev=findEv(sid);if(!ev)return;
@@ -1698,21 +1701,7 @@ function updateSEO(){
 function addStream(){const r=document.createElement('div');r.className='stream-row';r.innerHTML='<input type="text" placeholder="https://stream.com/…" class="mora-input" oninput="updateIframeBox()"><button class="btn-ghost btn-sm" onclick="removeStream(this)">✕</button>';document.getElementById('stream-list').appendChild(r);updateIframeBox();}
 function removeStream(btn){const l=document.getElementById('stream-list');if(l.children.length<=1){btn.previousElementSibling.value='';return;}btn.parentElement.remove();updateIframeBox();}
 function getMoraURLs(){return Array.from(document.querySelectorAll('.mora-input')).map(i=>i.value.trim()).filter(Boolean);}
-function buildIframe(urls){
-  const base=(v('player-base')||CFG.playerBase).trim();
-  const parts=[];
-  urls.forEach(u=>{
-    const type=u.includes('ddkanqu.com')?'mora':'embed';
-    parts.push(type+'='+encodeURIComponent(u));
-  });
-  const thumbUrl=v('compose-thumb-url')||'';
-  if(thumbUrl)parts.push('thumb='+encodeURIComponent(thumbUrl));
-  const title=v('post-title')||'';
-  const parsed=parseTitle(title);
-  if(parsed){parts.push('team1='+encodeURIComponent(parsed.home));parts.push('team2='+encodeURIComponent(parsed.away));}
-  const src=parts.length?base+'?'+parts.join('&'):base;
-  return'<div style="margin:18px 0;position:relative;padding-bottom:56.25%;height:0;overflow:hidden"><iframe loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="'+src+'" frameborder="0" scrolling="no" allowfullscreen></iframe></div>';
-}
+function buildIframe(urls){const base=(v('player-base')||CFG.playerBase).trim();const params=urls.map(u=>'mora='+encodeURIComponent(u)).join('&');const src=params?base+'?'+params:base;return'<div style="margin:18px 0"><iframe loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" width="100%" height="500" src="'+src+'" frameborder="0" scrolling="no" allowfullscreen></iframe></div>';}
 function updateIframeBox(){const urls=getMoraURLs();document.getElementById('iframe-code').textContent=urls.length?buildIframe(urls):'Add a stream URL above…';}
 function insertIframe(){const urls=getMoraURLs();if(!urls.length){toast('Add at least one stream URL','w');return;}const body=document.getElementById('post-body');body.value+=(body.value?'\n\n':'')+buildIframe(urls);updateSEO();toast('iframe inserted ✓','s');}
 
