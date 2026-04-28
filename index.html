@@ -1237,12 +1237,7 @@ async function buildArticleWithClaude(title,ev,isHighlights=false){
 async function buildArticleWithStreams(title,ev,isHighlights=false){
   const base=await buildArticleWithClaude(title,ev,isHighlights);
   if(!CFG.autoFetchStreams||CFG.embedStreamsInPost===false||!ev)return base;
-  try{
-    const sources=await getAllStreamSourcesForEvent(ev);if(!sources.length)return base;
-    const thumbUrl=v('compose-thumb-url')||(getLog(ev)?.thumb?.startsWith('http')?getLog(ev).thumb:'');
-    const opts=ev.type==='match'?{thumb:thumbUrl,team1:ev.home.name,team2:ev.away.name}:{thumb:thumbUrl};
-    return base+'\n\n'+buildMultiSourceIframe(sources,opts);
-  }catch(e){return base;}
+  try{const sources=await getAllStreamSourcesForEvent(ev);if(!sources.length)return base;return base+'\n\n'+buildMultiSourceIframe(sources);}catch(e){return base;}
 }
 
 // ═══ LOGO ENGINE ═══
@@ -1731,8 +1726,22 @@ async function postToBlogger(){
   }
   const thumbHtml=thumbUrl?'<div><img src="'+thumbUrl+'" style="max-width:100%;height:auto;border-radius:10px;margin-bottom:18px" alt="'+t+'"></div>\n':'';
 
+  // Patch media-player iframe src in body: inject thumb=, team1=, team2= now that we have all values
+  let patchedBody=b;
+  if(thumbUrl||currentComposeEv?.type==='match'){
+    patchedBody=b.replace(/(src=")(https:\/\/[^"]*alvinalexa[^"]*media-player[^"]*?)(")/g,(m,pre,iSrc,post)=>{
+      let u=iSrc;
+      if(thumbUrl&&!u.includes('thumb='))u+='&thumb='+encodeURIComponent(thumbUrl);
+      if(currentComposeEv?.type==='match'){
+        if(!u.includes('team1='))u+='&team1='+encodeURIComponent(currentComposeEv.home.name);
+        if(!u.includes('team2='))u+='&team2='+encodeURIComponent(currentComposeEv.away.name);
+      }
+      return pre+u+post;
+    });
+  }
+
   // Body already contains the race iframe from genRacePost — no need to re-append
-  const html=thumbHtml+b.replace(/\n/g,'<br>');
+  const html=thumbHtml+patchedBody.replace(/\n/g,'<br>');
 
   const schedDtVal=document.getElementById('post-schedule-dt')?.value;
   let publishDate=null;if(schedDtVal&&st==='LIVE'){publishDate=new Date(schedDtVal).toISOString();}
@@ -2065,16 +2074,7 @@ async function getDdkanquSourcesForEvent(ev){
 function getChannelsForEvent(ev){return findCHsForLeague(ev.league?.id||'').filter(c=>c.url).map(c=>({url:c.url,type:'mora'}));}
 function getProgTxtStreamsForEvent(ev){if(ev.type==='race')return[];const key=pairKey(ev.home.name,ev.away.name);return externalStreamsMap[key]||[];}
 async function getAllStreamSourcesForEvent(ev){if(!CFG.autoFetchStreams)return[];const sources=[];const ddkSources=await getDdkanquSourcesForEvent(ev);sources.push(...ddkSources);sources.push(...getChannelsForEvent(ev));sources.push(...getProgTxtStreamsForEvent(ev));return sources;}
-function buildMultiSourceIframe(sources,opts={}){
-  if(!sources||!sources.length)return'';
-  const base=(CFG.mediaPlayerBase||'https://alvinalexa.github.io/media-player/').replace(/\/$/,'');
-  const parts=sources.map(s=>s.type+'='+encodeURIComponent(s.url));
-  if(opts.thumb)parts.push('thumb='+encodeURIComponent(opts.thumb));
-  if(opts.team1)parts.push('team1='+encodeURIComponent(opts.team1));
-  if(opts.team2)parts.push('team2='+encodeURIComponent(opts.team2));
-  const src=base+'?'+parts.join('&');
-  return'<div style="margin:18px 0;position:relative;padding-bottom:56.25%;height:0;overflow:hidden"><iframe loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="'+src+'" frameborder="0" scrolling="no" allowfullscreen></iframe></div>';
-}
+function buildMultiSourceIframe(sources){if(!sources||!sources.length)return'';const base=(CFG.mediaPlayerBase||'https://alvinalexa.github.io/media-player/').replace(/\/$/,'');const params=sources.map(s=>s.type+'='+encodeURIComponent(s.url)).join('&');const src=base+'?'+params;return'<div style="margin:18px 0;position:relative;padding-bottom:56.25%;height:0;overflow:hidden"><iframe loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="'+src+'" frameborder="0" scrolling="no" allowfullscreen></iframe></div>';}
 async function refreshAllStreams(){
   if(!CFG.autoFetchStreams){toast('Enable "Auto-fetch External Streams" in Settings first','w');return;}
   updateAggStatus('<span class="spinner"></span> Loading…','i');
