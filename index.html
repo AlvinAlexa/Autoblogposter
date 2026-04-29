@@ -732,10 +732,6 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
           <span style="text-transform:none;letter-spacing:0;color:var(--text)">Enable DDKanqu Scraping</span>
         </label>
         <label class="toggle" style="display:flex;align-items:center;gap:8px;font-size:.8rem;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 11px">
-          <input type="checkbox" id="cfg-enable-kafeizhibo" onchange="saveCFG()"><div class="tslider"></div>
-          <span style="text-transform:none;letter-spacing:0;color:var(--text)">Enable Kafeizhibo Streams <span style="color:var(--blue);font-size:.65rem">(kafeizhibo.com)</span></span>
-        </label>
-        <label class="toggle" style="display:flex;align-items:center;gap:8px;font-size:.8rem;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 11px">
           <input type="checkbox" id="cfg-embed-streams-in-post" onchange="saveCFG()"><div class="tslider"></div>
           <span style="text-transform:none;letter-spacing:0;color:var(--text)">Auto-embed iframe in Posts</span>
         </label>
@@ -861,7 +857,7 @@ let CFG={
   schedEnabled:false,schedThumbs:true,logoOverridesRaw:'',
   mediaPlayerBase:'https://alvinalexa.github.io/media-player/',
   progTxtUrl:'https://sportsonline.st/prog.txt',
-  autoFetchStreams:false,enableDdkanqu:false,enableKafeizhibo:false,embedStreamsInPost:true,
+  autoFetchStreams:false,enableDdkanqu:false,embedStreamsInPost:true,
   ddkanquMappingsRaw:'',
   deepseekKey:'',deepseekModel:'claude-sonnet-4-20250514',deepseekTone:'',deepseekLength:'medium',
 ytApiKey:''
@@ -877,7 +873,7 @@ let currentComposeEv=null;
 let currentComposeRace=null; // stores race object when composing from Full Races
 let fullRacesData=[];
 let tbGenCount=0,composeGenCount=0;
-let externalStreamsMap={},ddkanquCache={},ddkanquMappings={},ddkanquHomeMap={},kafeizhiboHomeMap={};
+let externalStreamsMap={},ddkanquCache={},ddkanquMappings={},ddkanquHomeMap={};
 let dsArticleCache={};
 
 const ZH_EN_TEAMS={
@@ -904,6 +900,15 @@ const ZH_EN_TEAMS={
   '火箭':'Houston Rockets','独行侠':'Dallas Mavericks','雷霆':'Oklahoma City Thunder',
   '骑士':'Cleveland Cavaliers','公牛':'Chicago Bulls','凯尔特人':'Boston Celtics',
   '尼克斯':'New York Knicks','篮网':'Brooklyn Nets','雄鹿':'Milwaukee Bucks',
+  '76人':'Philadelphia 76ers','老鹰':'Atlanta Hawks','魔术':'Orlando Magic',
+  '黄蜂':'Charlotte Hornets','活塞':'Detroit Pistons','步行者':'Indiana Pacers',
+  '猛龙':'Toronto Raptors','热火队':'Miami Heat','太阳':'Phoenix Suns',
+  '国王':'Sacramento Kings','爵士':'Utah Jazz','开拓者':'Portland Trail Blazers',
+  '鹈鹕':'New Orleans Pelicans','灰熊':'Memphis Grizzlies','马刺队':'San Antonio Spurs',
+  '拓荒者':'Portland Trail Blazers','森林狼':'Minnesota Timberwolves',
+  '雷霆队':'Oklahoma City Thunder','火箭队':'Houston Rockets',
+  '拜仁':'Bayern Munich','曼联队':'Manchester United','巴萨':'Barcelona',
+  '皇马':'Real Madrid','国米':'Internazionale','罗马队':'Roma',
   '利雅得新月':'Al Hilal','利雅得胜利':'Al Nassr',
 };
 function zhToEn(n){return ZH_EN_TEAMS[n]||n;}
@@ -981,7 +986,6 @@ function saveCFG(){
   CFG.progTxtUrl=v('cfg-prog-txt-url')||'https://sportsonline.st/prog.txt';
   CFG.autoFetchStreams=document.getElementById('cfg-auto-fetch-streams')?.checked||false;
   CFG.enableDdkanqu=document.getElementById('cfg-enable-ddkanqu')?.checked||false;
-  CFG.enableKafeizhibo=document.getElementById('cfg-enable-kafeizhibo')?.checked||false;
   CFG.embedStreamsInPost=document.getElementById('cfg-embed-streams-in-post')?.checked??true;
   CFG.ddkanquMappingsRaw=v('cfg-ddkanqu-mappings');
   CFG.deepseekKey=v('cfg-deepseek-key');
@@ -1006,7 +1010,6 @@ function applyConfigToUI(){
   set('cfg-ddkanqu-mappings',CFG.ddkanquMappingsRaw||'');
   if(document.getElementById('cfg-auto-fetch-streams'))document.getElementById('cfg-auto-fetch-streams').checked=CFG.autoFetchStreams||false;
   if(document.getElementById('cfg-enable-ddkanqu'))document.getElementById('cfg-enable-ddkanqu').checked=CFG.enableDdkanqu||false;
-  if(document.getElementById('cfg-enable-kafeizhibo'))document.getElementById('cfg-enable-kafeizhibo').checked=CFG.enableKafeizhibo||false;
   if(document.getElementById('cfg-embed-streams-in-post'))document.getElementById('cfg-embed-streams-in-post').checked=CFG.embedStreamsInPost!==false;
   set('cfg-deepseek-key',CFG.deepseekKey||'');set('cfg-deepseek-tone',CFG.deepseekTone||'');
   if(document.getElementById('cfg-deepseek-model'))document.getElementById('cfg-deepseek-model').value=CFG.deepseekModel||'deepseek-chat';
@@ -2016,7 +2019,7 @@ document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click
 function toast(msg,type='i'){const t=document.createElement('div');t.className='toast '+type;const icons={s:'✓ ',e:'✕ ',i:'ℹ ',w:'⚠ '};t.textContent=(icons[type]||'')+msg;document.getElementById('toasts').appendChild(t);setTimeout(()=>{t.style.transition='opacity .3s';t.style.opacity='0';setTimeout(()=>t.remove(),320);},3000);}
 
 // ═══ STREAM AGGREGATOR ═══
-function normTeam(name){return(name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\b(fc|afc|rfc|sc|cf|ac|as|bsc|rcd|rgb|vfb|vfl|1\.fc)\b/g,'').replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,' ').trim();}
+function normTeam(name){let n=(name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\b(fc|afc|rfc|sc|cf|ac|as|bsc|rcd|rgb|vfb|vfl|1\.fc)\b/g,'').replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,' ').trim();const cities=['philadelphia','oklahoma city','new york','new orleans','golden state','los angeles','la clippers','la lakers','portland trail','minnesota','memphis','sacramento','charlotte','san antonio','oklahoma'];for(const c of cities){if(n.startsWith(c+' '))n=n.slice(c.length+1);}return n;}
 function pairKey(a,b){return[normTeam(a),normTeam(b)].sort().join('|');}
 function parseProgTxt(text){
   const map={};const lines=(text||'').split('\n');
@@ -2065,63 +2068,17 @@ async function getDdkanquSourcesForEvent(ev){
 }
 function getChannelsForEvent(ev){return findCHsForLeague(ev.league?.id||'').filter(c=>c.url).map(c=>({url:c.url,type:'mora'}));}
 function getProgTxtStreamsForEvent(ev){if(ev.type==='race')return[];const key=pairKey(ev.home.name,ev.away.name);return externalStreamsMap[key]||[];}
-async function getAllStreamSourcesForEvent(ev){
-  const sources=[...getChannelsForEvent(ev)];
-  if(ev.type==='match'){
-    const kfSources=getKafeizhiboSourcesForEvent(ev);
-    sources.push(...kfSources);
-  }
-  if(CFG.autoFetchStreams){
-    const ddkSources=await getDdkanquSourcesForEvent(ev);
-    sources.push(...ddkSources);
-    sources.push(...getProgTxtStreamsForEvent(ev));
-  }
-  return sources;
-}
-async function loadKafeizhiboStreams(){
-  const url='https://www.kafeizhibo.com/api/v1/archor?type=&_t='+Date.now();
-  const proxies=['https://corsproxy.io/?'+encodeURIComponent(url),'https://api.allorigins.win/raw?url='+encodeURIComponent(url)];
-  for(const proxy of proxies){
-    try{
-      const res=await fetch(proxy,{signal:AbortSignal.timeout(10000)});
-      if(!res.ok)continue;
-      const json=await res.json();
-      const list=Array.isArray(json)?json:(json.data||[]);
-      kafeizhiboHomeMap={};
-      list.forEach(item=>{
-        if(!item.home_team||!item.away_team||!item.stream_url)return;
-        if(!item.stream_url.includes('livelivelive.space'))return; // skip expiring u5rq tokens
-        if(item.status!=='live'&&item.status!=='online')return;
-        const enHome=zhToEn(item.home_team),enAway=zhToEn(item.away_team);
-        const key=pairKey(enHome,enAway);
-        if(!kafeizhiboHomeMap[key])kafeizhiboHomeMap[key]=[];
-        // avoid duplicate stream URLs for same match
-        if(!kafeizhiboHomeMap[key].some(s=>s.url===item.stream_url)){
-          kafeizhiboHomeMap[key].push({url:item.stream_url,type:'mora'});
-        }
-      });
-      const count=Object.keys(kafeizhiboHomeMap).length;
-      console.log('[Kafeizhibo] Loaded '+count+' match(es)');
-      return count;
-    }catch(e){console.warn('[Kafeizhibo]',e.message);}
-  }
-  return 0;
-}
-function getKafeizhiboSourcesForEvent(ev){
-  if(!CFG.enableKafeizhibo)return[];
-  const key=pairKey(ev.home.name,ev.away.name);
-  return kafeizhiboHomeMap[key]||[];
-}
+async function getAllStreamSourcesForEvent(ev){if(!CFG.autoFetchStreams)return[];const sources=[];const ddkSources=await getDdkanquSourcesForEvent(ev);sources.push(...ddkSources);sources.push(...getChannelsForEvent(ev));sources.push(...getProgTxtStreamsForEvent(ev));return sources;}
 function buildMultiSourceIframe(sources){if(!sources||!sources.length)return'';const base=(CFG.mediaPlayerBase||'https://alvinalexa.github.io/media-player/').replace(/\/$/,'');const params=sources.map(s=>s.type+'='+encodeURIComponent(s.url)).join('&');const src=base+'?'+params;return'<div style="margin:18px 0;position:relative;padding-bottom:56.25%;height:0;overflow:hidden"><iframe loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="'+src+'" frameborder="0" scrolling="no" allowfullscreen></iframe></div>';}
 async function refreshAllStreams(){
   if(!CFG.autoFetchStreams){toast('Enable "Auto-fetch External Streams" in Settings first','w');return;}
   updateAggStatus('<span class="spinner"></span> Loading…','i');
-  await Promise.all([loadExternalStreams(),loadDDKanquHome(),CFG.enableKafeizhibo?loadKafeizhiboStreams():Promise.resolve()]);
+  await Promise.all([loadExternalStreams(),loadDDKanquHome()]);
   ddkanquMappings=parseDDKMappings(CFG.ddkanquMappingsRaw);
   const progTotal=Object.keys(externalStreamsMap).length;const homeTotal=Object.keys(ddkanquHomeMap).length;const mTotal=Object.keys(ddkanquMappings).length;
   updateAggStatus('✓ prog.txt: '+progTotal+' · DDKanqu home: '+homeTotal+' · Manual: '+mTotal,'s');
   const el=document.getElementById('streams-status');if(el)el.textContent='Updated '+new Date().toLocaleTimeString();
-  const kfTotal=Object.keys(kafeizhiboHomeMap).length;const badge=document.getElementById('agg-prog-badge');if(badge)badge.textContent='prog.txt: '+progTotal+' · DDK: '+homeTotal+(kfTotal?' · KFZ: '+kfTotal:'');
+  const badge=document.getElementById('agg-prog-badge');if(badge)badge.textContent='prog.txt: '+progTotal+' · DDK: '+homeTotal;
   persistLogoCache();toast('Streams refreshed ✓','s');
 }
 function updateAggStatus(html,type='i'){const el=document.getElementById('agg-status');if(!el)return;const colors={s:'var(--green)',e:'var(--red)',i:'var(--muted2)',w:'var(--orange)'};el.style.color=colors[type]||'var(--muted2)';el.innerHTML=html;}
@@ -2590,18 +2547,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const cv=document.getElementById('compose-canvas');const ctx=cv.getContext('2d');ctx.fillStyle='#0c1018';ctx.fillRect(0,0,cv.width,cv.height);ctx.fillStyle='rgba(255,255,255,.06)';ctx.font='900 28px "Barlow Condensed",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('SPORTS 803 · AUTO THUMBNAIL',cv.width/2,cv.height/2);
   document.getElementById('schedule-dt-wrap').style.display='block';
   updateClaudeStatus();
-  if(CFG.autoFetchStreams||CFG.enableKafeizhibo){
-    ddkanquMappings=parseDDKMappings(CFG.ddkanquMappingsRaw);
-    const loaders=[];
-    if(CFG.autoFetchStreams){loaders.push(loadExternalStreams().catch(e=>console.warn('[Streams]',e.message)));loaders.push(loadDDKanquHome().catch(e=>console.warn('[DDKanqu]',e.message)));}
-    if(CFG.enableKafeizhibo){loaders.push(loadKafeizhiboStreams().catch(e=>console.warn('[Kafeizhibo]',e.message)));}
-    Promise.all(loaders).then(()=>{
-      const kfTotal=Object.keys(kafeizhiboHomeMap).length;
-      const badge=document.getElementById('agg-prog-badge');
-      if(badge)badge.textContent='prog.txt: '+Object.keys(externalStreamsMap).length+' · DDK: '+Object.keys(ddkanquHomeMap).length+(kfTotal?' · KFZ: '+kfTotal:'');
-      persistLogoCache();
-    });
-  }
+  if(CFG.autoFetchStreams){ddkanquMappings=parseDDKMappings(CFG.ddkanquMappingsRaw);Promise.all([loadExternalStreams().catch(e=>console.warn('[Streams]',e.message)),loadDDKanquHome().catch(e=>console.warn('[DDKanqu]',e.message))]).then(()=>{const badge=document.getElementById('agg-prog-badge');if(badge)badge.textContent='prog.txt: '+Object.keys(externalStreamsMap).length+' · DDK: '+Object.keys(ddkanquHomeMap).length;persistLogoCache();});}
   console.log('[Sports 803] Dashboard v8 loaded. Claude AI: '+(CFG.deepseekKey?'✓':'not configured')+'. Highlights player: active.');
 });
 </script>
