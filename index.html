@@ -2241,11 +2241,13 @@ function fuzzyLookupPair(home, away, map) {
 }
 // ─── END TEAM ALIAS + FUZZY ENGINE ────────────────────────────────
 
-function parseProgTxt(text){
-  const map={};const lines=(text||'').split('\n');
-  for(const line of lines){const trimmed=line.trim();if(!trimmed||trimmed.startsWith('#')||!trimmed.includes('|'))continue;const parts=trimmed.split('|').map(p=>p.trim()).filter(Boolean);if(parts.length<2)continue;let matchStr=parts[0].replace(/^\d{1,2}:\d{2}\s+/,'').replace(/\s*(W)\s*$/i,'').trim();const urls=parts.slice(1).filter(u=>u.startsWith('http'));if(!urls.length)continue;const sep=matchStr.match(/ (x|vs\.?|–|-) /i);if(!sep)continue;const idx=matchStr.toLowerCase().indexOf(sep[0].toLowerCase());const teamA=matchStr.substring(0,idx).trim();const teamB=matchStr.substring(idx+sep[0].length).trim();if(!teamA||!teamB)continue;const key=pairKey(teamA,teamB);if(!map[key])map[key]=[];for(const u of urls)map[key].push({url:u,type:'embed'});}
-  return map;
+function getProgTxtStreamsForEvent(ev) {
+  if (ev.type === 'race') return [];
+  // Uses fuzzy scan so prog.txt entries with slightly different spellings still match
+  const result = fuzzyLookupPair(ev.home.name, ev.away.name, externalStreamsMap);
+  return result || [];
 }
+
 async function loadExternalStreams(){
   const url=CFG.progTxtUrl||'https://sportsonline.st/prog.txt';const proxyUrl='https://corsproxy.io/?'+encodeURIComponent(url);let text='';
   for(const src of[url,proxyUrl]){try{const res=await fetch(src,{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);text=await res.text();if(text.trim())break;}catch(e){console.warn('[Streams]',e.message);}}
