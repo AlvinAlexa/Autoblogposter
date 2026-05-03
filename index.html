@@ -720,7 +720,8 @@ button:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
       </div>
       <div class="settings-grid" style="margin-bottom:12px">
         <div class="form-group"><label>Media Player Base URL</label><input type="text" id="cfg-media-player-base" placeholder="https://alvinalexa.github.io/media-player/"></div>
-        <div class="form-group"><label>Prog.txt URL (SportsonLine)</label><input type="text" id="cfg-prog-txt-url" placeholder="https://sportsonline.st/prog.txt"></div>
+      <div class="form-group"><label>Prog.txt URL (SportsonLine)</label><input type="text" id="cfg-prog-txt-url" placeholder="https://sportsonline.st/prog.txt"></div>
+<div class="form-group"><label>KFZ API URL <span style="color:var(--muted2);font-weight:400">— paste the API endpoint from kafeizhibo.com Network tab (XHR filter)</span></label><input type="text" id="cfg-kfz-api-url" placeholder="https://www.kafeizhibo.com/api/v1/…" style="font-family:var(--mono);font-size:.72rem"><div style="font-size:.62rem;color:var(--muted2);margin-top:4px">💡 To find it: open kafeizhibo.com in Chrome → F12 → Network tab → filter XHR/Fetch → reload the page → look for an API call returning a list of matches → paste its URL here.</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
         <label class="toggle" style="display:flex;align-items:center;gap:8px;font-size:.8rem;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 11px">
@@ -864,7 +865,8 @@ let CFG={
   autoFetchStreams:false,enableDdkanqu:false,enableKafeizhibo:false,embedStreamsInPost:true,
   ddkanquMappingsRaw:'',
   deepseekKey:'',deepseekModel:'claude-sonnet-4-20250514',deepseekTone:'',deepseekLength:'medium',
-ytApiKey:''
+ytApiKey:'',
+kfzApiUrl:''
 };
 let LOGO_OVERRIDES={},LOGO_CACHE={};
 let allEvents=[],channels=[],postLog={};
@@ -972,7 +974,8 @@ function saveAll(){
 }
 function saveCFG(){
   CFG.blogId=v('cfg-blogid');CFG.clientId=v('cfg-clientid');
-  CFG.imgbbKey=v('cfg-imgbb');CFG.ytApiKey=v('cfg-yt-key');CFG.playerBase=v('cfg-player')||'https://soulmap1.blogspot.com/p/media-player.html';
+  CFG.imgbbKey=v('cfg-imgbb');CFG.ytApiKey=v('cfg-yt-key');CFG.kfzApiUrl=v('cfg-kfz-api-url')||'';
+CFG.playerBase=v('cfg-player')||'https://soulmap1.blogspot.com/p/media-player.html';
   CFG.schedTiming=parseInt(document.getElementById('sched-timing')?.value||60);
   CFG.schedStatus=document.getElementById('sched-def-status')?.value||'DRAFT';
   CFG.schedInterval=parseInt(document.getElementById('sched-interval')?.value||300000);
@@ -993,7 +996,8 @@ function saveCFG(){
 }
 function applyConfigToUI(){
   set('cfg-blogid',CFG.blogId);set('cfg-clientid',CFG.clientId);
-  set('cfg-imgbb',CFG.imgbbKey);set('cfg-yt-key',CFG.ytApiKey||'');set('cfg-player',CFG.playerBase);
+  set('cfg-imgbb',CFG.imgbbKey);set('cfg-yt-key',CFG.ytApiKey||'');set('cfg-kfz-api-url',CFG.kfzApiUrl||'');
+set('cfg-player',CFG.playerBase);
   set('cfg-logo-overrides',CFG.logoOverridesRaw);set('player-base',CFG.playerBase);
   if(document.getElementById('sched-timing'))document.getElementById('sched-timing').value=CFG.schedTiming||60;
   if(document.getElementById('sched-def-status'))document.getElementById('sched-def-status').value=CFG.schedStatus||'DRAFT';
@@ -2016,8 +2020,227 @@ document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click
 function toast(msg,type='i'){const t=document.createElement('div');t.className='toast '+type;const icons={s:'✓ ',e:'✕ ',i:'ℹ ',w:'⚠ '};t.textContent=(icons[type]||'')+msg;document.getElementById('toasts').appendChild(t);setTimeout(()=>{t.style.transition='opacity .3s';t.style.opacity='0';setTimeout(()=>t.remove(),320);},3000);}
 
 // ═══ STREAM AGGREGATOR ═══
-function normTeam(name){return(name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\b(fc|afc|rfc|sc|cf|ac|as|bsc|rcd|rgb|vfb|vfl|1\.fc)\b/g,'').replace(/[^a-z0-9\s]/g,'').replace(/\s+/g,' ').trim();}
-function pairKey(a,b){return[normTeam(a),normTeam(b)].sort().join('|');}
+// ─── TEAM ALIAS TABLE ─────────────────────────────────────────────
+// Maps any known variation of a team name to one canonical form.
+// When both the ESPN name and the DDK/KFZ name resolve to the same
+// canonical, they match — even if the raw strings look different.
+const TEAM_ALIAS_GROUPS = [
+  // ── Soccer / Football ──
+  ['manchester united','man united','man utd','manchester utd'],
+  ['manchester city','man city'],
+  ['tottenham hotspur','tottenham','spurs'],
+  ['west ham united','west ham'],
+  ['newcastle united','newcastle'],
+  ['aston villa','villa'],
+  ['fc barcelona','barcelona','barca'],
+  ['real madrid','real madrid cf'],
+  ['atletico madrid','atletico','atl madrid'],
+  ['paris saint germain','psg','paris sg','paris saint-germain'],
+  ['inter milan','internazionale','inter','fc inter'],
+  ['ac milan','milan'],
+  ['juventus','juve'],
+  ['borussia dortmund','dortmund','bvb'],
+  ['fc bayern munich','bayern munich','fc bayern','bayern'],
+  ['rb leipzig','leipzig'],
+  ['eintracht frankfurt','frankfurt'],
+  ['bayer leverkusen','leverkusen'],
+  ['sporting cp','sporting lisbon','sporting'],
+  ['sl benfica','benfica'],
+  ['fc porto','porto'],
+  ['real sociedad','sociedad'],
+  ['athletic club','athletic bilbao','bilbao'],
+  ['real betis','betis'],
+  ['villarreal cf','villarreal'],
+  ['sevilla fc','sevilla'],
+  ['valencia cf','valencia'],
+  ['celta vigo','celta'],
+  ['real mallorca','mallorca'],
+  ['ca osasuna','osasuna'],
+  ['ss lazio','lazio'],
+  ['as roma','roma'],
+  ['ssc napoli','napoli'],
+  ['al hilal','hilal','al-hilal'],
+  ['al nassr','nassr','al-nassr'],
+  ['ajax','afc ajax'],
+  // ── MLS ──
+  ['inter miami','inter miami cf','miami international','miami cf'],
+  ['new york city fc','nycfc','nyc fc'],
+  ['new york red bulls','red bulls','ny red bulls'],
+  ['los angeles fc','lafc','la fc'],
+  ['los angeles galaxy','la galaxy'],
+  ['atlanta united','atlanta utd'],
+  ['seattle sounders fc','seattle sounders','sounders'],
+  ['portland timbers','timbers'],
+  ['sporting kansas city','sporting kc'],
+  ['orlando city sc','orlando city','orlando'],
+  ['cf montreal','montreal impact','montreal'],
+  ['toronto fc','toronto'],
+  // ── NBA ──
+  ['philadelphia 76ers','76ers','sixers'],
+  ['boston celtics','celtics'],
+  ['los angeles lakers','lakers','la lakers'],
+  ['los angeles clippers','clippers','la clippers'],
+  ['golden state warriors','warriors'],
+  ['houston rockets','rockets'],
+  ['dallas mavericks','mavericks','mavs'],
+  ['oklahoma city thunder','thunder','okc thunder'],
+  ['cleveland cavaliers','cavaliers','cavs'],
+  ['chicago bulls','bulls'],
+  ['milwaukee bucks','bucks'],
+  ['miami heat','heat'],
+  ['brooklyn nets','nets'],
+  ['new york knicks','knicks'],
+  ['phoenix suns','suns'],
+  ['denver nuggets','nuggets'],
+  ['san antonio spurs','spurs','san antonio'],
+  ['memphis grizzlies','grizzlies'],
+  ['new orleans pelicans','pelicans'],
+  ['utah jazz','jazz'],
+  ['portland trail blazers','trail blazers','blazers'],
+  ['sacramento kings','kings'],
+  ['minnesota timberwolves','timberwolves','wolves'],
+  ['toronto raptors','raptors'],
+  ['atlanta hawks','hawks'],
+  ['charlotte hornets','hornets'],
+  ['orlando magic','magic'],
+  ['washington wizards','wizards'],
+  ['indiana pacers','pacers'],
+  ['detroit pistons','pistons'],
+  // ── NFL ──
+  ['kansas city chiefs','chiefs'],
+  ['new england patriots','patriots'],
+  ['dallas cowboys','cowboys'],
+  ['green bay packers','packers'],
+  ['new york giants','giants','ny giants'],
+  ['new york jets','jets','ny jets'],
+  ['san francisco 49ers','49ers','niners'],
+  ['seattle seahawks','seahawks'],
+  ['miami dolphins','dolphins'],
+  ['buffalo bills','bills'],
+  ['baltimore ravens','ravens'],
+  ['pittsburgh steelers','steelers'],
+  ['denver broncos','broncos'],
+  ['las vegas raiders','raiders'],
+  ['los angeles rams','rams','la rams'],
+  ['los angeles chargers','chargers','la chargers'],
+  ['chicago bears','bears'],
+  ['minnesota vikings','vikings'],
+  // ── NHL ──
+  ['toronto maple leafs','maple leafs','leafs'],
+  ['montreal canadiens','canadiens','habs'],
+  ['boston bruins','bruins'],
+  ['new york rangers','rangers','ny rangers'],
+  ['tampa bay lightning','lightning'],
+  ['colorado avalanche','avalanche'],
+  ['vegas golden knights','golden knights'],
+  // ── MLB ──
+  ['new york yankees','yankees','ny yankees'],
+  ['new york mets','mets','ny mets'],
+  ['los angeles dodgers','dodgers','la dodgers'],
+  ['boston red sox','red sox'],
+  ['chicago cubs','cubs'],
+  ['houston astros','astros'],
+  ['atlanta braves','braves'],
+];
+
+// Build a fast lookup table: any alias string → its canonical (first entry in group)
+const _aliasLookup = {};
+for (const group of TEAM_ALIAS_GROUPS) {
+  const canonical = group[0];
+  for (const alias of group) _aliasLookup[alias] = canonical;
+}
+
+// Words that are too common/generic to count as a match by themselves.
+// City names are listed here to prevent cross-sport false positives
+// (e.g. "Miami Heat" vs "Inter Miami" both have "miami" — listed here so
+//  they don't accidentally match each other).
+const _STOP_TOKENS = new Set([
+  'vs','fc','sc','cf','ac','as','the','de','of','and','club',
+  'city','united','real','sporting','athletic','north','south','east','west',
+  // Cities shared by teams in multiple sports — stop them to prevent false matches
+  'miami','boston','chicago','toronto','orlando','dallas','denver',
+  'houston','atlanta','portland','phoenix','memphis','angeles','sacramento',
+  'golden','state','antonio','francisco','oklahoma','cleveland','brooklyn',
+  'charlotte','washington','indiana','detroit','minnesota','utah',
+]);
+
+// Resolve any team name to its canonical alias (or keep as-is if unknown)
+function resolveAlias(name) {
+  const n = (name || '').toLowerCase().trim();
+  return _aliasLookup[n] || n;
+}
+
+// NEW normTeam — same cleaning as before, plus strips sport-prefix labels
+// like "NBA: Philadelphia 76ers" → "philadelphia 76ers"
+function normTeam(name) {
+  return (name || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/^(nba|nfl|nhl|mlb|mls|epl|ucl|laliga|bundesliga|seriea|ligue1|ufc|atp|wta|f1|motogp|nascar)\s*[:\-–]\s*/i, '')
+    .replace(/\b(fc|afc|rfc|sc|cf|ac|as|bsc|rcd|rgb|vfb|vfl|1\.fc)\b/g, '')
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// NEW pairKey — now alias-resolves both sides before sorting.
+// This is the core fix: "76ers" and "Philadelphia 76ers" now produce
+// the same key because both resolve to "philadelphia 76ers".
+function pairKey(a, b) {
+  return [resolveAlias(normTeam(a)), resolveAlias(normTeam(b))].sort().join('|');
+}
+
+// Extract meaningful tokens from a team name (for fuzzy fallback)
+function _sigTokens(name) {
+  return resolveAlias(normTeam(name))
+    .split(/\s+/)
+    .filter(t => t.length >= 3 && !_STOP_TOKENS.has(t));
+}
+
+// Returns true if two team name strings are likely the same team.
+// Tries alias resolution first; fuzzy token overlap as last resort.
+function teamsMatch(a, b) {
+  const ra = resolveAlias(normTeam(a));
+  const rb = resolveAlias(normTeam(b));
+  if (ra === rb) return true; // alias match
+
+  // Fuzzy: check if significant tokens overlap
+  const tokA = _sigTokens(a), tokB = _sigTokens(b);
+  if (!tokA.length || !tokB.length) return false;
+  const setB = new Set(tokB);
+  const overlap = tokA.filter(t => setB.has(t)).length;
+  if (overlap >= 1) {
+    // Log discovered pairs so you can add them to your DDK Mapping Table
+    console.log(`[Sports803 FuzzyMatch] "${a}" ↔ "${b}" matched via token overlap. Consider adding this to your DDK Mapping Table.`);
+    return true;
+  }
+  return false;
+}
+
+// Scan any pairKey-keyed map (DDK, KFZ, prog.txt) using fuzzy matching.
+// Returns the matched value, or null if nothing found.
+function fuzzyLookupPair(home, away, map) {
+  // 1. Try the exact (alias-resolved) pairKey first
+  const exactKey = pairKey(home, away);
+  if (map[exactKey] !== undefined) return map[exactKey];
+
+  // 2. Fuzzy scan: check every entry in the map
+  for (const [mKey, mVal] of Object.entries(map)) {
+    const parts = mKey.split('|');
+    if (parts.length < 2) continue;
+    const [mA, mB] = parts;
+    if (
+      (teamsMatch(home, mA) && teamsMatch(away, mB)) ||
+      (teamsMatch(home, mB) && teamsMatch(away, mA))
+    ) {
+      console.log(`[Sports803] Map fuzzy hit: "${home} vs ${away}" → key "${mKey}"`);
+      return mVal;
+    }
+  }
+  return null;
+}
+// ─── END TEAM ALIAS + FUZZY ENGINE ────────────────────────────────
+
 function parseProgTxt(text){
   const map={};const lines=(text||'').split('\n');
   for(const line of lines){const trimmed=line.trim();if(!trimmed||trimmed.startsWith('#')||!trimmed.includes('|'))continue;const parts=trimmed.split('|').map(p=>p.trim()).filter(Boolean);if(parts.length<2)continue;let matchStr=parts[0].replace(/^\d{1,2}:\d{2}\s+/,'').replace(/\s*(W)\s*$/i,'').trim();const urls=parts.slice(1).filter(u=>u.startsWith('http'));if(!urls.length)continue;const sep=matchStr.match(/ (x|vs\.?|–|-) /i);if(!sep)continue;const idx=matchStr.toLowerCase().indexOf(sep[0].toLowerCase());const teamA=matchStr.substring(0,idx).trim();const teamB=matchStr.substring(idx+sep[0].length).trim();if(!teamA||!teamB)continue;const key=pairKey(teamA,teamB);if(!map[key])map[key]=[];for(const u of urls)map[key].push({url:u,type:'embed'});}
@@ -2055,63 +2278,128 @@ function parseDDKanquHome(html){
   }
   return map;
 }
-async function getDdkanquSourcesForEvent(ev){
-  if(ev.type==='race')return[];const key=pairKey(ev.home.name,ev.away.name);const sources=[];
-  if(ddkanquMappings[key]){sources.push({url:ddkUrl(ddkanquMappings[key]),type:'mora'});return sources;}
-  if(ddkanquHomeMap[key]){const entry=ddkanquHomeMap[key];sources.push({url:entry.zhibo,type:'mora'});if(entry.hls)sources.push({url:entry.hls,type:'hls'});return sources;}
-  if(ddkanquCache[key]!==undefined){if(ddkanquCache[key])sources.push({url:ddkanquCache[key],type:'mora'});return sources;}
-  if(CFG.enableDdkanqu){const scraped=await scrapeDDKanqu(ev.home.name,ev.away.name);ddkanquCache[key]=scraped||'';try{localStorage.setItem(SK_DDKC,JSON.stringify({data:ddkanquCache,ts:Date.now()}));}catch(e){}if(scraped)sources.push({url:scraped,type:'mora'});}
+async function getDdkanquSourcesForEvent(ev) {
+  if (ev.type === 'race') return [];
+  const sources = [];
+
+  // 1. Manual mappings table (fuzzy alias-aware lookup)
+  const manual = fuzzyLookupPair(ev.home.name, ev.away.name, ddkanquMappings);
+  if (manual) {
+    sources.push({ url: ddkUrl(manual), type: 'mora' });
+    return sources;
+  }
+
+  // 2. DDKanqu homepage scraped map (fuzzy)
+  const homeEntry = fuzzyLookupPair(ev.home.name, ev.away.name, ddkanquHomeMap);
+  if (homeEntry) {
+    if (homeEntry.zhibo) sources.push({ url: homeEntry.zhibo, type: 'mora' });
+    if (homeEntry.hls)   sources.push({ url: homeEntry.hls,   type: 'hls'  });
+    return sources;
+  }
+
+  // 3. Cache check
+  const cacheKey = pairKey(ev.home.name, ev.away.name);
+  if (ddkanquCache[cacheKey] !== undefined) {
+    if (ddkanquCache[cacheKey]) sources.push({ url: ddkanquCache[cacheKey], type: 'mora' });
+    return sources;
+  }
+
+  // 4. Live scrape fallback
+  if (CFG.enableDdkanqu) {
+    const scraped = await scrapeDDKanqu(ev.home.name, ev.away.name);
+    ddkanquCache[cacheKey] = scraped || '';
+    try { localStorage.setItem(SK_DDKC, JSON.stringify({ data: ddkanquCache, ts: Date.now() })); } catch(e) {}
+    if (scraped) sources.push({ url: scraped, type: 'mora' });
+  }
   return sources;
 }
-function getChannelsForEvent(ev){return findCHsForLeague(ev.league?.id||'').filter(c=>c.url).map(c=>({url:c.url,type:'mora'}));}
-function getProgTxtStreamsForEvent(ev){if(ev.type==='race')return[];const key=pairKey(ev.home.name,ev.away.name);return externalStreamsMap[key]||[];}
-async function getAllStreamSourcesForEvent(ev){
-  const sources=[...getChannelsForEvent(ev)];
-  if(ev.type==='match'){
-    const kfSources=getKafeizhiboSourcesForEvent(ev);
-    sources.push(...kfSources);
-  }
-  if(CFG.autoFetchStreams){
-    const ddkSources=await getDdkanquSourcesForEvent(ev);
-    sources.push(...ddkSources);
-    sources.push(...getProgTxtStreamsForEvent(ev));
-  }
-  return sources;
-}
-async function loadKafeizhiboStreams(){
-  const url='https://www.kafeizhibo.com/api/v1/archor?type=&_t='+Date.now();
-  const proxies=['https://corsproxy.io/?'+encodeURIComponent(url),'https://api.allorigins.win/raw?url='+encodeURIComponent(url)];
-  for(const proxy of proxies){
-    try{
-      const res=await fetch(proxy,{signal:AbortSignal.timeout(10000)});
-      if(!res.ok)continue;
-      const json=await res.json();
-      const list=Array.isArray(json)?json:(json.data||[]);
-      kafeizhiboHomeMap={};
-      list.forEach(item=>{
-        if(!item.home_team||!item.away_team||!item.stream_url)return;
-        if(!item.stream_url.includes('livelivelive.space'))return; // skip expiring u5rq tokens
-        if(item.status!=='live'&&item.status!=='online')return;
-        const enHome=zhToEn(item.home_team),enAway=zhToEn(item.away_team);
-        const key=pairKey(enHome,enAway);
-        if(!kafeizhiboHomeMap[key])kafeizhiboHomeMap[key]=[];
-        // avoid duplicate stream URLs for same match
-        if(!kafeizhiboHomeMap[key].some(s=>s.url===item.stream_url)){
-          kafeizhiboHomeMap[key].push({url:item.stream_url,type:'mora'});
+
+async function loadKafeizhiboStreams() {
+  // Build the list of API endpoints to try, in order of preference.
+  // The user-configured URL (if any) is tried first.
+  const configuredUrl = (CFG.kfzApiUrl || '').trim();
+  const candidateUrls = [
+    ...(configuredUrl ? [configuredUrl] : []),
+    'https://www.kafeizhibo.com/api/v1/archor?type=&_t=' + Date.now(),
+    'https://www.kafeizhibo.com/api/v1/match?_t='        + Date.now(),
+    'https://www.kafeizhibo.com/api/v1/schedule?_t='     + Date.now(),
+    'https://www.kafeizhibo.com/api/v1/live?_t='         + Date.now(),
+  ];
+  const proxies = [
+    u => 'https://corsproxy.io/?' + encodeURIComponent(u),
+    u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+  ];
+
+  // Only skip these statuses — everything else (live, online, upcoming,
+  // scheduled, pre, soon, etc.) is allowed through
+  const SKIP_STATUSES = new Set(['cancelled','cancel','closed','end','ended','finish','finished','off']);
+
+  let list = null;
+
+  // Try each API URL through each CORS proxy until we get real data
+  outer:
+  for (const apiUrl of candidateUrls) {
+    for (const proxyFn of proxies) {
+      try {
+        const res = await fetch(proxyFn(apiUrl), { signal: AbortSignal.timeout(10000) });
+        if (!res.ok) continue;
+        const json = await res.json();
+        // Handle various response shapes: bare array, {data:[]}, {list:[]}, {items:[]}, {result:[]}
+        const candidate = Array.isArray(json)
+          ? json
+          : (json.data || json.list || json.items || json.result || []);
+        if (candidate.length > 0) {
+          list = candidate;
+          console.log('[Kafeizhibo] API hit: ' + apiUrl + ' → ' + candidate.length + ' item(s)');
+          break outer;
         }
-      });
-      const count=Object.keys(kafeizhiboHomeMap).length;
-      console.log('[Kafeizhibo] Loaded '+count+' match(es)');
-      return count;
-    }catch(e){console.warn('[Kafeizhibo]',e.message);}
+      } catch(e) {
+        console.warn('[Kafeizhibo]', e.message);
+      }
+    }
   }
-  return 0;
+
+  if (!list || !list.length) {
+    console.warn('[Kafeizhibo] All endpoints returned empty. Paste the correct API URL in Settings → Stream Aggregator → KFZ API URL.');
+    updateAggStatus('⚠ Kafeizhibo: no data — paste API URL in Settings', 'w');
+    return 0;
+  }
+
+  kafeizhiboHomeMap = {};
+  let added = 0;
+
+  for (const item of list) {
+    // Accept various field name styles different API versions might use
+    const homeRaw  = item.home_team  || item.home       || item.team_home || item.homeTeam  || '';
+    const awayRaw  = item.away_team  || item.away       || item.team_away || item.awayTeam  || '';
+    const streamUrl = item.stream_url || item.play_url  || item.url       || item.playUrl   || item.stream || '';
+
+    if (!homeRaw || !awayRaw || !streamUrl) continue;
+
+    // Skip only explicitly cancelled/ended events
+    const status = (item.status || '').toLowerCase();
+    if (SKIP_STATUSES.has(status)) continue;
+
+    // Translate Chinese team names → English, then alias-resolve
+    const enHome = zhToEn(homeRaw);
+    const enAway = zhToEn(awayRaw);
+    const key = pairKey(enHome, enAway);
+
+    if (!kafeizhiboHomeMap[key]) kafeizhiboHomeMap[key] = [];
+
+    // Avoid exact duplicate stream URLs for the same match
+    if (!kafeizhiboHomeMap[key].some(s => s.url === streamUrl)) {
+      kafeizhiboHomeMap[key].push({ url: streamUrl, type: 'mora' });
+      added++;
+    }
+  }
+
+  const count = Object.keys(kafeizhiboHomeMap).length;
+  console.log('[Kafeizhibo] Loaded ' + count + ' match(es), ' + added + ' stream source(s)');
+  return count;
 }
-function getKafeizhiboSourcesForEvent(ev){
-  if(!CFG.enableKafeizhibo)return[];
-  const key=pairKey(ev.home.name,ev.away.name);
-  return kafeizhiboHomeMap[key]||[];
-}
+
+
 function buildMultiSourceIframe(sources){if(!sources||!sources.length)return'';const base=(CFG.mediaPlayerBase||'https://alvinalexa.github.io/media-player/').replace(/\/$/,'');const params=sources.map(s=>s.type+'='+encodeURIComponent(s.url)).join('&');const src=base+'?'+params;return'<div style="margin:18px 0;position:relative;padding-bottom:56.25%;height:0;overflow:hidden"><iframe loading="lazy" sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation" allow="encrypted-media" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0" src="'+src+'" frameborder="0" scrolling="no" allowfullscreen></iframe></div>';}
 async function refreshAllStreams(){
   if(!CFG.autoFetchStreams){toast('Enable "Auto-fetch External Streams" in Settings first','w');return;}
